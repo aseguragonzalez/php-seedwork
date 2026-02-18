@@ -1,0 +1,40 @@
+{
+  "[markdown]": {
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true
+  },
+  "[php]": {
+    "editor.defaultFormatter": "wongjn.php-sniffer",
+    "editor.formatOnPaste": false,
+    "editor.formatOnSave": false
+  },
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.autopep8",
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true
+  },
+  "[xml]": {
+    "editor.defaultFormatter": "redhat.vscode-xml",
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true
+  },
+  "namespaceResolver.sortAlphabetically": true,
+  "namespaceResolver.sortNatural": true,
+  "namespaceResolver.sortOnSave": true,
+  "php.validate.executablePath": "/usr/local/bin/php",
+  "phpSniffer.autoDetect": true,
+  "phpSniffer.executablesFolder": "",
+  "phpSniffer.standard": "PSR12",
+  "phpunit.args": [
+    "-c",
+    "${workspaceFolder}/phpunit.xml"
+  ],
+  "phpunit.debuggerConfig": "Listen for Xdebug",
+  "phpunit.paths": {
+    "${workspaceFolder}": "${workspaceFolder}"
+  },
+  "phpunit.php": "/usr/local/bin/php",
+  "phpunit.phpunit": "${workspaceFolder}/vendor/bin/phpunit",
+  "phpunit.xdebugPort": 9003
+}

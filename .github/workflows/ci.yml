@@ -1,0 +1,31 @@
+name: PHP Seedwork CI
+
+on:
+  pull_request:
+
+jobs:
+  validate:
+    name: Validate Seedwork Package
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Set up PHP 8.4
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 8.4
+
+    - name: Install Seedwork dependencies
+      run: composer install --no-progress
+
+    - name: Run pre-commit checks
+      run: |
+        if [ -f .pre-commit-config.yaml ]; then
+          pip install pre-commit
+          pre-commit run --all-files
+        fi
+
+    - name: Tests
+      run: make test
