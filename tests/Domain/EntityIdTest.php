@@ -5,54 +5,41 @@ declare(strict_types=1);
 namespace Tests\Domain;
 
 use PHPUnit\Framework\TestCase;
+use Seedwork\Domain\Exceptions\ValueException;
 use Tests\Fixtures\BankAccount\Domain\Entities\BankAccountId;
-use Tests\Fixtures\BankAccount\Domain\Entities\TransactionId;
 
 final class EntityIdTest extends TestCase
 {
-    public function testBankAccountIdFromString(): void
+    public function testEquals(): void
     {
-        $id = BankAccountId::fromString('acc-001');
+        $id1 = BankAccountId::create();
+        $id2 = BankAccountId::create();
+        $id3 = BankAccountId::fromString($id1->value);
 
-        $this->assertSame('acc-001', $id->value);
-        $this->assertSame('acc-001', (string) $id);
+        $this->assertFalse($id1->equals($id2));
+        $this->assertTrue($id1->equals($id3));
     }
 
-    public function testBankAccountIdEquals(): void
+    public function testToString(): void
     {
-        $a = BankAccountId::fromString('acc-001');
-        $b = BankAccountId::fromString('acc-001');
-        $c = BankAccountId::fromString('acc-002');
+        $id = BankAccountId::create();
 
-        $this->assertTrue($a->equals($b));
-        $this->assertTrue($b->equals($a));
-        $this->assertFalse($a->equals($c));
-        $this->assertFalse($c->equals($a));
+        $this->assertSame($id->value, (string)$id);
     }
 
-    public function testTransactionIdFromString(): void
+    public function testValidationFailsWhenEmpty(): void
     {
-        $id = TransactionId::fromString('txn-123');
+        $this->expectException(ValueException::class);
+        $this->expectExceptionMessage('Bank account id cannot be empty');
 
-        $this->assertSame('txn-123', $id->value);
-        $this->assertSame('txn-123', (string) $id);
+        BankAccountId::fromString('');
     }
 
-    public function testTransactionIdGenerate(): void
+    public function testValidationFailsWhenDoesNotStartWithAcc(): void
     {
-        $id = TransactionId::generate();
+        $this->expectException(ValueException::class);
+        $this->expectExceptionMessage('Bank account id must start with "acc-"');
 
-        $this->assertStringStartsWith('txn-', $id->value);
-        $this->assertNotEquals(TransactionId::generate()->value, $id->value);
-    }
-
-    public function testTransactionIdEquals(): void
-    {
-        $a = TransactionId::fromString('txn-a');
-        $b = TransactionId::fromString('txn-a');
-        $c = TransactionId::fromString('txn-b');
-
-        $this->assertTrue($a->equals($b));
-        $this->assertFalse($a->equals($c));
+        BankAccountId::fromString('1234567890');
     }
 }

@@ -6,35 +6,30 @@ namespace Tests\Domain;
 
 use PHPUnit\Framework\TestCase;
 use Tests\Fixtures\BankAccount\Domain\Entities\BankAccount;
-use Tests\Fixtures\BankAccount\Domain\Entities\BankAccountId;
 use Tests\Fixtures\BankAccount\Domain\ValueObjects\Currency;
 use Tests\Fixtures\BankAccount\Domain\ValueObjects\Money;
 
 final class AggregateRootTest extends TestCase
 {
-    public function testBankAccountIdentityEquality(): void
+    public function testEquals(): void
     {
-        $id = BankAccountId::fromString('acc-001');
-        $account1 = BankAccount::create($id);
-        $account2 = BankAccount::create($id);
-
-        $this->assertTrue($account1->equals($account2));
-    }
-
-    public function testBankAccountDifferentIdentitiesNotEqual(): void
-    {
-        $account1 = BankAccount::create(BankAccountId::fromString('acc-001'));
-        $account2 = BankAccount::create(BankAccountId::fromString('acc-002'));
+        $account1 = BankAccount::create();
+        $account2 = BankAccount::create();
+        $account3 = BankAccount::build(
+            $account1->id,
+            $account1->getBalance(),
+            $account1->getTransactions()
+        );
 
         $this->assertFalse($account1->equals($account2));
+        $this->assertTrue($account1->equals($account3));
     }
 
-    public function testCollectEventsReturnsBufferedEventsAfterWithdraw(): void
+    public function testCollectEvents(): void
     {
-        $account = BankAccount::create(BankAccountId::fromString('acc-001'))
-            ->deposit(new Money(100, Currency::USD));
-
-        $account = $account->withdraw(new Money(30, Currency::USD));
+        $account = BankAccount::create()
+            ->deposit(new Money(100, Currency::USD))
+            ->withdraw(new Money(30, Currency::USD));
 
         $events = $account->collectEvents();
 

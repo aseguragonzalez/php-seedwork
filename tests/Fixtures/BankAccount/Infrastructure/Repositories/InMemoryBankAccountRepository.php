@@ -28,12 +28,12 @@ final class InMemoryBankAccountRepository implements BankAccountRepository
 
     /**
      * @param BankAccountId $id
-     * @return BankAccount
+     * @return BankAccount|null
      */
-    public function getById(EntityId $id): AggregateRoot
+    public function findBy(EntityId $id): ?AggregateRoot
     {
         if (!isset($this->accounts[$id->value])) {
-            throw new \RuntimeException(sprintf('BankAccount not found: %s', $id->value));
+            return null;
         }
 
         return clone $this->accounts[$id->value];
@@ -42,7 +42,7 @@ final class InMemoryBankAccountRepository implements BankAccountRepository
     /**
      * @param BankAccountId $id
      */
-    public function deleteById(EntityId $id): void
+    public function deleteBy(EntityId $id): void
     {
         unset($this->accounts[$id->value]);
     }

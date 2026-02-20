@@ -26,8 +26,11 @@ final readonly class GetBankAccountStatusQueryHandler implements GetBankAccountS
      */
     public function handle(Query $query): QueryResult
     {
-        /** @var BankAccount $account */
-        $account = $this->repository->getById($query->accountId);
+        /** @var BankAccount|null $account */
+        $account = $this->repository->findBy($query->accountId);
+        if ($account === null) {
+            throw new \RuntimeException('BankAccount not found');
+        }
 
         $transactions = array_map(
             fn (Transaction $t) => new TransactionDto(
@@ -36,7 +39,6 @@ final readonly class GetBankAccountStatusQueryHandler implements GetBankAccountS
                 $t->amount->amount,
                 $t->amount->currency->value,
                 $t->createdAt->format(\DateTimeInterface::ATOM),
-                $t->relatedAccountId?->value
             ),
             $account->getTransactions()
         );

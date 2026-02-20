@@ -9,12 +9,12 @@ use Tests\Fixtures\BankAccount\Application\GetBankAccountStatus\BankAccountStatu
 use Tests\Fixtures\BankAccount\Application\GetBankAccountStatus\GetBankAccountStatusQuery;
 use Tests\Fixtures\BankAccount\Application\GetBankAccountStatus\GetBankAccountStatusQueryHandler;
 use Tests\Fixtures\BankAccount\Domain\Entities\BankAccount;
+use Tests\Fixtures\BankAccount\Domain\Entities\BankAccountId;
 use Tests\Fixtures\BankAccount\Domain\Repositories\BankAccountRepository;
 use Tests\Fixtures\BankAccount\Domain\ValueObjects\AccountBalance;
-use Tests\Fixtures\BankAccount\Domain\Entities\BankAccountId;
-use Tests\Fixtures\BankAccount\Domain\ValueObjects\TransactionType;
 use Tests\Fixtures\BankAccount\Domain\ValueObjects\Currency;
 use Tests\Fixtures\BankAccount\Domain\ValueObjects\Money;
+use Tests\Fixtures\BankAccount\Domain\ValueObjects\TransactionType;
 
 final class GetBankAccountStatusTest extends TestCase
 {
@@ -24,7 +24,7 @@ final class GetBankAccountStatusTest extends TestCase
         $account = BankAccount::create($accountId)->deposit(new Money(100, Currency::USD));
 
         $repository = $this->createStub(BankAccountRepository::class);
-        $repository->method('getById')->willReturn($account);
+        $repository->method('findBy')->willReturn($account);
 
         $handler = new GetBankAccountStatusQueryHandler($repository);
 
@@ -45,7 +45,7 @@ final class GetBankAccountStatusTest extends TestCase
             ->deposit(new Money(50, Currency::USD));
 
         $repository = $this->createStub(BankAccountRepository::class);
-        $repository->method('getById')->willReturn($account);
+        $repository->method('findBy')->willReturn($account);
 
         $handler = new GetBankAccountStatusQueryHandler($repository);
 
@@ -74,7 +74,7 @@ final class GetBankAccountStatusTest extends TestCase
             ->transferOut(new Money(30, Currency::EUR), $toId);
 
         $repository = $this->createStub(BankAccountRepository::class);
-        $repository->method('getById')->willReturn($fromAccount);
+        $repository->method('findBy')->willReturn($fromAccount);
 
         $handler = new GetBankAccountStatusQueryHandler($repository);
 
@@ -88,11 +88,5 @@ final class GetBankAccountStatusTest extends TestCase
         $this->assertContains(TransactionType::DEPOSIT, $types);
         $this->assertContains(TransactionType::WITHDRAWAL, $types);
         $this->assertContains(TransactionType::TRANSFER_OUT, $types);
-
-        $transferOut = array_values(array_filter(
-            $result->transactions,
-            fn ($t) => $t->type === TransactionType::TRANSFER_OUT
-        ))[0];
-        $this->assertSame('acc-to', $transferOut->relatedAccountId);
     }
 }

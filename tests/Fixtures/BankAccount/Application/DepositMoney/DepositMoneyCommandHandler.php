@@ -25,7 +25,10 @@ final readonly class DepositMoneyCommandHandler implements DepositMoney
      */
     public function handle(Command $command): void
     {
-        $account = $this->repository->getById($command->accountId);
+        $account = $this->repository->findBy($command->accountId);
+        if ($account === null) {
+            throw new \RuntimeException('BankAccount not found');
+        }
         $account = $account->deposit($command->amount);
 
         $this->repository->save($account);

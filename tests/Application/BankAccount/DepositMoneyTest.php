@@ -23,7 +23,7 @@ final class DepositMoneyTest extends TestCase
         $account = BankAccount::create($accountId)->deposit(new Money(100, Currency::USD));
 
         $repository = $this->createMock(BankAccountRepository::class);
-        $repository->method('getById')->willReturn($account);
+        $repository->method('findBy')->willReturn($account);
         /** @var BankAccount|null $savedAccount */
         $savedAccount = null;
         $repository->expects($this->once())->method('save')->willReturnCallback(
@@ -47,7 +47,7 @@ final class DepositMoneyTest extends TestCase
         $account = BankAccount::create($accountId);
 
         $repository = $this->createStub(BankAccountRepository::class);
-        $repository->method('getById')->willReturn($account);
+        $repository->method('findBy')->willReturn($account);
 
         $publishedEvents = [];
         $domainEventsBus = $this->createMock(DomainEventsBus::class);

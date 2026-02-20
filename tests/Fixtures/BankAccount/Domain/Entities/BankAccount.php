@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\Fixtures\BankAccount\Domain\Entities;
 
 use Seedwork\Domain\AggregateRoot;
+use Seedwork\Domain\DomainEvent;
 use Tests\Fixtures\BankAccount\Domain\Entities\BankAccountId;
 use Tests\Fixtures\BankAccount\Domain\Entities\Transaction;
-use Tests\Fixtures\BankAccount\Domain\Entities\TransactionId;
 use Tests\Fixtures\BankAccount\Domain\Events\MoneyDeposited;
 use Tests\Fixtures\BankAccount\Domain\Events\MoneyTransferredIn;
 use Tests\Fixtures\BankAccount\Domain\Events\MoneyTransferredOut;
@@ -24,9 +24,9 @@ final readonly class BankAccount extends AggregateRoot
 {
     /**
      * @param array<Transaction> $transactions
-     * @param array<\Seedwork\Domain\DomainEvent> $domainEvents
+     * @param array<DomainEvent> $domainEvents
      */
-    public function __construct(
+    private function __construct(
         BankAccountId $id,
         private AccountBalance $balance,
         private array $transactions = [],
@@ -35,11 +35,27 @@ final readonly class BankAccount extends AggregateRoot
         parent::__construct($id, $domainEvents);
     }
 
-    public static function create(BankAccountId $id, ?AccountBalance $initialBalance = null): self
+    protected function validate(): void
     {
+    }
+
+    public static function create(?BankAccountId $id = null, ?AccountBalance $initialBalance = null): self
+    {
+        $id = $id ?? BankAccountId::create();
         $balance = $initialBalance ?? AccountBalance::zero();
 
-        return new self($id, $balance, []);
+        return new self($id, $balance);
+    }
+
+    /**
+     * @param array<Transaction> $transactions
+     */
+    public static function build(
+        BankAccountId $id,
+        AccountBalance $balance,
+        array $transactions
+    ): self {
+        return new self($id, $balance, $transactions, domainEvents: []);
     }
 
     public function withdraw(Money $amount): self
@@ -54,15 +70,8 @@ final readonly class BankAccount extends AggregateRoot
             $this->balance->amount - $amount->amount,
             $this->balance->currency
         );
-        $transactionId = TransactionId::generate();
-        $transaction = new Transaction(
-            $transactionId,
-            TransactionType::WITHDRAWAL,
-            $amount,
-            new \DateTimeImmutable('now', new \DateTimeZone('UTC')),
-            null
-        );
-        $event = new MoneyWithdrawn($this->id, $amount, $transactionId);
+        $transaction = Transaction::create(TransactionType::WITHDRAWAL, $amount);
+        $event = MoneyWithdrawn::create($amount, $this->id, $transaction->id);
 
         return new self(
             $this->id,
@@ -80,15 +89,8 @@ final readonly class BankAccount extends AggregateRoot
             $this->balance->amount + $amount->amount,
             $this->balance->currency
         );
-        $transactionId = TransactionId::generate();
-        $transaction = new Transaction(
-            $transactionId,
-            TransactionType::DEPOSIT,
-            $amount,
-            new \DateTimeImmutable('now', new \DateTimeZone('UTC')),
-            null
-        );
-        $event = new MoneyDeposited($this->id, $amount, $transactionId);
+        $transaction = Transaction::create(TransactionType::DEPOSIT, $amount);
+        $event = MoneyDeposited::create($amount, $this->id, $transaction->id);
 
         return new self(
             $this->id,
@@ -110,15 +112,8 @@ final readonly class BankAccount extends AggregateRoot
             $this->balance->amount - $amount->amount,
             $this->balance->currency
         );
-        $transactionId = TransactionId::generate();
-        $transaction = new Transaction(
-            $transactionId,
-            TransactionType::TRANSFER_OUT,
-            $amount,
-            new \DateTimeImmutable('now', new \DateTimeZone('UTC')),
-            $toAccountId
-        );
-        $event = new MoneyTransferredOut($this->id, $toAccountId, $amount, $transactionId);
+        $transaction = Transaction::create(TransactionType::TRANSFER_OUT, $amount);
+        $event = MoneyTransferredOut::create($amount, $this->id, $toAccountId, $transaction->id);
 
         return new self(
             $this->id,
@@ -136,15 +131,8 @@ final readonly class BankAccount extends AggregateRoot
             $this->balance->amount + $amount->amount,
             $this->balance->currency
         );
-        $transactionId = TransactionId::generate();
-        $transaction = new Transaction(
-            $transactionId,
-            TransactionType::TRANSFER_IN,
-            $amount,
-            new \DateTimeImmutable('now', new \DateTimeZone('UTC')),
-            $fromAccountId
-        );
-        $event = new MoneyTransferredIn($this->id, $fromAccountId, $amount, $transactionId);
+        $transaction = Transaction::create(TransactionType::TRANSFER_IN, $amount);
+        $event = MoneyTransferredIn::create($amount, $this->id, $fromAccountId, $transaction->id);
 
         return new self(
             $this->id,

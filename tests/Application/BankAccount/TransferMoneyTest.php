@@ -27,7 +27,7 @@ final class TransferMoneyTest extends TestCase
         $fromAccount = BankAccount::create($fromId)->deposit(new Money(100, Currency::USD));
         $toAccount = BankAccount::create($toId);
         $repository = $this->createMock(BankAccountRepository::class);
-        $repository->method('getById')->willReturnCallback(
+        $repository->method('findBy')->willReturnCallback(
             fn (BankAccountId $id) => $id->value === 'acc-from' ? $fromAccount : $toAccount
         );
         /** @var array<BankAccount> $savedAccounts */
@@ -56,7 +56,7 @@ final class TransferMoneyTest extends TestCase
         $toAccount = BankAccount::create($toId);
 
         $repository = $this->createStub(BankAccountRepository::class);
-        $repository->method('getById')->willReturnCallback(
+        $repository->method('findBy')->willReturnCallback(
             fn (BankAccountId $id) => $id->value === 'acc-from' ? $fromAccount : $toAccount
         );
         /** @var array<MoneyTransferredOut|MoneyTransferredIn> $publishedEvents */
@@ -92,7 +92,7 @@ final class TransferMoneyTest extends TestCase
         $toAccount = BankAccount::create($toId);
 
         $repository = $this->createStub(BankAccountRepository::class);
-        $repository->method('getById')->willReturnCallback(
+        $repository->method('findBy')->willReturnCallback(
             fn (BankAccountId $id) => $id->value === 'acc-from' ? $fromAccount : $toAccount
         );
         $domainEventsBus = $this->createStub(DomainEventsBus::class);

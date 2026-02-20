@@ -14,7 +14,6 @@ final readonly class TransactionDto
         public int $amount,
         public string $currency,
         public string $createdAt,
-        public ?string $relatedAccountId = null
     ) {
     }
 }
