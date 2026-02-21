@@ -36,8 +36,8 @@ interface DomainEventBus
      * is published, the handler is invoked. Allows adding new reactions
      * (projections, side effects) without changing publishers (Open/Closed).
      *
-     * @param class-string<DomainEvent> $eventType FQCN of the domain event (e.g. MoneyDeposited::class).
-     * @param DomainEventHandler<DomainEvent> $domainEventHandler Handler to invoke for that event type.
+     * @param string $eventType FQCN of the domain event (e.g. MoneyDeposited::class).
+     * @param string $domainEventHandler FQCN of the domain event handler (e.g. MoneyDepositedEventHandler::class).
      */
-    public function subscribe(string $eventType, DomainEventHandler $domainEventHandler): void;
+    public function subscribe(string $eventType, string $domainEventHandler): void;
 }
