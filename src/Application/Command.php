@@ -8,10 +8,10 @@ namespace SeedWork\Application;
  * CQRS write-side request: immutable DTO carrying an intent (e.g. "deposit money").
  *
  * One command class per use case; dispatched via {@see CommandBus} to a single
- * {@see CommandHandler}. Rule: use only primitive attributes (scalars, array of
- * scalars); avoid domain types (entities, value objects) so the port stays
- * serializable and adapter-agnostic. Handlers translate primitives to domain
- * types when loading aggregates.
+ * {@see CommandHandler}. Prefer attributes that are easy to serialize and keep
+ * the port adapter-agnostic (scalars, arrays of scalars, simple value objects
+ * such as IDs or money). Avoid passing full domain entities; handlers can load
+ * and reconstruct rich domain objects when handling the command.
  *
  * @see CommandHandler Handlers that execute the use case for this command.
  * @see CommandBus Application port that dispatches commands to the right handler.
