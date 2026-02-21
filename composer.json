@@ -1,0 +1,41 @@
+{
+  "authors": [
+    {
+      "email": "a.segura.gonzalez@gmail.com",
+      "name": "Alfonso Segura"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "SeedWork\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "config": {
+    "platform": {
+      "php": "8.4"
+    }
+  },
+  "description": "DDD and Hexagonal Architecture building blocks (aggregates, entities, value objects, etc).",
+  "license": "MIT",
+  "name": "aseguragonzalez/seedwork",
+  "require": {
+    "php": "^8.4",
+    "psr/container": "^2.0"
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.93.1",
+    "phpstan/phpstan": "^2.1",
+    "phpunit/phpunit": "^12.5",
+    "squizlabs/php_codesniffer": "^4.0"
+  },
+  "support": {
+    "docs": "https://github.com/aseguragonzalez/resbooking-seedwork/tree/main/packages/seedwork/docs",
+    "source": "https://github.com/aseguragonzalez/resbooking-seedwork.git"
+  },
+  "type": "library"
+}

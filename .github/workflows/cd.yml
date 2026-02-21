@@ -1,0 +1,101 @@
+name: SeedWork Release
+
+on:
+  push:
+    branches:
+    - main
+
+jobs:
+  release:
+    name: Build and Publish Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Allows the workflow to push the version tag
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Read version and check if tag exists
+      id: check
+      run: |
+        VERSION=$(cat VERSION | tr -d '[:space:]')
+        echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+        if git ls-remote --exit-code --tags origin "refs/tags/seedwork-v${VERSION}" 2>/dev/null; then
+          echo "tag_exists=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "tag_exists=false" >> "$GITHUB_OUTPUT"
+        fi
+
+    - name: Set up PHP 8.4
+      if: steps.check.outputs.tag_exists != 'true'
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 8.4
+
+    - name: Install SeedWork dependencies
+      if: steps.check.outputs.tag_exists != 'true'
+      run: composer install --no-progress
+
+    - name: Format check
+      if: steps.check.outputs.tag_exists != 'true'
+      run: make format-check
+
+    - name: Lint
+      if: steps.check.outputs.tag_exists != 'true'
+      run: make lint
+
+    - name: Static analysis
+      if: steps.check.outputs.tag_exists != 'true'
+      run: make static-analyse
+
+    - name: Tests
+      if: steps.check.outputs.tag_exists != 'true'
+      run: make test
+
+    - name: Build package
+      if: steps.check.outputs.tag_exists != 'true'
+      run: make create-package
+
+    - name: Create and push tag
+      if: steps.check.outputs.tag_exists != 'true'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
+        git tag -a "seedwork-v${{ steps.check.outputs.version }}" -m "Release seedwork v${{ steps.check.outputs.version }}"
+        git push origin "seedwork-v${{ steps.check.outputs.version }}"
+
+    - name: Archive dist artifacts
+      if: steps.check.outputs.tag_exists != 'true'
+      run: |
+        zip -r seedwork-dist.zip dist
+
+    - name: Create GitHub Release
+      if: steps.check.outputs.tag_exists != 'true'
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: seedwork-v${{ steps.check.outputs.version }}
+        release_name: SeedWork v${{ steps.check.outputs.version }}
+        body: |
+          Release seedwork v${{ steps.check.outputs.version }}
+        draft: false
+        prerelease: false
+
+    - name: Upload release asset
+      if: steps.check.outputs.tag_exists != 'true'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: seedwork-dist.zip
+        asset_name: seedwork-dist.zip
+        asset_content_type: application/zip
