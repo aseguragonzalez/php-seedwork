@@ -1,4 +1,4 @@
-# PHP Seedwork
+# PHP SeedWork
 
 DDD and Hexagonal Architecture building blocks (aggregates, entities, value
 objects, command/query handlers, etc).
@@ -6,8 +6,8 @@ objects, command/query handlers, etc).
 ## Goal
 
 - **Unify patterns:** All domain and application code extends or implements
- Seedwork abstractions, keeping the codebase consistent and predictable.
-- **Keep the domain pure:** Domain types depend only on Seedwork domain types;
+ SeedWork abstractions, keeping the codebase consistent and predictable.
+- **Keep the domain pure:** Domain types depend only on SeedWork domain types;
  no framework or infrastructure in the domain layer.
 - **Clear boundaries:** Application use cases are expressed as command handlers
  (writes) and query handlers (reads), with primitives-only DTOs at the port boundary.
@@ -16,7 +16,7 @@ See the [docs](docs/) for architecture and usage details.
 
 ## Architecture role
 
-Seedwork sits between project conventions and application/domain code:
+SeedWork sits between project conventions and application/domain code:
 
 ```mermaid
 flowchart TB
@@ -24,7 +24,7 @@ flowchart TB
         CursorRules[.cursorrules]
     end
 
-    subgraph seedwork [Seedwork]
+    subgraph SeedWork [SeedWork]
         AR[AggregateRoot]
         E[Entity]
         VO[ValueObject]
@@ -32,7 +32,7 @@ flowchart TB
         R[Repository]
         CH[CommandHandler]
         QH[QueryHandler]
-        DEB[DomainEventsBus]
+        DEB[DomainEventBus]
     end
 
     subgraph domain [Domain layer]
@@ -50,11 +50,11 @@ flowchart TB
 
     subgraph infrastructure [Infrastructure layer]
         SqlRestaurantRepo[SqlRestaurantRepository]
-        DeferredBus[DeferredDomainEventsBus]
+        DeferredBus[DeferredDomainEventBus]
         Middleware[DomainEventsMiddleware]
     end
 
-    CursorRules --> seedwork
+    CursorRules --> SeedWork
     AR --> Restaurant
     E --> DiningArea
     VO --> Settings
@@ -69,15 +69,15 @@ flowchart TB
     DeferredBus --> Middleware
 ```
 
-- **Domain layer:** Extends Seedwork domain bases (`AggregateRoot`, `Entity`,
+- **Domain layer:** Extends SeedWork domain bases (`AggregateRoot`, `Entity`,
  `ValueObject`), uses `EntityId`, raises `DomainEvent` and `DomainException`/
  `ValueException`, and defines repository interfaces extending `Repository<T>`.
 - **Application layer:** Use case interfaces extend `CommandHandler<TCommand>`
- or `QueryHandler<TQuery, TResult>` and declare `execute()`. Handlers implement
+ or `QueryHandler<TQuery, TResult>` and implement `handle()`. Handlers implement
   those interfaces and depend on domain repository interfaces.
 - **Infrastructure layer:** Implements `Repository<T>` and optionally
- `DomainEventsBus` (e.g. `DeferredDomainEventsBus`). Controllers dispatch to use
-  cases; middleware or similar calls `DomainEventsBus::notify()` after handling
+ `DomainEventBus` (e.g. `DeferredDomainEventBus`). Controllers dispatch to use
+  cases; middleware or similar calls `DomainEventBus::publish()` after handling
    a request.
 
 ## Requirements
@@ -89,10 +89,10 @@ flowchart TB
 From [Packagist](https://packagist.org) (when published):
 
 ```bash
-composer require aseguragonzalez/seedwork
+composer require aseguragonzalez/SeedWork
 ```
 
-From this repository (or from a monorepo, use the path to the package, e.g. `./packages/seedwork`):
+From this repository (or from a monorepo, use the path to the package, e.g. `./packages/SeedWork`):
 
 Add to your root `composer.json`:
 
@@ -102,19 +102,19 @@ Add to your root `composer.json`:
         { "type": "path", "url": "." }
     ],
     "require": {
-        "aseguragonzalez/seedwork": "@dev"
+        "aseguragonzalez/SeedWork": "@dev"
     }
 }
 ```
 
-Then run `composer update aseguragonzalez/seedwork`.
+Then run `composer update aseguragonzalez/SeedWork`.
 
 ## Getting started
 
-After installation, the library is available under the `Seedwork\` namespace.
-Start with the [domain basics](docs/seedwork/01-domain.md) and
-[application layer](docs/seedwork/04-application.md). For full usage, examples,
-and component reference, see the [Seedwork architecture and usage guide](docs/seedwork/README.md).
+After installation, the library is available under the `SeedWork\` namespace.
+Start with the [domain basics](docs/SeedWork/01-domain.md) and
+[application layer](docs/SeedWork/04-application.md). For full usage, examples,
+and component reference, see the [SeedWork architecture and usage guide](docs/SeedWork/README.md).
 Run `make test` from the package directory to verify the setup.
 
 ## Built with
@@ -129,9 +129,9 @@ Run `make test` from the package directory to verify the setup.
 ## Documentation
 
 See the [docs](docs/) folder or
-[resbooking-seedwork docs](https://github.com/aseguragonzalez/resbooking-seedwork/tree/main/docs)
-for architecture and usage. [docs/seedwork/README.md](docs/seedwork/README.md)
- contains the PHP Seedwork
+[resbooking-SeedWork docs](https://github.com/aseguragonzalez/resbooking-SeedWork/tree/main/docs)
+for architecture and usage. [docs/SeedWork/README.md](docs/SeedWork/README.md)
+ contains the PHP SeedWork
 architecture, usage by layer, concrete examples, and the component reference table.
 
 ## Development
@@ -156,7 +156,7 @@ make all
 1. Edit `VERSION` in this directory with the new semantic version
    (e.g. `0.0.2`, `0.2.0-alpha`).
 2. Commit and push to `main`, or merge a pull request.
-3. The release workflow runs automatically. If the tag `seedwork-v{VERSION}`
+3. The release workflow runs automatically. If the tag `SeedWork-v{VERSION}`
    does not exist, it validates, builds, and publishes a GitHub Release with
    the zip artifact.
 4. No manual `git tag` or `git push --tags` is required.

@@ -15,7 +15,7 @@ final readonly class DefaultMoneyTransferredOutEventHandler implements MoneyTran
     /**
      * @param MoneyTransferredOut $event
      */
-    public function execute(DomainEvent $event): void
+    public function handle(DomainEvent $event): void
     {
         // Example: react to outgoing transfer (e.g. reconciliation)
         // $event->amount->amount;

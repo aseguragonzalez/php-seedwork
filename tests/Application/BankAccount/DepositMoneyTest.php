@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Application\BankAccount;
 
 use PHPUnit\Framework\TestCase;
-use Seedwork\Application\DomainEventsBus;
+use Seedwork\Application\DomainEventBus;
 use Tests\Fixtures\BankAccount\Application\DepositMoney\DepositMoneyCommand;
 use Tests\Fixtures\BankAccount\Application\DepositMoney\DepositMoneyCommandHandler;
 use Tests\Fixtures\BankAccount\Domain\Entities\BankAccount;
@@ -31,8 +31,8 @@ final class DepositMoneyTest extends TestCase
                 $savedAccount = $arg;
             }
         );
-        $domainEventsBus = $this->createStub(DomainEventsBus::class);
-        $handler = new DepositMoneyCommandHandler($repository, $domainEventsBus);
+        $domainEventBus = $this->createStub(DomainEventBus::class);
+        $handler = new DepositMoneyCommandHandler($repository, $domainEventBus);
 
         $handler->handle(new DepositMoneyCommand($accountId, new Money(50, Currency::USD)));
 
@@ -50,14 +50,17 @@ final class DepositMoneyTest extends TestCase
         $repository->method('findBy')->willReturn($account);
 
         $publishedEvents = [];
-        $domainEventsBus = $this->createMock(DomainEventsBus::class);
-        $domainEventsBus->expects($this->atLeastOnce())->method('publish')->willReturnCallback(
-            function ($event) use (&$publishedEvents) {
-                $publishedEvents[] = $event;
+        $domainEventBus = $this->createMock(DomainEventBus::class);
+        $domainEventBus->expects($this->atLeastOnce())->method('publish')->willReturnCallback(
+            /**
+             * @param array<DomainEvent> $events
+             */
+            function (array $events) use (&$publishedEvents) {
+                $publishedEvents = array_merge($publishedEvents, $events);
             }
         );
 
-        $handler = new DepositMoneyCommandHandler($repository, $domainEventsBus);
+        $handler = new DepositMoneyCommandHandler($repository, $domainEventBus);
         $handler->handle(new DepositMoneyCommand($accountId, new Money(75, Currency::USD)));
 
         $depositedEvents = array_filter($publishedEvents, fn ($e) => $e instanceof MoneyDeposited);

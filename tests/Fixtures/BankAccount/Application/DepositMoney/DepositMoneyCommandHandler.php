@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Fixtures\BankAccount\Application\DepositMoney;
 
 use Seedwork\Application\Command;
-use Seedwork\Application\DomainEventsBus;
+use Seedwork\Application\DomainEventBus;
 use Tests\Fixtures\BankAccount\Domain\Repositories\BankAccountRepository;
 
 /**
@@ -15,7 +15,7 @@ final readonly class DepositMoneyCommandHandler implements DepositMoney
 {
     public function __construct(
         private BankAccountRepository $repository,
-        private DomainEventsBus $domainEventsBus
+        private DomainEventBus $domainEventBus
     ) {
     }
 
@@ -33,8 +33,6 @@ final readonly class DepositMoneyCommandHandler implements DepositMoney
 
         $this->repository->save($account);
 
-        foreach ($account->collectEvents() as $event) {
-            $this->domainEventsBus->publish($event);
-        }
+        $this->domainEventBus->publish($account->collectEvents());
     }
 }

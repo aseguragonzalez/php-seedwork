@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Application\BankAccount;
 
 use PHPUnit\Framework\TestCase;
-use Seedwork\Application\DomainEventsBus;
+use Seedwork\Application\DomainEventBus;
 use Tests\Fixtures\BankAccount\Application\WithdrawMoney\WithdrawMoneyCommand;
 use Tests\Fixtures\BankAccount\Application\WithdrawMoney\WithdrawMoneyCommandHandler;
 use Tests\Fixtures\BankAccount\Domain\Entities\BankAccount;
@@ -31,8 +31,8 @@ final class WithdrawMoneyTest extends TestCase
                 $savedAccount = $arg;
             }
         );
-        $domainEventsBus = $this->createStub(DomainEventsBus::class);
-        $handler = new WithdrawMoneyCommandHandler($repository, $domainEventsBus);
+        $domainEventBus = $this->createStub(DomainEventBus::class);
+        $handler = new WithdrawMoneyCommandHandler($repository, $domainEventBus);
 
         $handler->handle(new WithdrawMoneyCommand($accountId, new Money(30, Currency::USD)));
 
@@ -50,14 +50,17 @@ final class WithdrawMoneyTest extends TestCase
         $repository->method('findBy')->willReturn($account);
 
         $publishedEvents = [];
-        $domainEventsBus = $this->createMock(DomainEventsBus::class);
-        $domainEventsBus->expects($this->atLeastOnce())->method('publish')->willReturnCallback(
-            function ($event) use (&$publishedEvents) {
-                $publishedEvents[] = $event;
+        $domainEventBus = $this->createMock(DomainEventBus::class);
+        $domainEventBus->expects($this->atLeastOnce())->method('publish')->willReturnCallback(
+            /**
+             * @param array<DomainEvent> $events
+             */
+            function (array $events) use (&$publishedEvents) {
+                $publishedEvents = array_merge($publishedEvents, $events);
             }
         );
 
-        $handler = new WithdrawMoneyCommandHandler($repository, $domainEventsBus);
+        $handler = new WithdrawMoneyCommandHandler($repository, $domainEventBus);
         $handler->handle(new WithdrawMoneyCommand($accountId, new Money(30, Currency::USD)));
 
         $withdrawnEvents = array_values(array_filter($publishedEvents, fn ($e) => $e instanceof MoneyWithdrawn));
@@ -74,9 +77,9 @@ final class WithdrawMoneyTest extends TestCase
 
         $repository = $this->createStub(BankAccountRepository::class);
         $repository->method('findBy')->willReturn($account);
-        $domainEventsBus = $this->createStub(DomainEventsBus::class);
+        $domainEventBus = $this->createStub(DomainEventBus::class);
 
-        $handler = new WithdrawMoneyCommandHandler($repository, $domainEventsBus);
+        $handler = new WithdrawMoneyCommandHandler($repository, $domainEventBus);
 
         $this->expectException(InsufficientFundsException::class);
 

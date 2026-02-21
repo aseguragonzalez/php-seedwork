@@ -15,7 +15,7 @@ final readonly class DefaultMoneyTransferredInEventHandler implements MoneyTrans
     /**
      * @param MoneyTransferredIn $event
      */
-    public function execute(DomainEvent $event): void
+    public function handle(DomainEvent $event): void
     {
         // Example: react to incoming transfer (e.g. update projections)
         // $event->toAccountId->value;

@@ -15,7 +15,7 @@ final readonly class DefaultMoneyWithdrawnEventHandler implements MoneyWithdrawn
     /**
      * @param MoneyWithdrawn $event
      */
-    public function execute(DomainEvent $event): void
+    public function handle(DomainEvent $event): void
     {
         // Example: react to a withdrawal (e.g. audit log, analytics)
         // $event->accountId->value;

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Application\BankAccount;
 
 use PHPUnit\Framework\TestCase;
-use Seedwork\Application\DomainEventsBus;
+use Seedwork\Application\DomainEventBus;
 use Seedwork\Domain\DomainEvent;
 use Tests\Fixtures\BankAccount\Application\TransferMoney\TransferMoneyCommand;
 use Tests\Fixtures\BankAccount\Application\TransferMoney\TransferMoneyCommandHandler;
@@ -37,8 +37,8 @@ final class TransferMoneyTest extends TestCase
                 $savedAccounts[] = $account;
             }
         );
-        $domainEventsBus = $this->createStub(DomainEventsBus::class);
-        $handler = new TransferMoneyCommandHandler($repository, $domainEventsBus);
+        $domainEventBus = $this->createStub(DomainEventBus::class);
+        $handler = new TransferMoneyCommandHandler($repository, $domainEventBus);
 
         $handler->handle(new TransferMoneyCommand($fromId, $toId, new Money(40, Currency::USD)));
 
@@ -61,14 +61,17 @@ final class TransferMoneyTest extends TestCase
         );
         /** @var array<MoneyTransferredOut|MoneyTransferredIn> $publishedEvents */
         $publishedEvents = [];
-        $domainEventsBus = $this->createMock(DomainEventsBus::class);
-        $domainEventsBus->expects($this->atLeastOnce())->method('publish')->willReturnCallback(
-            function ($event) use (&$publishedEvents) {
-                $publishedEvents[] = $event;
+        $domainEventBus = $this->createMock(DomainEventBus::class);
+        $domainEventBus->expects($this->atLeastOnce())->method('publish')->willReturnCallback(
+            /**
+             * @param array<DomainEvent> $events
+             */
+            function (array $events) use (&$publishedEvents) {
+                $publishedEvents = array_merge($publishedEvents, $events);
             }
         );
 
-        $handler = new TransferMoneyCommandHandler($repository, $domainEventsBus);
+        $handler = new TransferMoneyCommandHandler($repository, $domainEventBus);
         $handler->handle(new TransferMoneyCommand($fromId, $toId, new Money(40, Currency::USD)));
 
         $outEvents = array_values(array_filter($publishedEvents, fn ($e) => $e instanceof MoneyTransferredOut));
@@ -95,9 +98,9 @@ final class TransferMoneyTest extends TestCase
         $repository->method('findBy')->willReturnCallback(
             fn (BankAccountId $id) => $id->value === 'acc-from' ? $fromAccount : $toAccount
         );
-        $domainEventsBus = $this->createStub(DomainEventsBus::class);
+        $domainEventBus = $this->createStub(DomainEventBus::class);
 
-        $handler = new TransferMoneyCommandHandler($repository, $domainEventsBus);
+        $handler = new TransferMoneyCommandHandler($repository, $domainEventBus);
 
         $this->expectException(InsufficientFundsException::class);
 

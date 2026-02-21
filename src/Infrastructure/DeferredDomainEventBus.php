@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Seedwork\Infrastructure;
 
+use Seedwork\Application\DomainEventBus;
 use Seedwork\Application\DomainEventHandler;
-use Seedwork\Application\DomainEventsBus;
 use Seedwork\Domain\DomainEvent;
 
-final class DeferredDomainEventsBus implements DomainEventsBus
+final class DeferredDomainEventBus implements DomainEventBus
 {
     /**
      * @var array<DomainEvent>
@@ -20,9 +20,12 @@ final class DeferredDomainEventsBus implements DomainEventsBus
      */
     private array $handlers = [];
 
-    public function publish(DomainEvent $event): void
+    /**
+     * @param array<DomainEvent> $events
+     */
+    public function publish(array $events): void
     {
-        $this->buffer[] = $event;
+        $this->buffer = array_merge($this->buffer, $events);
     }
 
     /**
@@ -37,7 +40,7 @@ final class DeferredDomainEventsBus implements DomainEventsBus
         $this->handlers[$eventType][] = $domainEventHandler;
     }
 
-    public function notify(): void
+    public function flush(): void
     {
         $events = $this->buffer;
         $this->buffer = [];
@@ -49,7 +52,7 @@ final class DeferredDomainEventsBus implements DomainEventsBus
             }
 
             foreach ($this->handlers[$eventType] as $handler) {
-                $handler->execute($event);
+                $handler->handle($event);
             }
         }
     }

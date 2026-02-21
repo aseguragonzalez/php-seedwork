@@ -16,7 +16,7 @@ final readonly class DefaultMoneyDepositedEventHandler implements MoneyDeposited
      * @param MoneyDeposited $event
      * @return void
      */
-    public function execute(DomainEvent $event): void
+    public function handle(DomainEvent $event): void
     {
         // Example: react to a deposit (e.g. send notification, update read model)
         // $event->accountId->value;
