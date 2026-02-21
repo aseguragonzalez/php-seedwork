@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures\BankAccount\Domain\Events;
 
-use Seedwork\Domain\DomainEvent;
+use SeedWork\Domain\DomainEvent;
 use Tests\Fixtures\BankAccount\Domain\Entities\BankAccountId;
 use Tests\Fixtures\BankAccount\Domain\Entities\TransactionId;
 use Tests\Fixtures\BankAccount\Domain\ValueObjects\Money;

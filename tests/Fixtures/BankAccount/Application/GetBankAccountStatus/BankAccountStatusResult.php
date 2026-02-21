@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures\BankAccount\Application\GetBankAccountStatus;
 
-use Seedwork\Application\QueryResult;
+use SeedWork\Application\QueryResult;
 use Tests\Fixtures\BankAccount\Domain\Entities\BankAccountId;
 use Tests\Fixtures\BankAccount\Domain\ValueObjects\AccountBalance;
 

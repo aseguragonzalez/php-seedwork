@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures\BankAccount\Domain\ValueObjects;
 
-use Seedwork\Domain\Exceptions\ValueException;
-use Seedwork\Domain\ValueObject;
+use SeedWork\Domain\Exceptions\ValueException;
+use SeedWork\Domain\ValueObject;
 
 final readonly class Money extends ValueObject
 {

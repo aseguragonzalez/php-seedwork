@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Domain;
+namespace SeedWork\Domain;
 
 /**
  * Base type for Domain-Driven Design Domain Events.

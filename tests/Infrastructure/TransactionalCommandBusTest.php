@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\Infrastructure;
 
 use PHPUnit\Framework\TestCase;
-use Seedwork\Application\CommandBus;
-use Seedwork\Domain\UnitOfWork;
-use Seedwork\Infrastructure\TransactionalCommandBus;
+use SeedWork\Application\CommandBus;
+use SeedWork\Domain\UnitOfWork;
+use SeedWork\Infrastructure\TransactionalCommandBus;
 use Tests\Fixtures\BankAccount\Application\DepositMoney\DepositMoneyCommand;
 use Tests\Fixtures\BankAccount\Domain\Entities\BankAccountId;
 use Tests\Fixtures\BankAccount\Domain\ValueObjects\Currency;

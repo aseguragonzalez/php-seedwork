@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Domain;
+namespace SeedWork\Domain;
 
 /**
  * Repository for an aggregate root type: load by id, persist, and deleteBy by id.

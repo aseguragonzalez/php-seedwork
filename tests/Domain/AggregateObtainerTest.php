@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Domain;
 
 use PHPUnit\Framework\TestCase;
-use Seedwork\Domain\Exceptions\NotFoundResource;
+use SeedWork\Domain\Exceptions\NotFoundResource;
 use Tests\Fixtures\BankAccount\Domain\BankAccountObtainer;
 use Tests\Fixtures\BankAccount\Domain\Entities\BankAccount;
 use Tests\Fixtures\BankAccount\Domain\Entities\BankAccountId;

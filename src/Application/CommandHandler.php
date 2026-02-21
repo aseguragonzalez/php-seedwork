@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Application;
+namespace SeedWork\Application;
 
 /**
  * Application use case for a write. Implements one command type (T); invoked by
- * {@see CommandBus}. Depend on domain (e.g. {@see \Seedwork\Domain\Repository})
+ * {@see CommandBus}. Depend on domain (e.g. {@see \SeedWork\Domain\Repository})
  * and {@see DomainEventBus}, not infrastructure; keep thin (orchestration only,
  * no business logic). Typically one handler per Command class.
  *

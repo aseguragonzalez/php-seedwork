@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures\BankAccount\Domain\Repositories;
 
-use Seedwork\Domain\Repository;
+use SeedWork\Domain\Repository;
 use Tests\Fixtures\BankAccount\Domain\Entities\BankAccount;
 
 /**

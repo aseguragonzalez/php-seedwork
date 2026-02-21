@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures\BankAccount\Application\GetBankAccountStatus;
 
-use Seedwork\Application\Query;
-use Seedwork\Application\QueryResult;
+use SeedWork\Application\Query;
+use SeedWork\Application\QueryResult;
 use Tests\Fixtures\BankAccount\Domain\BankAccountObtainer;
 use Tests\Fixtures\BankAccount\Domain\Entities\BankAccount;
 use Tests\Fixtures\BankAccount\Domain\Entities\Transaction;

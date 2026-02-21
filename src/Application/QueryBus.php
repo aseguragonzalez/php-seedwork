@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Application;
+namespace SeedWork\Application;
 
 /**
  * Application port for dispatching queries and returning results. Decouples

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures\BankAccount\Application\WithdrawMoney;
 
-use Seedwork\Application\Command;
+use SeedWork\Application\Command;
 use Tests\Fixtures\BankAccount\Domain\Entities\BankAccountId;
 use Tests\Fixtures\BankAccount\Domain\ValueObjects\Money;
 

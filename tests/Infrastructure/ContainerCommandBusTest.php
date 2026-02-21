@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Tests\Infrastructure;
 
 use PHPUnit\Framework\TestCase;
-use Seedwork\Application\CommandHandler;
-use Seedwork\Infrastructure\ContainerCommandBus;
+use SeedWork\Application\CommandHandler;
+use SeedWork\Infrastructure\ContainerCommandBus;
 use Tests\Fixtures\BankAccount\Application\DepositMoney\DepositMoneyCommand;
 use Tests\Fixtures\BankAccount\Application\WithdrawMoney\WithdrawMoneyCommand;
 use Tests\Fixtures\BankAccount\Domain\Entities\BankAccountId;

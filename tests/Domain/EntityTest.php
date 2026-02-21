@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Domain;
 
 use PHPUnit\Framework\TestCase;
-use Seedwork\Domain\Exceptions\ValueException;
+use SeedWork\Domain\Exceptions\ValueException;
 use Tests\Fixtures\BankAccount\Domain\Entities\Transaction;
 use Tests\Fixtures\BankAccount\Domain\ValueObjects\Currency;
 use Tests\Fixtures\BankAccount\Domain\ValueObjects\Money;

@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Tests\Infrastructure;
 
 use PHPUnit\Framework\TestCase;
-use Seedwork\Application\CommandBus;
-use Seedwork\Application\DomainEventHandler;
-use Seedwork\Domain\DomainEvent;
-use Seedwork\Infrastructure\DeferredDomainEventBus;
-use Seedwork\Infrastructure\DomainEventFlushCommandBus;
+use SeedWork\Application\CommandBus;
+use SeedWork\Application\DomainEventHandler;
+use SeedWork\Domain\DomainEvent;
+use SeedWork\Infrastructure\DeferredDomainEventBus;
+use SeedWork\Infrastructure\DomainEventFlushCommandBus;
 use Tests\Fixtures\BankAccount\Application\DepositMoney\DepositMoneyCommand;
 use Tests\Fixtures\BankAccount\Application\MoneyDeposited\MoneyDepositedEventHandler;
 use Tests\Fixtures\BankAccount\Domain\Entities\BankAccountId;

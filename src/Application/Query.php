@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Application;
+namespace SeedWork\Application;
 
 /**
  * CQRS read-side request: immutable DTO for a read use case.

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Application;
+namespace SeedWork\Application;
 
-use Seedwork\Domain\DomainEvent;
+use SeedWork\Domain\DomainEvent;
 
 /**
  * Application port for publishing and subscribing to Domain Events.

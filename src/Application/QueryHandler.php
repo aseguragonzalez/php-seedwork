@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Application;
+namespace SeedWork\Application;
 
 /**
  * Application use case for a read. Implements one query type (T) and returns one

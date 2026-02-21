@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures\BankAccount\Application\MoneyWithdrawn;
 
-use Seedwork\Domain\DomainEvent;
+use SeedWork\Domain\DomainEvent;
 use Tests\Fixtures\BankAccount\Domain\Events\MoneyWithdrawn;
 
 /**

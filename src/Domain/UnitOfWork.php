@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Domain;
+namespace SeedWork\Domain;
 
 /**
  * Contract for a unit of work: defines a transaction boundary for persisting

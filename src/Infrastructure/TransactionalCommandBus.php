@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Infrastructure;
+namespace SeedWork\Infrastructure;
 
-use Seedwork\Application\Command;
-use Seedwork\Application\CommandBus;
-use Seedwork\Domain\UnitOfWork;
+use SeedWork\Application\Command;
+use SeedWork\Application\CommandBus;
+use SeedWork\Domain\UnitOfWork;
 
 /**
  * CommandBus that runs each dispatch inside a unit of work: creates a session,

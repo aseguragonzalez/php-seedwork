@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Tests\Infrastructure;
 
 use PHPUnit\Framework\TestCase;
-use Seedwork\Application\DomainEventHandler;
-use Seedwork\Infrastructure\DeferredDomainEventBus;
+use SeedWork\Application\DomainEventHandler;
+use SeedWork\Infrastructure\DeferredDomainEventBus;
 use Tests\Fixtures\BankAccount\Application\DepositMoney\DepositMoney;
 use Tests\Fixtures\BankAccount\Application\DepositMoney\DepositMoneyCommandHandler;
 use Tests\Fixtures\BankAccount\Application\MoneyDeposited\MoneyDepositedEventHandler;

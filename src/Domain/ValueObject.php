@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Domain;
+namespace SeedWork\Domain;
 
 /**
  * Base implementation of the Value Object pattern.

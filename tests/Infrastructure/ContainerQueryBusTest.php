@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\Infrastructure;
 
 use PHPUnit\Framework\TestCase;
-use Seedwork\Application\QueryHandler;
-use Seedwork\Application\QueryResult;
-use Seedwork\Infrastructure\ContainerQueryBus;
+use SeedWork\Application\QueryHandler;
+use SeedWork\Application\QueryResult;
+use SeedWork\Infrastructure\ContainerQueryBus;
 use Tests\Fixtures\BankAccount\Application\GetBankAccountStatus\BankAccountStatusResult;
 use Tests\Fixtures\BankAccount\Application\GetBankAccountStatus\GetBankAccountStatusQuery;
 use Tests\Fixtures\BankAccount\Domain\Entities\BankAccountId;

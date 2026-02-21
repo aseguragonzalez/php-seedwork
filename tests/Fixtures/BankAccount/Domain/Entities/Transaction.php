@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures\BankAccount\Domain\Entities;
 
-use Seedwork\Domain\Entity;
-use Seedwork\Domain\Exceptions\ValueException;
+use SeedWork\Domain\Entity;
+use SeedWork\Domain\Exceptions\ValueException;
 use Tests\Fixtures\BankAccount\Domain\ValueObjects\Money;
 use Tests\Fixtures\BankAccount\Domain\ValueObjects\TransactionType;
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures\BankAccount\Application\GetBankAccountStatus;
 
-use Seedwork\Application\QueryHandler;
+use SeedWork\Application\QueryHandler;
 
 /**
  * Application service that handles GetBankAccountStatusQuery and returns BankAccountStatusResult.

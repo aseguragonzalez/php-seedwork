@@ -1,11 +1,11 @@
-name: PHP Seedwork CI
+name: PHP SeedWork CI
 
 on:
   pull_request:
 
 jobs:
   validate:
-    name: Validate Seedwork Package
+    name: Validate SeedWork Package
     runs-on: ubuntu-latest
 
     steps:
@@ -17,7 +17,7 @@ jobs:
       with:
         php-version: 8.4
 
-    - name: Install Seedwork dependencies
+    - name: Install SeedWork dependencies
       run: composer install --no-progress
 
     - name: Run pre-commit checks

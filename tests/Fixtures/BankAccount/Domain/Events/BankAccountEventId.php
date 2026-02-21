@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures\BankAccount\Domain\Events;
 
-use Seedwork\Domain\EventId;
-use Seedwork\Domain\Exceptions\ValueException;
+use SeedWork\Domain\EventId;
+use SeedWork\Domain\Exceptions\ValueException;
 
 final readonly class BankAccountEventId extends EventId
 {

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Infrastructure;
+namespace SeedWork\Infrastructure;
 
 use Psr\Container\ContainerInterface;
-use Seedwork\Application\Command;
-use Seedwork\Application\CommandBus;
-use Seedwork\Application\CommandHandler;
+use SeedWork\Application\Command;
+use SeedWork\Application\CommandBus;
+use SeedWork\Application\CommandHandler;
 
 /**
  * PSR-11-based implementation of CommandBus that resolves handlers by command

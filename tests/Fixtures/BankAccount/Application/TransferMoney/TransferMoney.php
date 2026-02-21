@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures\BankAccount\Application\TransferMoney;
 
-use Seedwork\Application\CommandHandler;
+use SeedWork\Application\CommandHandler;
 
 /**
  * Application service that handles TransferMoneyCommand.

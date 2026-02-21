@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Domain;
+namespace SeedWork\Domain;
 
-use Seedwork\Domain\Exceptions\NotFoundResource;
+use SeedWork\Domain\Exceptions\NotFoundResource;
 
 /**
  * Base component to obtain an aggregate by id or throw when not found.

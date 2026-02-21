@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures\BankAccount\Application\WithdrawMoney;
 
-use Seedwork\Application\Command;
-use Seedwork\Application\DomainEventBus;
+use SeedWork\Application\Command;
+use SeedWork\Application\DomainEventBus;
 use Tests\Fixtures\BankAccount\Domain\BankAccountObtainer;
 use Tests\Fixtures\BankAccount\Domain\Repositories\BankAccountRepository;
 

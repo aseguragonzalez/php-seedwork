@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures\BankAccount\Infrastructure\Repositories;
 
-use Seedwork\Domain\AggregateRoot;
-use Seedwork\Domain\EntityId;
+use SeedWork\Domain\AggregateRoot;
+use SeedWork\Domain\EntityId;
 use Tests\Fixtures\BankAccount\Domain\Entities\BankAccount;
 use Tests\Fixtures\BankAccount\Domain\Entities\BankAccountId;
 use Tests\Fixtures\BankAccount\Domain\Repositories\BankAccountRepository;

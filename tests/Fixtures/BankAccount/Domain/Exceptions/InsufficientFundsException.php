@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures\BankAccount\Domain\Exceptions;
 
-use Seedwork\Domain\Exceptions\DomainException;
+use SeedWork\Domain\Exceptions\DomainException;
 
 final class InsufficientFundsException extends DomainException
 {

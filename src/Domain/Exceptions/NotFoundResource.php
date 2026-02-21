@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Domain\Exceptions;
+namespace SeedWork\Domain\Exceptions;
 
-use Seedwork\Domain\EntityId;
+use SeedWork\Domain\EntityId;
 
 final class NotFoundResource extends DomainException
 {

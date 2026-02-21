@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures\BankAccount\Domain\Entities;
 
-use Seedwork\Domain\AggregateRoot;
-use Seedwork\Domain\DomainEvent;
+use SeedWork\Domain\AggregateRoot;
+use SeedWork\Domain\DomainEvent;
 use Tests\Fixtures\BankAccount\Domain\Entities\BankAccountId;
 use Tests\Fixtures\BankAccount\Domain\Entities\Transaction;
 use Tests\Fixtures\BankAccount\Domain\Events\MoneyDeposited;

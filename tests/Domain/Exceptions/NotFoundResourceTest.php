@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\Domain\Exceptions;
 
 use PHPUnit\Framework\TestCase;
-use Seedwork\Domain\EntityId;
-use Seedwork\Domain\Exceptions\DomainException;
-use Seedwork\Domain\Exceptions\NotFoundResource;
+use SeedWork\Domain\EntityId;
+use SeedWork\Domain\Exceptions\DomainException;
+use SeedWork\Domain\Exceptions\NotFoundResource;
 use Tests\Fixtures\BankAccount\Domain\Entities\BankAccountId;
 
 final class NotFoundResourceTest extends TestCase

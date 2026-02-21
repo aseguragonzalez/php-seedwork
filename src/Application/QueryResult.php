@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Application;
+namespace SeedWork\Application;
 
 /**
  * Immutable DTO returned by {@see QueryHandler}s; used at the application/port

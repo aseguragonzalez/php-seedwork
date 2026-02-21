@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures\BankAccount\Domain;
 
-use Seedwork\Domain\AggregateObtainer;
+use SeedWork\Domain\AggregateObtainer;
 use Tests\Fixtures\BankAccount\Domain\Entities\BankAccount;
 use Tests\Fixtures\BankAccount\Domain\Repositories\BankAccountRepository;
 

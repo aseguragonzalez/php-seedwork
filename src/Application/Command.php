@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Application;
+namespace SeedWork\Application;
 
 /**
  * CQRS write-side request: immutable DTO carrying an intent (e.g. "deposit money").

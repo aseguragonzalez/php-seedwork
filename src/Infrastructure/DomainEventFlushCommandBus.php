@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Infrastructure;
+namespace SeedWork\Infrastructure;
 
-use Seedwork\Application\Command;
-use Seedwork\Application\CommandBus;
+use SeedWork\Application\Command;
+use SeedWork\Application\CommandBus;
 
 /**
  * CommandBus decorator that flushes the DeferredDomainEventBus after each

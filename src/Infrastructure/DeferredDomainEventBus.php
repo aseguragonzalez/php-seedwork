@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Infrastructure;
+namespace SeedWork\Infrastructure;
 
 use Psr\Container\ContainerInterface;
-use Seedwork\Application\DomainEventBus;
-use Seedwork\Application\DomainEventHandler;
-use Seedwork\Domain\DomainEvent;
+use SeedWork\Application\DomainEventBus;
+use SeedWork\Application\DomainEventHandler;
+use SeedWork\Domain\DomainEvent;
 
 /**
  * PSR-11-based implementation of DomainEventBus that buffers events and

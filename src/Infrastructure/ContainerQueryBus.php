@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Infrastructure;
+namespace SeedWork\Infrastructure;
 
 use Psr\Container\ContainerInterface;
-use Seedwork\Application\Query;
-use Seedwork\Application\QueryBus;
-use Seedwork\Application\QueryHandler;
-use Seedwork\Application\QueryResult;
+use SeedWork\Application\Query;
+use SeedWork\Application\QueryBus;
+use SeedWork\Application\QueryHandler;
+use SeedWork\Application\QueryResult;
 
 /**
  * PSR-11-based implementation of QueryBus that resolves query handlers by query

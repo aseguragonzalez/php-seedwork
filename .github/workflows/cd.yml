@@ -1,4 +1,4 @@
-name: Seedwork Release
+name: SeedWork Release
 
 on:
   push:
@@ -35,7 +35,7 @@ jobs:
       with:
         php-version: 8.4
 
-    - name: Install Seedwork dependencies
+    - name: Install SeedWork dependencies
       if: steps.check.outputs.tag_exists != 'true'
       run: composer install --no-progress
 

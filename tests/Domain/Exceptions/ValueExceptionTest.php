@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Tests\Domain\Exceptions;
 
 use PHPUnit\Framework\TestCase;
-use Seedwork\Domain\Exceptions\DomainException;
-use Seedwork\Domain\Exceptions\ValueException;
+use SeedWork\Domain\Exceptions\DomainException;
+use SeedWork\Domain\Exceptions\ValueException;
 
 final class ValueExceptionTest extends TestCase
 {
