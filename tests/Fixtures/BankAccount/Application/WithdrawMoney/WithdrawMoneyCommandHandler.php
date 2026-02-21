@@ -6,6 +6,7 @@ namespace Tests\Fixtures\BankAccount\Application\WithdrawMoney;
 
 use Seedwork\Application\Command;
 use Seedwork\Application\DomainEventBus;
+use Tests\Fixtures\BankAccount\Domain\BankAccountObtainer;
 use Tests\Fixtures\BankAccount\Domain\Repositories\BankAccountRepository;
 
 /**
@@ -14,6 +15,7 @@ use Tests\Fixtures\BankAccount\Domain\Repositories\BankAccountRepository;
 final readonly class WithdrawMoneyCommandHandler implements WithdrawMoney
 {
     public function __construct(
+        private BankAccountObtainer $obtainer,
         private BankAccountRepository $repository,
         private DomainEventBus $domainEventBus
     ) {
@@ -24,11 +26,7 @@ final readonly class WithdrawMoneyCommandHandler implements WithdrawMoney
      */
     public function handle(Command $command): void
     {
-        $account = $this->repository->findBy($command->accountId);
-        if ($account === null) {
-            throw new \RuntimeException('BankAccount not found');
-        }
-        $account = $account->withdraw($command->amount);
+        $account = $this->obtainer->obtain($command->accountId)->withdraw($command->amount);
 
         $this->repository->save($account);
 

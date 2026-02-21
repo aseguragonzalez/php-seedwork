@@ -6,6 +6,7 @@ namespace Tests\Fixtures\BankAccount\Application\TransferMoney;
 
 use Seedwork\Application\Command;
 use Seedwork\Application\DomainEventBus;
+use Tests\Fixtures\BankAccount\Domain\BankAccountObtainer;
 use Tests\Fixtures\BankAccount\Domain\Repositories\BankAccountRepository;
 
 /**
@@ -14,6 +15,7 @@ use Tests\Fixtures\BankAccount\Domain\Repositories\BankAccountRepository;
 final readonly class TransferMoneyCommandHandler implements TransferMoney
 {
     public function __construct(
+        private BankAccountObtainer $obtainer,
         private BankAccountRepository $repository,
         private DomainEventBus $domainEventBus
     ) {
@@ -24,14 +26,12 @@ final readonly class TransferMoneyCommandHandler implements TransferMoney
      */
     public function handle(Command $command): void
     {
-        $fromAccount = $this->repository->findBy($command->fromAccountId);
-        $toAccount = $this->repository->findBy($command->toAccountId);
-        if ($fromAccount === null || $toAccount === null) {
-            throw new \RuntimeException('BankAccount not found');
-        }
-
-        $fromAccount = $fromAccount->transferOut($command->amount, $command->toAccountId);
-        $toAccount = $toAccount->transferIn($command->amount, $command->fromAccountId);
+        $fromAccount = $this->obtainer
+            ->obtain($command->fromAccountId)
+            ->transferOut($command->amount, $command->toAccountId);
+        $toAccount = $this->obtainer
+            ->obtain($command->toAccountId)
+            ->transferIn($command->amount, $command->fromAccountId);
 
         $this->repository->save($fromAccount);
         $this->repository->save($toAccount);

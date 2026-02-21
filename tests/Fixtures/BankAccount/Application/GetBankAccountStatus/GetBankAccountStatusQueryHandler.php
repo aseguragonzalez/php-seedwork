@@ -6,9 +6,9 @@ namespace Tests\Fixtures\BankAccount\Application\GetBankAccountStatus;
 
 use Seedwork\Application\Query;
 use Seedwork\Application\QueryResult;
+use Tests\Fixtures\BankAccount\Domain\BankAccountObtainer;
 use Tests\Fixtures\BankAccount\Domain\Entities\BankAccount;
 use Tests\Fixtures\BankAccount\Domain\Entities\Transaction;
-use Tests\Fixtures\BankAccount\Domain\Repositories\BankAccountRepository;
 
 /**
  * Handler for the GetBankAccountStatus query.
@@ -16,7 +16,7 @@ use Tests\Fixtures\BankAccount\Domain\Repositories\BankAccountRepository;
 final readonly class GetBankAccountStatusQueryHandler implements GetBankAccountStatus
 {
     public function __construct(
-        private BankAccountRepository $repository
+        private BankAccountObtainer $obtainer
     ) {
     }
 
@@ -26,11 +26,8 @@ final readonly class GetBankAccountStatusQueryHandler implements GetBankAccountS
      */
     public function handle(Query $query): QueryResult
     {
-        /** @var BankAccount|null $account */
-        $account = $this->repository->findBy($query->accountId);
-        if ($account === null) {
-            throw new \RuntimeException('BankAccount not found');
-        }
+        /** @var BankAccount $account */
+        $account = $this->obtainer->obtain($query->accountId);
 
         $transactions = array_map(
             fn (Transaction $t) => new TransactionDto(
