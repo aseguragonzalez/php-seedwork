@@ -10,7 +10,6 @@ return (new Config())
     ->setParallelConfig(ParallelConfigFactory::detect()) // @TODO 4.0 no need to call this manually
     ->setRiskyAllowed(false)
     ->setRules([
-        '@auto' => true,
         '@PhpCsFixer' => true,
         'no_unused_imports' => true,
     ])
