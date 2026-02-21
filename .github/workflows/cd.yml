@@ -69,3 +69,33 @@ jobs:
         git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
         git tag -a "seedwork-v${{ steps.check.outputs.version }}" -m "Release seedwork v${{ steps.check.outputs.version }}"
         git push origin "seedwork-v${{ steps.check.outputs.version }}"
+
+    - name: Archive dist artifacts
+      if: steps.check.outputs.tag_exists != 'true'
+      run: |
+        zip -r seedwork-dist.zip dist
+
+    - name: Create GitHub Release
+      if: steps.check.outputs.tag_exists != 'true'
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: seedwork-v${{ steps.check.outputs.version }}
+        release_name: SeedWork v${{ steps.check.outputs.version }}
+        body: |
+          Release seedwork v${{ steps.check.outputs.version }}
+        draft: false
+        prerelease: false
+
+    - name: Upload release asset
+      if: steps.check.outputs.tag_exists != 'true'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: seedwork-dist.zip
+        asset_name: seedwork-dist.zip
+        asset_content_type: application/zip
