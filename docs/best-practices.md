@@ -86,7 +86,7 @@ This guide explains how to use the SeedWork package effectively in your project.
 ## Summary
 
 | Area | Practice |
-|------|----------|
+| --- | --- |
 | Aggregates | Small, reference others by id, enforce invariants, return new instance + events |
 | Commands | Thin handlers; obtain → domain → save → publish events; stack Transaction → Flush → Container |
 | Events | Record on meaningful change; deferred flush after command; one concern per handler; idempotent when async |

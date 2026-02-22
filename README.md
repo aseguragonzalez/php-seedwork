@@ -1,6 +1,6 @@
 # PHP SeedWork
 
-DDD and Hexagonal Architecture building blocks (aggregates, entities, value
+DDD and Hexagonal (Clean) Architecture building blocks (aggregates, entities, value
 objects, command/query handlers, etc).
 
 ## Goal
@@ -17,66 +17,17 @@ See the [docs](docs/) for architecture and usage details.
 
 ## Architecture role
 
-SeedWork sits between project conventions and application/domain code:
+SeedWork sits between project conventions and application/domain code.
 
-```mermaid
-flowchart TB
-    subgraph conventions [Project conventions]
-        CursorRules[.cursorrules]
-    end
-
-    subgraph SeedWork [SeedWork]
-        AR[AggregateRoot]
-        E[Entity]
-        VO[ValueObject]
-        DE[DomainEvent]
-        R[Repository]
-        CH[CommandHandler]
-        QH[QueryHandler]
-        DEB[DomainEventBus]
-    end
-
-    subgraph domain [Domain layer]
-        Restaurant[Restaurant aggregate]
-        DiningArea[DiningArea entity]
-        Settings[Settings value object]
-        RestaurantCreated[RestaurantCreated event]
-        RestaurantRepo[RestaurantRepository interface]
-    end
-
-    subgraph application [Application layer]
-        CreateNewRestaurant[CreateNewRestaurant use case]
-        GetRestaurantById[GetRestaurantById use case]
-    end
-
-    subgraph infrastructure [Infrastructure layer]
-        SqlRestaurantRepo[SqlRestaurantRepository]
-        DeferredBus[DeferredDomainEventBus]
-        Middleware[DomainEventsMiddleware]
-    end
-
-    CursorRules --> SeedWork
-    AR --> Restaurant
-    E --> DiningArea
-    VO --> Settings
-    DE --> RestaurantCreated
-    R --> RestaurantRepo
-    CH --> CreateNewRestaurant
-    QH --> GetRestaurantById
-    DEB --> DeferredBus
-    RestaurantRepo --> SqlRestaurantRepo
-    CreateNewRestaurant --> SqlRestaurantRepo
-    GetRestaurantById --> SqlRestaurantRepo
-    DeferredBus --> Middleware
-```
+### Layers
 
 - **Domain layer:** Extends SeedWork domain bases (`AggregateRoot`, `Entity`,
   `ValueObject`), uses `EntityId`, raises `DomainEvent` and `DomainException`/
-  `ValueException`, and defines repository interfaces extending `Repository<T>`.
-- **Application layer:** Use case interfaces extend `CommandHandler<TCommand>`
-  or `QueryHandler<TQuery, TResult>` and implement `handle()`. Handlers
+  `ValueException`, and defines repository interfaces extending `Repository`.
+- **Application layer:** Use case interfaces extend `CommandHandler`
+  or `QueryHandler` and implement `handle()`. Handlers
   implement those interfaces and depend on domain repository interfaces.
-- **Infrastructure layer:** Implements `Repository<T>` and optionally
+- **Infrastructure layer:** Implements `Repository` and optionally
   `DomainEventBus` (e.g. `DeferredDomainEventBus`). Controllers dispatch to use
   cases; middleware or similar calls `DomainEventBus::publish()` after handling
   a request.
@@ -85,34 +36,17 @@ flowchart TB
 
 - PHP 8.4 or later
 - Composer 2.x
+- Docker and Dev Container for development
 
 ## Installation
 
-From [Packagist](https://packagist.org) (when published):
+Install the package with Composer:
 
 ```bash
-composer require aseguragonzalez/seedwork
+composer require aseguragonzalez/php-seedwork
 ```
 
-From this repository (or from a monorepo, use the path to the package, e.g.
-`./packages/seedwork`):
-
-Add to your root `composer.json`:
-
-```json
-{
-    "repositories": [
-        { "type": "path", "url": "." }
-    ],
-    "require": {
-        "aseguragonzalez/seedwork": "@dev"
-    }
-}
-```
-
-Then run `composer update aseguragonzalez/seedwork`.
-
-## Getting started
+## How to use
 
 After installation, the library is available under the `SeedWork\` namespace.
 
@@ -123,9 +57,9 @@ After installation, the library is available under the `SeedWork\` namespace.
 - **[Best practices](docs/best-practices.md)** — How to use the package in your
   project.
 - **[tests/Fixtures/BankAccount/](tests/Fixtures/BankAccount/)** — Full
-  working example (domain, application, infrastructure).
+  working example about how to use the package.
 
-Run `make test` from the package directory to verify the setup.
+Source and issue tracker: [php-seedwork](https://github.com/aseguragonzalez/php-seedwork).
 
 ## Built with
 
@@ -136,27 +70,9 @@ Run `make test` from the package directory to verify the setup.
 - **PHP-CS-Fixer** ^3.93 for code style
 - **PHP_CodeSniffer** (PSR-12) for linting
 
-## Documentation
-
-Documentation lives in the [docs/](docs/) directory:
-
-- [docs/README.md](docs/README.md) — Index and quick links.
-- [Component reference](docs/component-reference.md) — Every SeedWork component.
-- [Coding standards](docs/coding-standards.md) — Conventions and do/don't notes.
-- [Best practices](docs/best-practices.md) — Usage guide.
-- [Examples](docs/examples/) — Copilot instructions and Cursor rules for
-  consumer projects.
-
-Source and issue tracker: [resbooking-seedwork](https://github.com/aseguragonzalez/resbooking-seedwork).
-
 ## Development
 
-From the package directory:
-
-```bash
-make install
-make all
-```
+From the root directory of the project (where the `Makefile` is located):
 
 - `make install` — Install pre-commit hooks and Composer dependencies.
 - `make all` — Run format-check, lint, static analysis, and tests.
@@ -173,11 +89,30 @@ make all
 1. Edit `VERSION` in this directory with the new semantic version (e.g.
    `0.1.0`, `0.2.0-alpha`).
 2. Commit and push to `main`, or merge a pull request.
-3. The CD workflow runs on push to `main`. If the tag `seedwork-v{VERSION}` does
-   not exist, it runs checks, builds the package, and creates a GitHub Release
-   with the zip artifact and tag `seedwork-v{VERSION}`.
+3. The CD workflow runs on push to `main`. If the tag `php-seedwork-v{VERSION}`
+   does not exist, it runs the CI workflow, which runs checks, builds the package,
+   and creates a GitHub Release with the zip artifact and tag `php-seedwork-v{VERSION}`.
 4. No manual `git tag` or `git push --tags` is required.
+
+## References
+
+This package draws on the following literature and on the experience of building
+solid, scalable, and maintainable systems in different stacks (PHP, C#, Python,
+TypeScript).
+
+- Eric Evans, *Domain-Driven Design: Tackling Complexity in the Heart
+  of Software* [1]
+- Vaughn Vernon, *Implementing Domain-Driven Design* [2]
+- Robert C. Martin, *Clean Architecture: A Craftsman's Guide to Software Structure and Design* [3]
+- .NET Microservices: Architecture for Containerized .NET Applications [4]
+- Architecture Patterns with Python by Harry Percival [5]
 
 ## License
 
 [MIT License](LICENSE). Copyright (c) 2026 Alfonso Segura.
+
+[1]: https://www.amazon.es/Domain-Driven-Design-Tackling-Complexity-Software/dp/0321125215
+[2]: https://www.amazon.es/Implementing-Domain-Driven-Design-Vaughn-Vernon/dp/0321834577
+[3]: https://www.amazon.es/Clean-Architecture-Craftsmans-Software-Structure/dp/0134494164
+[4]: https://learn.microsoft.com/en-us/dotnet/architecture/microservices/
+[5]: https://www.oreilly.com/library/view/architecture-patterns-with/9781492052197/
