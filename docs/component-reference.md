@@ -196,9 +196,10 @@ final readonly class BankAccountController
 }
 ```
 
-The controller depends only on the application ports (`CommandBus`, `QueryBus`)
-and on the Command/Query/Result DTOs; it does not depend on repositories, the
-event bus, or infrastructure.
+The controller depends only on the application ports (`CommandBus`, `QueryBus`),
+the Command/Query/Result DTOs, and simple domain types used to construct those
+messages; it does not depend on repositories, the domain event bus, unit of work,
+or other infrastructure implementations.
 
 ---
 
