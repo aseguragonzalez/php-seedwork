@@ -3,9 +3,6 @@
 This package provides DDD and Hexagonal (Clean) Architecture building blocks for
 PHP applications.
 
-Documentation follows an 80-character line length (enforced by markdownlint
-MD013; see root `.markdownlint.json`).
-
 ## Contents
 
 - [Component reference](component-reference.md) — Every interface, base class, and

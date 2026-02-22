@@ -5,11 +5,25 @@ Infrastructure).
 
 ## Domain layer
 
+### AggregateRoot (`SeedWork\Domain\AggregateRoot`)
+
+- **Role:** Root of an aggregate; single entry point for changes; records domain
+  events.
+- **Usage:** Extend with your aggregate (e.g. `BankAccount`). Constructor:
+  `EntityId $id`, optional `array $domainEvents`. Implement `validate()`. State
+  changes return a new instance and append events; do not mutate. Provide a static
+  factory method to create a new instance (e.g. `create()` and `build()`). The
+  `validate()` method should be implemented to enforce the aggregate invariants.
+- **Key methods:** `equals(AggregateRoot $other): bool`, `collectEvents(): array`
+  (returns copies of recorded events).
+
 ### Entity (`SeedWork\Domain\Entity`)
 
 - **Role:** Base for DDD entities. Identity over attributes; equality by ID.
 - **Usage:** Extend per entity type. Constructor receives `EntityId $id`; call
-  `parent::__construct($id)` and implement `validate()`.
+  `parent::__construct($id)` and implement `validate()`. Provide a static
+  factory method to create a new instance (e.g. `create()` and `build()`). The
+  `validate()` method should be implemented to enforce the entity invariants.
 - **Key methods:** `equals(Entity $other): bool` (by id), `validate(): void`
   (override).
 
@@ -26,18 +40,9 @@ Infrastructure).
 - **Role:** Immutable object defined by attributes; equality by value.
 - **Usage:** Extend; keep readonly and immutable. Implement
   `equals(ValueObject $other): bool` and `validate(): void`. Call
-  `parent::__construct()` from subclass constructor.
+  `parent::__construct()` from subclass constructor. The `validate()` method
+  should be implemented to enforce the value object invariants.
 - **Key methods:** `equals()`, `validate()`.
-
-### AggregateRoot (`SeedWork\Domain\AggregateRoot`)
-
-- **Role:** Root of an aggregate; single entry point for changes; records domain
-  events.
-- **Usage:** Extend with your aggregate (e.g. `BankAccount`). Constructor:
-  `EntityId $id`, optional `array $domainEvents`. Implement `validate()`. State
-  changes return a new instance and append events; do not mutate.
-- **Key methods:** `equals(AggregateRoot $other): bool`, `collectEvents(): array`
-  (returns copies of recorded events).
 
 ### DomainEvent (`SeedWork\Domain\DomainEvent`)
 
@@ -108,8 +113,7 @@ Infrastructure).
 
 - **Role:** Use case for a write. One handler per command.
 - **Usage:** Implement `handle(Command $command): void`. Depend on repositories,
-  obtainers, and `DomainEventBus`; keep orchestration only; persist then
-  `publish(aggregate->collectEvents())`.
+  obtainers, etc; keep orchestration only.
 
 ### Query (`SeedWork\Application\Query`)
 
