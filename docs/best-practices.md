@@ -11,8 +11,8 @@ This guide explains how to use the SeedWork package effectively in your project.
   operations are coordinated in the application layer (e.g. load both, call
   behavior on each, save both).
 - **Ensure isolation between bounded contexts.** Avoid cross-context references between aggregates.
-  Use domain events (reactive) and Anti-corruption layers (ACL) components (retrieve data from the other context)
-  to isolate bounded contexts.
+  Use domain events (reactive integration) and Anti-corruption Layer (ACL) patterns
+  (for querying data from other contexts) to isolate bounded contexts.
 - **Enforce invariants in the root.** All rules that must always hold (e.g.
   balance ≥ 0, required fields) should be enforced in the aggregate root (or
   entities/value objects inside it). Reject invalid state in constructors and
