@@ -23,13 +23,16 @@ you agree to uphold our [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Development setup
 
-- **Requirements:** PHP 8.4 or later, Composer 2.x. Docker and Dev Container are
-  supported for development.
+- **Requirements:** PHP 8.4 or later, Composer 2.x, and the `pre-commit` CLI.
+  Docker and Dev Container are supported for development.
+  - Install `pre-commit` (Python tool) locally, for example:
+    - With pip (matches CI): `pip install pre-commit`
+    - Or via your OS package manager (e.g. `brew install pre-commit`, `apt install pre-commit`)
 - **Setup:**
   1. Clone the repository.
   2. Run `composer install`.
-  3. Run `make install` to install pre-commit hooks and ensure dependencies
-     are ready.
+  3. Run `make install` to install Git pre-commit hooks (using `pre-commit`) and
+     ensure dependencies are ready.
 
 ## Running checks
 
