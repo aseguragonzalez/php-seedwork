@@ -7,6 +7,8 @@ alwaysApply: false
 # Testing
 
 - **Framework:** PHPUnit ^12.5. Tests under [tests/](../../tests/) (e.g. `Tests\Domain\*`, `Tests\Infrastructure\*`).
-- **Mocks (`createMock`):** Use when you need to **verify interactions** (e.g. handler received command, event bus published events). Example: `$handler->expects($this->once())->method('handle')->with($command);`
+- **Mocks (`createMock`):** Use when you need to **verify interactions** (e.g. handler received command, event bus
+ published events). Example: `$handler->expects($this->once())->method('handle')->with($command);`
 - **Stubs (`createStub`):** Use when you only need a **stand-in that returns a value** (no assert on calls). Example: `$handler->method('handle')->willReturn($stubResult);`
-- **Domain / Infrastructure / application-layer tests:** Test public API using **real** implementation from the fixture. **Do not mock domain objects.**
+- **Domain / Infrastructure / application-layer tests:** Test public API using **real** implementation from the fixture
+ **Do not mock domain objects.**
