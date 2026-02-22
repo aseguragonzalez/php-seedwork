@@ -63,8 +63,8 @@ report security vulnerabilities as Code of Conduct matters.
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to the project maintainers at **[a.segura.gonzalez@gmail.com](mailto:a.segura.gonzalez@gmail.com)**. All
-complaints will be reviewed and investigated promptly and fairly.
+reported to the project maintainers at **[a.segura.gonzalez@gmail.com](mailto:a.segura.gonzalez@gmail.com)**.
+All complaints will be reviewed and investigated promptly and fairly.
 
 All project maintainers are obligated to respect the privacy and security of
 the reporter of any incident.
