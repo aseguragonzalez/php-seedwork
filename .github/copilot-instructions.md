@@ -50,7 +50,7 @@ You should update the examples and fixtures each time you add or change a patter
     (no need to assert on calls). Example: `$handler = $this->createStub(QueryHandler::class);` with
     `$handler->method('handle')->willReturn($stubResult);`.
 - **Domain / Infrastructure / application-layer tests:** Test public API of the components using real
- implementation from the fixture. Do not mock domain objects.
+  implementation from the fixture. Do not mock domain objects.
 
 ## Tooling
 
