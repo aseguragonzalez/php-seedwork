@@ -1,5 +1,8 @@
 name: PHP SeedWork CI
 
+permissions:
+  contents: read
+
 on:
   pull_request:
 
