@@ -102,8 +102,8 @@ TypeScript).
 
 - Eric Evans, *Domain-Driven Design: Tackling Complexity in the Heart
   of Software* [1]
-- Vaughn Vernon, *Implementing Domain-Driven Design* [2].
-- Robert C. Martin, *Clean Architecture: A Craftsman's Guide to Software Structure and Design* [3].
+- Vaughn Vernon, *Implementing Domain-Driven Design* [2]
+- Robert C. Martin, *Clean Architecture: A Craftsman's Guide to Software Structure and Design* [3]
 - .NET Microservices: Architecture for Containerized .NET Applications [4]
 - Architecture Patterns with Python by Harry Percival [5]
 
