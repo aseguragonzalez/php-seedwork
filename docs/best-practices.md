@@ -45,7 +45,7 @@ This guide explains how to use the SeedWork package effectively in your project.
   `MoneyDeposited::create(...)`) and pass through existing events when building
   the new aggregate instance.
 - **Use a deferred event bus and flush after the command.** Buffer events during
-  command handling and call `flush()` only after the command succeed.
+  command handling and call `flush()` only after the command succeeds.
   This avoids publishing events for rolled-back work and keeps
   ordering predictable.
 - **When to use the deferred event bus.** The deferred event bus is well-suited
