@@ -1,6 +1,6 @@
 ---
 name: Bug report
-description: Report a bug or unexpected behavior in the package
+about: Report a bug or unexpected behavior in the package
 title: "[Bug]: "
 labels: ["bug"]
 assignees: []
