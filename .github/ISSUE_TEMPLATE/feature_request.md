@@ -1,6 +1,6 @@
 ---
 name: Feature request
-description: Suggest an improvement or ask a question about the package
+about: Suggest an improvement or ask a question about the package
 title: "[Feature]: "
 labels: ["enhancement"]
 assignees: []
