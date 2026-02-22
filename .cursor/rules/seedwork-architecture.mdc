@@ -6,8 +6,11 @@ alwaysApply: false
 
 # Architecture
 
-- **Domain** (`SeedWork\Domain\*`): Entity, ValueObject, AggregateRoot, DomainEvent, EntityId, EventId, Repository, UnitOfWork, AggregateObtainer, DomainException / ValueException / NotFoundResource.
-- **Application** (`SeedWork\Application\*`): Command, CommandBus, CommandHandler, Query, QueryBus, QueryHandler, QueryResult, DomainEventBus, DomainEventHandler.
-- **Infrastructure** (`SeedWork\Infrastructure\*`): ContainerCommandBus, ContainerQueryBus, TransactionalCommandBus, DeferredDomainEventBus, DomainEventFlushCommandBus.
+- **Domain** (`SeedWork\Domain\*`): Entity, ValueObject, AggregateRoot, DomainEvent, EntityId, EventId, Repository,
+ UnitOfWork, AggregateObtainer, DomainException / ValueException / NotFoundResource.
+- **Application** (`SeedWork\Application\*`): Command, CommandBus, CommandHandler, Query, QueryBus, QueryHandler,
+QueryResult, DomainEventBus, DomainEventHandler.
+- **Infrastructure** (`SeedWork\Infrastructure\*`): ContainerCommandBus, ContainerQueryBus, TransactionalCommandBus,
+ DeferredDomainEventBus, DomainEventFlushCommandBus.
 
 See [docs/component-reference.md](../../docs/component-reference.md) for every interface and base class.

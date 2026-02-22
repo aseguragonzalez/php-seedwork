@@ -72,6 +72,9 @@ Source and issue tracker: [php-seedwork](https://github.com/aseguragonzalez/php-
 
 ## Development
 
+If you plan to contribute, please read [CONTRIBUTING.md](CONTRIBUTING.md) and
+[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+
 From the root directory of the project (where the `Makefile` is located):
 
 - `make install` — Install pre-commit hooks and Composer dependencies.
