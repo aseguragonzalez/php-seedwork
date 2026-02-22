@@ -189,7 +189,7 @@ them as the default for new code and when refactoring.
 - **Don't:**
   - Use command-like names for events
   - Use vague names like `ProcessData` or `HandleRequest` for commands
-  - Use generic names like `Service`, `Manager`, `Handler`, etc.
+  - Use generic names with suffixes like `Service`, `Manager`, etc.
 
 ### Files and structure
 
