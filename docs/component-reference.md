@@ -184,7 +184,7 @@ final readonly class BankAccountController
             new Money((int) $amount, Currency::from($currency))
         );
         $this->commandBus->dispatch($command);
-        // Return 204 / redirect / or created resource id per your API style.
+        // Framework integration code would handle the HTTP response (e.g., 204, redirect, or resource ID).
     }
 
     public function getStatus(string $accountId): BankAccountStatusResult
