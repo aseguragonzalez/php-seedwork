@@ -1,0 +1,11 @@
+---
+description: php-seedwork package context; domain stays pure; see README and docs
+alwaysApply: true
+---
+
+# php-seedwork project
+
+This repository is the **php-seedwork** package: DDD and Hexagonal (Clean) Architecture building blocks for PHP (aggregates, entities, value objects, command/query handlers, event bus, etc.). Goal: scalable, maintainable software based on DDD and Clean Architecture.
+
+- **Domain layer stays pure** — no framework or infrastructure in domain.
+- **Source of truth:** [README](../../README.md) and [docs/](../../docs/) for the full picture.
