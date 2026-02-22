@@ -10,6 +10,9 @@ This guide explains how to use the SeedWork package effectively in your project.
   other aggregate roots; use their `EntityId` instead. Cross-aggregate
   operations are coordinated in the application layer (e.g. load both, call
   behavior on each, save both).
+- **Ensure isolation between bounded contexts.** Avoid cross-context references between aggregates.
+  Use domain events (reactive integration) and Anti-corruption Layer (ACL) patterns
+  (for querying data from other contexts) to isolate bounded contexts.
 - **Enforce invariants in the root.** All rules that must always hold (e.g.
   balance ≥ 0, required fields) should be enforced in the aggregate root (or
   entities/value objects inside it). Reject invalid state in constructors and
@@ -23,7 +26,7 @@ This guide explains how to use the SeedWork package effectively in your project.
 
 - **Commands carry intent and data only.** The handler is responsible for
   loading the aggregate (e.g. via `AggregateObtainer`), calling the
-  appropriate domain method(s), persisting, and publishing collected events.
+  appropriate domain method(s), persisting, etc.
   Keep handlers thin: orchestration only, no business logic.
 - **Use AggregateObtainer in handlers.** It gives you "load by id or throw"
   with a consistent `NotFoundResource` message. Avoid repeating `findBy` + null
@@ -42,9 +45,21 @@ This guide explains how to use the SeedWork package effectively in your project.
   `MoneyDeposited::create(...)`) and pass through existing events when building
   the new aggregate instance.
 - **Use a deferred event bus and flush after the command.** Buffer events during
-  command handling and call `flush()` only after the command (and transaction)
-  succeed. This avoids publishing events for rolled-back work and keeps
+  command handling and call `flush()` only after the command succeeds.
+  This avoids publishing events for rolled-back work and keeps
   ordering predictable.
+- **When to use the deferred event bus.** The deferred event bus is well-suited
+  for **monolithic** systems where you want: **isolation between bounded
+  contexts** (events are processed after the transaction, within the same
+  process); **transactionality** (events are only flushed after a successful
+  commit—on rollback, nothing is published); and **no dependency on message
+  brokers** (no RabbitMQ, Kafka, etc.; everything runs in-process after the
+  transaction). Prefer it for **API or MVC applications** where the **incoming
+  request is the transaction boundary** and you do **not** need to synchronize
+  with multiple external systems (e.g. a single database for the write, no
+  outbound messaging in the same request). For cross-service or async
+  integration, a message broker and a different bus implementation are more
+  appropriate. Keep using the stacking order: Transactional → Flush → Container.
 - **Design event handlers for a single concern.** One handler per event type and
   concern (e.g. update read model, send notification). If the bus can redeliver
   (e.g. async), make handlers idempotent (e.g. by event id) where possible.
@@ -58,26 +73,35 @@ This guide explains how to use the SeedWork package effectively in your project.
 - **Keep query handlers read-only.** Do not dispatch commands or change state
   inside a query handler. Queries are for reading; use commands for writes.
 
+## Entry points (controllers, API)
+
+- **Keep controllers thin.** Map the incoming request to a Command or Query,
+  dispatch via `CommandBus` or `QueryBus`, then map the `QueryResult` or
+  command outcome to the HTTP/response. Do not put domain logic or
+  infrastructure (repositories, event bus, etc.) in the controller; depend
+  only on the bus interfaces.
+- **See the [component reference](component-reference.md#using-the-application-ports-from-an-entry-point)**
+  for a concrete controller example using CommandBus and QueryBus.
+
 ## Dependency direction
 
 - **Domain does not depend on Application or Infrastructure.** The domain
   layer only depends on SeedWork domain types (and PHP built-ins). No
   framework, no database, no HTTP.
 - **Application depends on Domain and application ports.** Use cases (handlers)
-  depend on repository interfaces, event bus interface, and domain types. They
+  depend on repository interfaces, event bus interface, domain ports (services), and domain types. They
   do not depend on concrete infrastructure.
 - **Infrastructure implements interfaces and depends inward.** Implement
-  `Repository`, `UnitOfWork`, and optionally `DomainEventBus` in
-  infrastructure. Depend on domain and application interfaces, not the other
-  way around.
+  `Repository`, `UnitOfWork`, etc in infrastructure. Depend on domain and
+  application interfaces, not the other way around.
 
 ## Testing
 
 - **Domain: unit test entities, value objects, and aggregate behavior.** Test
   invariants, validation, equality, and that behavior methods return the
-  expected new state and events. Use in-memory or fake repositories when the
+  expected new state and events. Use mocks or stubs for repositories when the
   domain is used in a larger flow.
-- **Handlers: unit test with fakes.** Use in-memory repositories and a test
+- **Handlers: unit test with fakes.** Use mocks and stubs for dependencies and a test
   double for the event bus to verify that the handler loads the right
   aggregate, calls the right domain method, saves, and publishes the expected
   events. Add integration tests with a real bus and persistence when you need to

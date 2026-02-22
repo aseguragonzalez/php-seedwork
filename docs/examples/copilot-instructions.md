@@ -44,6 +44,9 @@ and Hexagonal Architecture.
 - **Domain event handlers:** Implement `DomainEventHandler`; register on the
   event bus by event FQCN. One concern per handler; design for idempotency if
   the bus can redeliver.
+- **Entry points (controllers, API):** Only map request to Command/Query,
+  dispatch via `CommandBus`/`QueryBus`, and map result to response; no domain
+  or infrastructure in the entry point.
 
 ### Infrastructure
 
@@ -53,7 +56,9 @@ and Hexagonal Architecture.
   `TransactionalCommandBus` (outside) and `DomainEventFlushCommandBus` (inside),
   so the transaction wraps the command and event flush. Use the same
   `DeferredDomainEventBus` in handlers and in the flush decorator; subscribe
-  event handlers by event FQCN.
+  event handlers by event FQCN. Prefer the deferred event bus for monolithic
+  API/MVC apps when transactionality and bounded-context isolation are
+  desired and no message broker is used.
 
 ### Naming and style
 

@@ -158,6 +158,9 @@ them as the default for new code and when refactoring.
   - Wrap the command bus with `TransactionalCommandBus` (outside) and
     `DomainEventFlushCommandBus` (inside) so the transaction wraps the command and event flush
   - Register handlers with the same `DeferredDomainEventBus` that command handlers use
+  - Prefer `DeferredDomainEventBus` in monoliths when you need transactionality
+    and bounded-context isolation and are not using a message broker (see
+    [best-practices](best-practices.md))
 - **Don't:**
   - Flush the event bus outside the transaction when events must be consistent with the write
   - Put domain or application use-case logic in infrastructure
