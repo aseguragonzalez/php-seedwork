@@ -75,6 +75,8 @@ Source and issue tracker: [php-seedwork](https://github.com/aseguragonzalez/php-
 If you plan to contribute, please read [CONTRIBUTING.md](CONTRIBUTING.md) and
 [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
 
+**Debugging:** The PHP debug port in this project is **9000** (not 9003). Configure your IDE or Xdebug client to connect to port 9000 when debugging tests or scripts.
+
 From the root directory of the project (where the `Makefile` is located):
 
 - `make install` — Install pre-commit hooks and Composer dependencies.
