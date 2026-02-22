@@ -1,6 +1,6 @@
 ---
 name: Security issue
-description: Report a security vulnerability (handled privately)
+about: Report a security vulnerability (handled privately)
 title: "[Security]: "
 labels: ["security"]
 assignees: []
