@@ -30,10 +30,7 @@ you agree to uphold our [Code of Conduct](CODE_OF_CONDUCT.md).
     - Or via your OS package manager (e.g. `brew install pre-commit`, `apt install pre-commit`)
 - **Setup:**
   1. Clone the repository.
-  2. Run `composer install`.
-  3. Run `make install` to install Git pre-commit hooks (using `pre-commit`) and
-     ensure dependencies are ready.
-
+  2. Run `make install` to install Composer dependencies and pre-commit hooks.
 ## Running checks
 
 Before pushing, run the full check suite from the repository root:
