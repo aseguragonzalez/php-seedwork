@@ -36,5 +36,5 @@
   },
   "phpunit.php": "/usr/local/bin/php",
   "phpunit.phpunit": "${workspaceFolder}/vendor/bin/phpunit",
-  "phpunit.xdebugPort": 9003
+  "phpunit.xdebugPort": 9000
 }
