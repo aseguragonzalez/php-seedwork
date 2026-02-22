@@ -1,0 +1,12 @@
+---
+description: make targets for test, format, lint, static analysis
+alwaysApply: true
+---
+
+# Tooling
+
+- `make test` — Run PHPUnit (coverage in `coverage/`).
+- `make format` / `make format-check` — PHP-CS-Fixer (PSR-12).
+- `make lint` — PHP_CodeSniffer (PSR-12).
+- `make static-analyse` — PHPStan (level max).
+- `make all` — format-check, lint, static analysis, and tests.
