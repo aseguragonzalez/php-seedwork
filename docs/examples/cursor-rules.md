@@ -39,11 +39,12 @@ This project uses `aseguragonzalez/seedwork` for domain and application building
 - **Commands:** One class per use case extending `SeedWork\Application\Command`; one `CommandHandler`. Handler: obtain aggregate → call domain method → save → publish(collectEvents()). Prefer primitive/simple DTO attributes in Command.
 - **Queries:** One class per use case extending `SeedWork\Application\Query`; one `QueryHandler` returning `QueryResult` subclass; read-only; no command dispatch or state change.
 - **Port boundary:** Commands/Queries use primitive or simple DTO attributes; handlers convert to domain types.
+- **Entry points (controllers, API):** Only map request → Command/Query, dispatch via `CommandBus`/`QueryBus`, map result to response; no domain or infrastructure in the entry point.
 
 ## Infrastructure
 
 - Implement `Repository`, `UnitOfWork`; use `ContainerCommandBus`/`ContainerQueryBus` with PSR-11; register command/query FQCN to handler service id.
-- Stack: `TransactionalCommandBus(DomainEventFlushCommandBus(ContainerCommandBus), UnitOfWork)`. Same `DeferredDomainEventBus` in handlers and in flush decorator.
+- Stack: `TransactionalCommandBus(DomainEventFlushCommandBus(ContainerCommandBus), UnitOfWork)`. Same `DeferredDomainEventBus` in handlers and in flush decorator. Prefer deferred event bus for monolithic API/MVC apps when transactionality and bounded-context isolation are desired and no message broker is used.
 - Event handlers implement `DomainEventHandler`; subscribe by event FQCN on `DomainEventBus`.
 
 ## Conventions
@@ -100,11 +101,12 @@ This project uses `aseguragonzalez/seedwork` for domain and application building
 - **Commands:** One class per use case extending `SeedWork\Application\Command`; one `CommandHandler`. Handler: obtain aggregate → call domain method → save → publish(collectEvents()). Prefer primitive/simple DTO attributes in Command.
 - **Queries:** One class per use case extending `SeedWork\Application\Query`; one `QueryHandler` returning `QueryResult` subclass; read-only; no command dispatch or state change.
 - **Port boundary:** Commands/Queries use primitive or simple DTO attributes; handlers convert to domain types.
+- **Entry points (controllers, API):** Only map request → Command/Query, dispatch via `CommandBus`/`QueryBus`, map result to response; no domain or infrastructure in the entry point.
 
 ## Infrastructure
 
 - Implement `Repository`, `UnitOfWork`; use `ContainerCommandBus`/`ContainerQueryBus` with PSR-11; register command/query FQCN to handler service id.
-- Stack: `TransactionalCommandBus(DomainEventFlushCommandBus(ContainerCommandBus), UnitOfWork)`. Same `DeferredDomainEventBus` in handlers and in flush decorator.
+- Stack: `TransactionalCommandBus(DomainEventFlushCommandBus(ContainerCommandBus), UnitOfWork)`. Same `DeferredDomainEventBus` in handlers and in flush decorator. Prefer deferred event bus for monolithic API/MVC apps when transactionality and bounded-context isolation are desired and no message broker is used.
 - Event handlers implement `DomainEventHandler`; subscribe by event FQCN on `DomainEventBus`.
 
 ## Conventions

@@ -152,6 +152,54 @@ Infrastructure).
 - **Usage:** Implement `handle(DomainEvent $event): void`. One concern per
   handler; idempotent if bus is async.
 
+### Using the application ports from an entry point
+
+Entry points (HTTP controllers, API handlers, CLI commands) should stay thin:
+no domain or infrastructure logic; only map the incoming request to a Command
+or Query, call the bus, then map the result to the response.
+
+**Write path (command):** Build a Command from the request (e.g. IDs, amounts
+from request body or route), inject `CommandBus`, dispatch, then return
+success/redirect/ID as needed. Let the handler and transaction deal with
+persistence and events.
+
+**Read path (query):** Build a Query from the request (e.g. resource id from
+route), inject `QueryBus`, call `ask($query)`, then map the returned
+`QueryResult` (or your subclass) to JSON, view data, or response DTO.
+
+Example (framework-agnostic; names align with the BankAccount fixture):
+
+```php
+final readonly class BankAccountController
+{
+    public function __construct(
+        private CommandBus $commandBus,
+        private QueryBus $queryBus
+    ) {}
+
+    public function deposit(string $accountId, string $amount, string $currency): void
+    {
+        $command = new DepositMoneyCommand(
+            BankAccountId::fromString($accountId),
+            new Money((int) $amount, Currency::from($currency))
+        );
+        $this->commandBus->dispatch($command);
+        // Return 204 / redirect / or created resource id per your API style.
+    }
+
+    public function getStatus(string $accountId): BankAccountStatusResult
+    {
+        $query = new GetBankAccountStatusQuery(BankAccountId::fromString($accountId));
+        /** @var BankAccountStatusResult $result */
+        return $this->queryBus->ask($query);
+    }
+}
+```
+
+The controller depends only on the application ports (`CommandBus`, `QueryBus`)
+and on the Command/Query/Result DTOs; it does not depend on repositories, the
+event bus, or infrastructure.
+
 ---
 
 ## Infrastructure layer
@@ -185,7 +233,11 @@ Infrastructure).
   on `flush()`.
 - **Usage:** Same container and handlers as used by command handlers. Subscribe
   with `subscribe($eventFqcn, $handlerServiceId)`. Call `flush()` after the
-  command (e.g. via `DomainEventFlushCommandBus`).
+  command (e.g. via `DomainEventFlushCommandBus`). Recommended for monolithic
+  applications when you need transactionality and isolation between bounded
+  contexts and are not using a message broker (e.g. typical API or MVC
+  request/response). See [Best practices](best-practices.md) for when to use
+  the deferred bus.
 
 ### DomainEventFlushCommandBus (`SeedWork\Infrastructure\DomainEventFlushCommandBus`)
 
