@@ -37,7 +37,7 @@ This project uses `aseguragonzalez/seedwork` for domain and application building
 ## Application
 
 - **Commands:** One class per use case extending `SeedWork\Application\Command`; one `CommandHandler`. Handler: obtain aggregate → call domain method → save → publish(collectEvents()). Prefer primitive/simple DTO attributes in Command.
-- **Queries:** One class per use case extending `SeedWork\Application\Query`; one `QueryHandler` returning `QueryResult` subclass; read-only; no command dispatch or state change.
+- **Queries:** One class per use case extending `SeedWork\Application\Query`; one `QueryHandler` returning `QueryResult` subclass; read-only; no command dispatch or state change. Query handlers can depend on a `QueryRepository` for projection data (getById, filter); implement QueryRepository in infrastructure. Use `FilterCriteria` subclasses for `filter()` (implement `validate()` for allowed fields); keep projections as simple DTOs and map to `QueryResult` in the handler.
 - **Port boundary:** Commands/Queries use primitive or simple DTO attributes; handlers convert to domain types.
 - **Entry points (controllers, API):** Only map request → Command/Query, dispatch via `CommandBus`/`QueryBus`, map result to response; no domain or infrastructure in the entry point.
 
@@ -99,7 +99,7 @@ This project uses `aseguragonzalez/seedwork` for domain and application building
 ## Application
 
 - **Commands:** One class per use case extending `SeedWork\Application\Command`; one `CommandHandler`. Handler: obtain aggregate → call domain method → save → publish(collectEvents()). Prefer primitive/simple DTO attributes in Command.
-- **Queries:** One class per use case extending `SeedWork\Application\Query`; one `QueryHandler` returning `QueryResult` subclass; read-only; no command dispatch or state change.
+- **Queries:** One class per use case extending `SeedWork\Application\Query`; one `QueryHandler` returning `QueryResult` subclass; read-only; no command dispatch or state change. Query handlers can depend on a `QueryRepository` for projection data (getById, filter); implement QueryRepository in infrastructure. Use `FilterCriteria` subclasses for `filter()` (implement `validate()` for allowed fields); keep projections as simple DTOs and map to `QueryResult` in the handler.
 - **Port boundary:** Commands/Queries use primitive or simple DTO attributes; handlers convert to domain types.
 - **Entry points (controllers, API):** Only map request → Command/Query, dispatch via `CommandBus`/`QueryBus`, map result to response; no domain or infrastructure in the entry point.
 

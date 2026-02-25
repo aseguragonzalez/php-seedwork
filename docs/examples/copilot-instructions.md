@@ -41,6 +41,11 @@ and Hexagonal Architecture.
 - **Queries:** One query per read use case (extends
   `SeedWork\Application\Query`). One handler implementing `QueryHandler` and
   returning a `QueryResult` subclass (DTO). No side effects in query handlers.
+  Query handlers may depend on a `QueryRepository` to read projections
+  (getById, filter); implement QueryRepository in infrastructure. Use
+  `FilterCriteria` subclasses for `filter()` (implement `validate()` for allowed
+  fields); keep projections as simple DTOs and map to `QueryResult` in the
+  handler.
 - **Domain event handlers:** Implement `DomainEventHandler`; register on the
   event bus by event FQCN. One concern per handler; design for idempotency if
   the bus can redeliver.

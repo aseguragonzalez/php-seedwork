@@ -6,9 +6,11 @@ namespace Tests\Fixtures\BankAccount\Application\GetBankAccountStatus;
 
 use SeedWork\Application\Query;
 use SeedWork\Application\QueryResult;
-use Tests\Fixtures\BankAccount\Domain\BankAccountObtainer;
-use Tests\Fixtures\BankAccount\Domain\Entities\BankAccount;
-use Tests\Fixtures\BankAccount\Domain\Entities\Transaction;
+use SeedWork\Domain\Exceptions\NotFoundResource;
+use Tests\Fixtures\BankAccount\Domain\Entities\BankAccountId;
+use Tests\Fixtures\BankAccount\Domain\ValueObjects\AccountBalance;
+use Tests\Fixtures\BankAccount\Domain\ValueObjects\Currency;
+use Tests\Fixtures\BankAccount\Domain\ValueObjects\TransactionType;
 
 /**
  * Handler for the GetBankAccountStatus query.
@@ -16,7 +18,7 @@ use Tests\Fixtures\BankAccount\Domain\Entities\Transaction;
 final readonly class GetBankAccountStatusQueryHandler implements GetBankAccountStatus
 {
     public function __construct(
-        private BankAccountObtainer $obtainer
+        private BankAccountQueryRepository $queryRepository,
     ) {
     }
 
@@ -26,23 +28,27 @@ final readonly class GetBankAccountStatusQueryHandler implements GetBankAccountS
      */
     public function handle(Query $query): QueryResult
     {
-        /** @var BankAccount $account */
-        $account = $this->obtainer->obtain($query->accountId);
+        $projection = $this->queryRepository->getById($query->accountId->value);
 
+        if ($projection === null) {
+            throw new NotFoundResource('BankAccount', $query->accountId);
+        }
+
+        /** @var BankAccountProjection $projection */
         $transactions = array_map(
-            fn (Transaction $t) => new TransactionDto(
-                $t->id->value,
-                $t->type,
-                $t->amount->amount,
-                $t->amount->currency->value,
-                $t->createdAt->format(\DateTimeInterface::ATOM),
+            fn (TransactionProjection $t) => new TransactionDto(
+                $t->id,
+                TransactionType::from($t->type),
+                $t->amount,
+                $t->currency,
+                $t->createdAt,
             ),
-            $account->getTransactions()
+            $projection->transactions
         );
 
         return new BankAccountStatusResult(
-            $account->id,
-            $account->getBalance(),
+            BankAccountId::fromString($projection->id),
+            new AccountBalance($projection->balanceAmount, Currency::from($projection->currency)),
             $transactions
         );
     }

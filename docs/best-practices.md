@@ -70,6 +70,17 @@ This guide explains how to use the SeedWork package effectively in your project.
   `QueryResult` subclasses (or similar DTOs) with primitive or simple fields.
   Map from domain or from a read model (e.g. projection) to these DTOs. This
   keeps the read side stable and serializable.
+- **Use QueryRepository for the read side.** Use `getById(string $id)` for a
+  single projection and `filter(int $offset, int $limit, array $filters)` for a
+  slice. Implement the port in infrastructure (e.g. DB or in-memory for tests).
+- **For `filter()`, use FilterCriteria subclasses.** Extend
+  `SeedWork\Application\FilterCriteria` and implement `validate()` for allowed
+  fields and value shape (e.g. BETWEEN requires an array of two elements). Pass
+  an array of criteria to `filter()`; implementations interpret `FilterOperator`
+  (EQ, NEQ, GT, GTE, LT, LTE, IN, BETWEEN, LIKE).
+- **Keep projections as simple DTOs.** Use plain DTOs (e.g. `BankAccountProjection`)
+  for the read model and map them to `QueryResult` in the handler so the port
+  boundary stays stable.
 - **Keep query handlers read-only.** Do not dispatch commands or change state
   inside a query handler. Queries are for reading; use commands for writes.
 

@@ -20,8 +20,8 @@ suite:
 - **[tests/Fixtures/BankAccount/](../tests/Fixtures/BankAccount/)** — Domain
   (aggregate root, entities, value objects, events, repository interface, obtainer),
   application (commands, queries, command/query handlers, event handlers), and
-  infrastructure (in-memory repository). Use it as a reference when building your
-  own bounded context.
+  infrastructure (in-memory aggregate repository, in-memory query repository for
+  projections). Use it as a reference when building your own bounded context.
 
 ## Quick links
 
