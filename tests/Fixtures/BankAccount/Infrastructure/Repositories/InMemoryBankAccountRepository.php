@@ -46,4 +46,14 @@ final class InMemoryBankAccountRepository implements BankAccountRepository
     {
         unset($this->accounts[$id->value]);
     }
+
+    /**
+     * Returns all stored aggregates (fixture only; not on domain interface).
+     *
+     * @return array<BankAccount>
+     */
+    public function findAll(): array
+    {
+        return array_values(array_map(fn (BankAccount $a): BankAccount => clone $a, $this->accounts));
+    }
 }

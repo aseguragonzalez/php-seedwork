@@ -8,8 +8,12 @@ use PHPUnit\Framework\TestCase;
 use SeedWork\Application\QueryHandler;
 use SeedWork\Application\QueryResult;
 use SeedWork\Infrastructure\ContainerQueryBus;
+use Tests\Fixtures\BankAccount\Application\GetBankAccountStatus\GetBankAccountStatusQueryHandler;
 use Tests\Fixtures\BankAccount\Application\GetBankAccountStatus\BankAccountStatusResult;
 use Tests\Fixtures\BankAccount\Application\GetBankAccountStatus\GetBankAccountStatusQuery;
+use Tests\Fixtures\BankAccount\Infrastructure\Repositories\InMemoryBankAccountQueryRepository;
+use Tests\Fixtures\BankAccount\Infrastructure\Repositories\InMemoryBankAccountRepository;
+use Tests\Fixtures\BankAccount\Domain\Entities\BankAccount;
 use Tests\Fixtures\BankAccount\Domain\Entities\BankAccountId;
 use Tests\Fixtures\BankAccount\Domain\ValueObjects\AccountBalance;
 use Tests\Fixtures\FakeContainer;
@@ -92,5 +96,26 @@ final class ContainerQueryBusTest extends TestCase
             AccountBalance::zero(),
             []
         );
+    }
+
+    public function testGetBankAccountStatusWithQueryRepositoryReturnsResultFromProjection(): void
+    {
+        $aggregateRepository = new InMemoryBankAccountRepository();
+        $queryRepository = new InMemoryBankAccountQueryRepository($aggregateRepository);
+        $account = BankAccount::create();
+        $aggregateRepository->save($account);
+
+        $handler = new GetBankAccountStatusQueryHandler($queryRepository);
+        $container = new FakeContainer(['statusHandler' => $handler]);
+        $bus = new ContainerQueryBus($container);
+        $bus->register(GetBankAccountStatusQuery::class, 'statusHandler');
+
+        $query = new GetBankAccountStatusQuery($account->id);
+        $result = $bus->ask($query);
+
+        $this->assertInstanceOf(BankAccountStatusResult::class, $result);
+        $this->assertTrue($result->accountId->equals($account->id));
+        $this->assertSame(0, $result->balance->amount);
+        $this->assertSame([], $result->transactions);
     }
 }

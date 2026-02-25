@@ -129,6 +129,9 @@ them as the default for new code and when refactoring.
 - **Do:**
   - One query class per read use case extending `SeedWork\Application\Query`
   - One handler implementing `QueryHandler` and returning a `QueryResult` subclass
+  - Use `QueryRepository` for the read side (`getById`, `filter` with
+    `FilterCriteria`); define projection DTOs and `FilterCriteria` subclasses in
+    application; implement `QueryRepository` in infrastructure
   - Keep queries and results with primitive or simple DTO attributes when possible
   - Make query handlers read-only (no state changes, no command dispatch)
 - **Don't:**
@@ -188,6 +191,8 @@ them as the default for new code and when refactoring.
   - Events: past tense (e.g. `MoneyDeposited`, `OrderPlaced`)
   - Handlers: `XxxCommandHandler`, `XxxQueryHandler`, `XxxEventHandler`
   - Repositories: `XxxRepository`
+  - Query repositories: `XxxQueryRepository` (application port); projection DTOs:
+    e.g. `XxxProjection`
   - IDs: `XxxId` (entity), `XxxEventId` (event)
 - **Don't:**
   - Use command-like names for events
@@ -219,6 +224,7 @@ them as the default for new code and when refactoring.
 | **CommandHandler** | Obtain → domain → save → publish events | Business logic; skip event publish |
 | **Query** | One per read use case; no side effects | State changes; command dispatch |
 | **QueryHandler** | Return QueryResult DTO; read-only | Return entities; mutate state |
+| **QueryRepository / FilterCriteria** | One QueryRepository per projection type; extend FilterCriteria with `validate()` for allowed fields; implement in infra | Put read-model query methods on domain Repository; skip FilterCriteria validation |
 | **DomainEventHandler** | One concern; idempotent when async | Many concerns; assume exactly-once |
 
 These do/don't notes and the component reference together define the coding

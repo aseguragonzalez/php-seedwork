@@ -26,7 +26,8 @@ SeedWork sits between project conventions and application/domain code.
   `ValueException`, and defines repository interfaces extending `Repository`.
 - **Application layer:** Use case interfaces extend `CommandHandler`
   or `QueryHandler` and implement `handle()`. Handlers
-  implement those interfaces and depend on domain repository interfaces.
+  implement those interfaces and depend on domain repository interfaces (and
+  optionally `QueryRepository` for the read side).
 - **Infrastructure layer:** Implements `Repository` and optionally
   `DomainEventBus` (e.g. `DeferredDomainEventBus`). Controllers dispatch to use
   cases; middleware or similar calls `DomainEventBus::publish()` after handling
@@ -57,7 +58,8 @@ After installation, the library is available under the `SeedWork\` namespace.
 - **[Best practices](docs/best-practices.md)** — How to use the package in your
   project.
 - **[tests/Fixtures/BankAccount/](tests/Fixtures/BankAccount/)** — Full
-  working example about how to use the package.
+  working example (including query handlers and query repository for
+  projections) about how to use the package.
 
 Source and issue tracker: [php-seedwork](https://github.com/aseguragonzalez/php-seedwork).
 

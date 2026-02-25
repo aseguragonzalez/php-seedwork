@@ -138,6 +138,33 @@ Infrastructure).
 - **Usage:** Extend with public readonly properties; primitives or simple
   structures.
 
+### QueryRepository (`SeedWork\Application\QueryRepository`)
+
+- **Role:** Port for reading projections (read-model DTOs) from the system. No
+  business logic; retrieval only. Used by query handlers for the read side
+  (CQRS). Implementations live in infrastructure.
+- **Usage:** Extend with `@template T of object` (projection type). Implement
+  in infrastructure (e.g. DB, in-memory for tests).
+- **Methods:** `getById(string $id): ?T`, `filter(int $offset, int $limit,
+  array $filters): array<T>` (returns a slice of projections; no count/total).
+
+### FilterOperator (`SeedWork\Application\FilterOperator`)
+
+- **Role:** Enum of comparison operators for filter criteria. Cases: EQ, NEQ,
+  GT, GTE, LT, LTE, IN, BETWEEN, LIKE (backed by lowercase strings).
+- **Usage:** Use in concrete `FilterCriteria` subclasses; implementations
+  interpret the operator when applying filters.
+
+### FilterCriteria (`SeedWork\Application\FilterCriteria`)
+
+- **Role:** Abstract immutable base for one filter criterion in
+  `QueryRepository::filter`. Field name, `FilterOperator`, and value (scalar
+  or array for IN/BETWEEN). Constructor calls `validate()`; subclasses
+  implement `validate()` to enforce allowed fields and value shape.
+- **Usage:** Extend in application/bounded context with a concrete readonly
+  class; implement `validate(): void`. Pass an array of `FilterCriteria` to
+  `QueryRepository::filter`.
+
 ### DomainEventBus (`SeedWork\Application\DomainEventBus`)
 
 - **Role:** Port to publish and subscribe to domain events.
@@ -165,7 +192,12 @@ persistence and events.
 
 **Read path (query):** Build a Query from the request (e.g. resource id from
 route), inject `QueryBus`, call `ask($query)`, then map the returned
-`QueryResult` (or your subclass) to JSON, view data, or response DTO.
+`QueryResult` (or your subclass) to JSON, view data, or response DTO. The query
+handler typically uses a `QueryRepository` to load a projection (`getById`) or
+a slice (`filter($offset, $limit, $filters)` with `FilterCriteria`), then maps
+the projection to the `QueryResult`. See the BankAccount fixture (e.g.
+`GetBankAccountStatusQueryHandler`, `BankAccountQueryRepository`,
+`BankAccountFilterCriteria`) for a full example.
 
 Example (framework-agnostic; names align with the BankAccount fixture):
 
