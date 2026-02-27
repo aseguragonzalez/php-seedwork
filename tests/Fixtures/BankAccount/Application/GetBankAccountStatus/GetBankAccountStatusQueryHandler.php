@@ -28,10 +28,11 @@ final readonly class GetBankAccountStatusQueryHandler implements GetBankAccountS
      */
     public function handle(Query $query): QueryResult
     {
-        $projection = $this->queryRepository->getById($query->accountId->value);
+        $accountId = BankAccountId::fromString($query->accountId);
+        $projection = $this->queryRepository->getById($accountId->value);
 
         if ($projection === null) {
-            throw new NotFoundResource('BankAccount', $query->accountId);
+            throw new NotFoundResource('BankAccount', $accountId);
         }
 
         /** @var BankAccountProjection $projection */

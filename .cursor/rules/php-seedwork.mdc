@@ -1,0 +1,132 @@
+---
+description: Core development rules for the php-seedwork package — DDD and Hexagonal Architecture building blocks for PHP. Covers layer rules, design principles, testing, and code review guidelines.
+alwaysApply: true
+---
+
+# php-seedwork — Development Rules
+
+This repository is the **php-seedwork** package: DDD and Hexagonal (Clean) Architecture **building blocks**
+for PHP. We provide base classes, interfaces, and lightweight infrastructure (aggregates, entities, value
+objects, command/query buses, event bus, etc.) that downstream projects compose into their domain and
+application layers.
+
+**We are building a library of abstractions, not a domain application.** Every class we ship is meant to be
+extended, implemented, or composed by consumers. Design decisions here ripple into every project that
+depends on this package.
+
+---
+
+## Architecture
+
+- **Domain** (`SeedWork\Domain\*`): Entity, ValueObject, AggregateRoot, DomainEvent, EntityId, EventId,
+  Repository, UnitOfWork, AggregateObtainer, DomainException / ValueException / NotFoundResource.
+- **Application** (`SeedWork\Application\*`): Command, CommandBus, CommandHandler, Query, QueryBus,
+  QueryHandler, QueryResult, DomainEventBus, DomainEventHandler.
+- **Infrastructure** (`SeedWork\Infrastructure\*`): ContainerCommandBus, ContainerQueryBus,
+  TransactionalCommandBus, DeferredDomainEventBus, DomainEventFlushCommandBus.
+
+See [README](../README.md) and [docs/](../docs/) for the full picture.
+
+---
+
+## Layer Rules
+
+1. **Domain → nothing.** No imports from Application, Infrastructure, or any external library/framework.
+2. **Application → Domain only.**
+3. **Infrastructure → Application + Domain.** Only layer allowed to depend on PSR interfaces or libraries.
+4. These rules apply to the package itself. Downstream consumers wire Infrastructure adapters on their own.
+
+---
+
+## Design Principles for Building Blocks
+
+- **Minimal surface area.** Expose only what consumers need; keep internals `private` or `protected`.
+- **Favor interfaces over base classes** for *contracts* (e.g. `Repository`, `CommandBus`). Use abstract
+  base classes for shared *behaviour* (e.g. `AggregateRoot` recording events, `Entity` equality).
+- **Open for extension, closed for modification.** Mark classes `final` unless designed to be extended.
+  Abstract base classes are `abstract`, never `final`.
+- **No framework coupling in Domain or Application.** Infrastructure may use PSR or library types — never
+  leak them upward.
+- **Immutability by default.** `readonly` properties and constructor promotion. Value objects are immutable.
+  Entities mutate only through guarded methods.
+- **Backward compatibility matters.** Adding a required parameter, renaming a class, or changing a return
+  type is a breaking change. Prefer additive changes (optional params with defaults, new interfaces).
+
+---
+
+## How We Build Code
+
+- **Sources:** `src/` under `SeedWork\` namespace; one main class per file; file name = class name.
+- **Specs:** `docs/coding-standards.md` and `docs/best-practices.md` are the source of truth.
+- **Reference:** `docs/component-reference.md` for every interface and base class.
+- **Conventions:** PHP 8.4+, `declare(strict_types=1);`, PSR-12, `readonly` where possible.
+- **Typing:** Strict parameter/return types, no `mixed` unless unavoidable. Use PHPStan generics
+  (`@template`, `@extends`) when appropriate.
+- **Exceptions:** Domain-specific exceptions extending `DomainException`, `ValueException`, or
+  `NotFoundResource`. Never throw bare `\Exception` or `\RuntimeException`.
+
+---
+
+## Examples and Fixtures
+
+Update examples and fixtures each time you add or change a pattern.
+
+- **Canonical example:** `tests/Fixtures/BankAccount/` — full bounded context (domain, application,
+  infrastructure). **Always consult this fixture before creating new patterns.**
+- **Consumer-facing examples:** `docs/examples/copilot-instructions.md` and `docs/examples/cursor-rules.md`.
+- When adding a new base class or interface, add a concrete implementation in the fixture.
+
+---
+
+## Testing
+
+- **Framework:** PHPUnit ^12.5. Tests in `tests/` (e.g. `Tests\Domain\*`, `Tests\Infrastructure\*`).
+- **What we test:** public API of each building block using the BankAccount fixture as implementation.
+- **Mocks (`createMock`):** Verify interactions (handler received command, bus published events).
+- **Stubs (`createStub`):** Stand-ins that return values or satisfy types without asserting calls.
+- **Do not mock domain objects** — use real implementations from the fixture.
+- **Test naming:** `test{Behavior}` or `test_{snake_case_behavior}` — describe *what* is verified.
+- **Edge cases matter** — consumers rely on predictable behaviour for nulls, empty strings, boundaries.
+
+---
+
+## Code Review Guidelines
+
+When reviewing a PR (or self-reviewing before pushing), verify:
+
+### Correctness
+- Respects **layer rules**? No upward dependency leaks.
+- **Invariants enforced** in the right place? (validation in the value object, not left to consumers.)
+- Works with the **existing fixture**? If not, is the fixture updated?
+
+### Contract & Compatibility
+- Any **public/protected signature** changed? Is it backward-compatible? Flag breaking changes.
+- New public methods **necessary**? Could the goal be achieved without widening the API surface?
+- Interfaces remain **lean**? Prefer composition or separate interfaces (ISP).
+
+### Quality & Style
+- `declare(strict_types=1);` present.
+- `readonly` and `final` used appropriately.
+- No `mixed` types without justification.
+- PSR-12 formatting. No commented-out code or `TODO` without a linked issue.
+- PHPStan level max passes.
+
+### Tests
+- **Tests for new/changed behaviour**? Both happy path and edge cases.
+- Mock/stub choices correct? (Mock = interaction verification, stub = stand-in.)
+- `make all` passes?
+
+### Documentation
+- `docs/component-reference.md` updated if new interface or base class added.
+- Fixture updated if new pattern introduced.
+- Consumer-facing examples updated if downstream usage is affected.
+
+---
+
+## Tooling
+
+- `make test` — PHPUnit (coverage in `coverage/`).
+- `make format` / `make format-check` — PHP-CS-Fixer (PSR-12).
+- `make lint` — PHP_CodeSniffer (PSR-12).
+- `make static-analyse` — PHPStan (level max).
+- `make all` — format-check, lint, static analysis, and tests.

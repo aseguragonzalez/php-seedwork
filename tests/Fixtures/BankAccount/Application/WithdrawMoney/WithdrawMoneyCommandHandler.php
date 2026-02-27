@@ -7,7 +7,10 @@ namespace Tests\Fixtures\BankAccount\Application\WithdrawMoney;
 use SeedWork\Application\Command;
 use SeedWork\Application\DomainEventBus;
 use Tests\Fixtures\BankAccount\Domain\BankAccountObtainer;
+use Tests\Fixtures\BankAccount\Domain\Entities\BankAccountId;
 use Tests\Fixtures\BankAccount\Domain\Repositories\BankAccountRepository;
+use Tests\Fixtures\BankAccount\Domain\ValueObjects\Currency;
+use Tests\Fixtures\BankAccount\Domain\ValueObjects\Money;
 
 /**
  * Handler for the WithdrawMoney command.
@@ -26,7 +29,10 @@ final readonly class WithdrawMoneyCommandHandler implements WithdrawMoney
      */
     public function handle(Command $command): void
     {
-        $account = $this->obtainer->obtain($command->accountId)->withdraw($command->amount);
+        $accountId = BankAccountId::fromString($command->accountId);
+        $amount = new Money($command->amount, Currency::from($command->currency));
+
+        $account = $this->obtainer->obtain($accountId)->withdraw($amount);
 
         $this->repository->save($account);
 

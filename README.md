@@ -96,10 +96,11 @@ From the root directory of the project (where the `Makefile` is located):
 1. Edit `VERSION` in this directory with the new semantic version (e.g.
    `0.1.0`, `0.2.0-alpha`).
 2. Commit and push to `main`, or merge a pull request.
-3. The CD workflow runs on push to `main`. If the tag `php-seedwork-v{VERSION}`
-   does not exist, it runs the CI workflow, which runs checks, builds the package,
-   and creates a GitHub Release with the zip artifact and tag `php-seedwork-v{VERSION}`.
-4. No manual `git tag` or `git push --tags` is required.
+3. The CD workflow runs on push to `main`. If the tag `v{VERSION}` does not exist,
+   it runs the CI workflow, which runs checks, builds the package, and creates a
+   GitHub Release with the zip artifact and tag `v{VERSION}`.
+4. No manual `git tag` or `git push --tags` is required. When editing CHANGELOG
+   links for new releases, use the tag format `vX.Y.Z` (e.g. `.../releases/tag/v0.1.0`).
 
 ## References
 
