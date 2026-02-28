@@ -37,7 +37,7 @@ Three layers — Domain (pure business logic), Application (orchestration),
 Infrastructure (adapters and ports). Domain must never import from Application
 or Infrastructure.
 
-```
+```text
 src/
 ├── Domain/<BoundedContext>/
 │   ├── Entities/          # Aggregates and entities
