@@ -93,6 +93,10 @@ From the root directory of the project (where the `Makefile` is located):
 
 ## Releasing
 
+CI checks that `VERSION` and `CHANGELOG.md` are present, well-formed, and in sync
+(the version in `VERSION` must match the first versioned section in `CHANGELOG.md`).
+PRs that change `src/` or `composer.json` must also update `VERSION` and/or `CHANGELOG.md`.
+
 1. Edit `VERSION` in this directory with the new semantic version (e.g.
    `0.1.0`, `0.2.0-alpha`).
 2. Commit and push to `main`, or merge a pull request.

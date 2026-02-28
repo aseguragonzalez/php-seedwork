@@ -38,3 +38,5 @@ suite:
   for GitHub Copilot.
 - [Cursor rules](examples/cursor-rules.md) — Example Cursor rule to use in your
   project (e.g. `.cursor/rules/seedwork-ddd.mdc`).
+- [CLAUDE instructions](examples/claude-example.md) — Example instructions
+  for Claude.
