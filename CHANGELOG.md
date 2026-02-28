@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-02-27
+
+### Changed
+
+- **Documentation:** Updated CLAUDE instructions for downstream projects.
+- **Dependencies:** Updated dependencies to the latest versions.
+
 ## [0.1.0] - 2026-02-27
 
 ### Changed
@@ -17,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.0-alpha] - 2026-02-22
 
-### Added
+### Changed
 
 - **Domain layer:** `AggregateRoot`, `Entity`, `ValueObject`, `EntityId`, `EventId`;
   `DomainEvent`; `Repository`, `UnitOfWork`, `AggregateObtainer`; exceptions
