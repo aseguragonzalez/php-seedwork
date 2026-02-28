@@ -10,8 +10,6 @@ use SeedWork\Domain\UnitOfWork;
 use SeedWork\Infrastructure\TransactionalCommandBus;
 use Tests\Fixtures\BankAccount\Application\DepositMoney\DepositMoneyCommand;
 use Tests\Fixtures\BankAccount\Domain\Entities\BankAccountId;
-use Tests\Fixtures\BankAccount\Domain\ValueObjects\Currency;
-use Tests\Fixtures\BankAccount\Domain\ValueObjects\Money;
 
 final class TransactionalCommandBusTest extends TestCase
 {
@@ -67,8 +65,9 @@ final class TransactionalCommandBusTest extends TestCase
     private function createDepositMoneyCommand(): DepositMoneyCommand
     {
         return new DepositMoneyCommand(
-            BankAccountId::create(),
-            new Money(100, Currency::USD)
+            BankAccountId::create()->value,
+            100,
+            'USD'
         );
     }
 }

@@ -91,8 +91,9 @@ final class DomainEventFlushCommandBusTest extends TestCase
     private function createDepositMoneyCommand(): DepositMoneyCommand
     {
         return new DepositMoneyCommand(
-            BankAccountId::create(),
-            new Money(100, Currency::USD)
+            BankAccountId::create()->value,
+            100,
+            'USD'
         );
     }
 }

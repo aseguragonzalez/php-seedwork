@@ -86,7 +86,7 @@ final class ContainerQueryBusTest extends TestCase
 
     private function createGetBankAccountStatusQuery(): GetBankAccountStatusQuery
     {
-        return new GetBankAccountStatusQuery(BankAccountId::create());
+        return new GetBankAccountStatusQuery(BankAccountId::create()->value);
     }
 
     private function createStubQueryResult(): QueryResult
@@ -110,7 +110,7 @@ final class ContainerQueryBusTest extends TestCase
         $bus = new ContainerQueryBus($container);
         $bus->register(GetBankAccountStatusQuery::class, 'statusHandler');
 
-        $query = new GetBankAccountStatusQuery($account->id);
+        $query = new GetBankAccountStatusQuery($account->id->value);
         $result = $bus->ask($query);
 
         $this->assertInstanceOf(BankAccountStatusResult::class, $result);

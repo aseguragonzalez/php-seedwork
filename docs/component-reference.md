@@ -211,27 +211,24 @@ final readonly class BankAccountController
 
     public function deposit(string $accountId, string $amount, string $currency): void
     {
-        $command = new DepositMoneyCommand(
-            BankAccountId::fromString($accountId),
-            new Money((int) $amount, Currency::from($currency))
-        );
+        $command = new DepositMoneyCommand($accountId, (int) $amount, $currency);
         $this->commandBus->dispatch($command);
         // Framework integration code would handle the HTTP response (e.g., 204, redirect, or resource ID).
     }
 
     public function getStatus(string $accountId): BankAccountStatusResult
     {
-        $query = new GetBankAccountStatusQuery(BankAccountId::fromString($accountId));
+        $query = new GetBankAccountStatusQuery($accountId);
         /** @var BankAccountStatusResult $result */
         return $this->queryBus->ask($query);
     }
 }
 ```
 
-The controller depends only on the application ports (`CommandBus`, `QueryBus`),
-the Command/Query/Result DTOs, and simple domain types used to construct those
-messages; it does not depend on repositories, the domain event bus, unit of work,
-or other infrastructure implementations.
+The controller depends only on the application ports (`CommandBus`, `QueryBus`)
+and the Command/Query/Result DTOs (commands and queries use primitives only);
+it does not depend on repositories, the domain event bus, unit of work, or other
+infrastructure implementations.
 
 ---
 

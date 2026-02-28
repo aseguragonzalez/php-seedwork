@@ -1,10 +1,13 @@
 # Copilot instructions — php-seedwork
 
 This repository is the **php-seedwork** package: DDD and Hexagonal (Clean) Architecture **building blocks**
-for PHP (aggregates, entities, value objects, command/query handlers, event bus, etc.). The goal is to help
-developers build **scalable, maintainable** software based on DDD, Clean Architecture, and best practices.
-SeedWork sits between project conventions and application/domain code; the **domain layer stays pure**
-(no framework or infrastructure in domain).
+for PHP. We provide base classes, interfaces, and lightweight infrastructure (aggregates, entities, value
+objects, command/query buses, event bus, etc.) that downstream projects compose into their domain and
+application layers.
+
+**We are building a library of abstractions, not a domain application.** Every class we ship is meant to be
+extended, implemented, or composed by consumers. Design decisions here ripple into every project that
+depends on this package.
 
 ## Architecture
 
@@ -17,6 +20,32 @@ SeedWork sits between project conventions and application/domain code; the **dom
 
 See [README](../README.md) and [docs/](../docs/) for the full picture.
 
+## Layer rules
+
+1. **Domain → nothing.** No imports from Application, Infrastructure, or any external library/framework.
+2. **Application → Domain only.**
+3. **Infrastructure → Application + Domain.** Only layer allowed to depend on PSR interfaces or libraries.
+4. These rules apply to the package itself. Downstream consumers wire Infrastructure adapters on their own.
+
+## Design principles for building blocks
+
+Because every component is a public contract consumed by other projects:
+
+- **Minimal surface area.** Expose only what consumers need; keep internals `private` or `protected`.
+  Fewer public methods = fewer things we can break.
+- **Favor interfaces over base classes** when the building block defines a *contract*
+  (e.g. `Repository`, `CommandBus`). Use abstract base classes when sharing *behaviour*
+  (e.g. `AggregateRoot` recording events, `Entity` equality).
+- **Open for extension, closed for modification.** Mark classes `final` unless they are explicitly designed
+  to be extended by consumers. Abstract base classes should be `abstract`, never `final`.
+- **No framework coupling in Domain or Application.** If Infrastructure needs a PSR or library type,
+  that's fine — but never leak it upward.
+- **Immutability by default.** Use `readonly` properties and constructor promotion. Value objects must be
+  immutable. Entities mutate only through guarded methods.
+- **Backward compatibility matters.** Adding a required parameter to a public/protected method, renaming
+  a class, or changing a return type is a breaking change. Prefer additive changes (new optional
+  parameters with defaults, new interfaces, new classes).
+
 ## How we build code
 
 - **Sources:** [src/](../src/) under `SeedWork\` namespace; one main class per file; file name = class name.
@@ -26,31 +55,78 @@ See [README](../README.md) and [docs/](../docs/) for the full picture.
 - **Reference:** [docs/component-reference.md](../docs/component-reference.md) for every interface and
   base class.
 - **Conventions:** PHP 8.4+, `declare(strict_types=1);`, PSR-12, readonly where possible.
+- **Typing:** Strict parameter types, return types, no `mixed` unless truly unavoidable.
+  Use union types or generics via PHPStan annotations (`@template`, `@extends`) when appropriate.
+- **Exceptions:** Domain-specific exceptions extending `DomainException`, `ValueException`, or
+  `NotFoundResource`. Never throw bare `\Exception` or `\RuntimeException`.
 
 ## Examples and fixtures
 
-You should update the examples and fixtures each time you add or change a pattern.
+Update examples and fixtures each time you add or change a pattern.
 
 - **Canonical example:** [tests/Fixtures/BankAccount/](../tests/Fixtures/BankAccount/) — full bounded
   context: domain (aggregate, entities, value objects, events, repository interface, obtainer),
   application (commands, queries, handlers, event handlers), infrastructure (in-memory repository).
-  Use it as the reference when adding or changing patterns.
+  **Always consult this fixture** before creating new patterns — follow its structure and naming.
 - **Consumer-facing examples:** [docs/examples/copilot-instructions.md](../docs/examples/copilot-instructions.md)
   (for downstream projects) and [docs/examples/cursor-rules.md](../docs/examples/cursor-rules.md).
+- When adding a new base class or interface, add a concrete implementation in the fixture that
+  demonstrates the intended usage.
 
-## Testing (mocks and stubs)
+## Testing
 
 - **Framework:** PHPUnit ^12.5. Tests live under [tests/](../tests/) (e.g. `Tests\Domain\*`,
   `Tests\Infrastructure\*`).
-- **Prefer mocks and stubs** instead of real infrastructure or heavy setup where possible:
-  - **Mocks (`createMock`):** Use when you need to **verify interactions** (e.g. handler received this
-    command, event bus published these events). Example: `$handler = $this->createMock(CommandHandler::class);`
-    then `$handler->expects($this->once())->method('handle')->with($command);`.
-  - **Stubs (`createStub`):** Use when you only need a **stand-in that returns a value** or satisfies a type
-    (no need to assert on calls). Example: `$handler = $this->createStub(QueryHandler::class);` with
-    `$handler->method('handle')->willReturn($stubResult);`.
-- **Domain / Infrastructure / application-layer tests:** Test public API of the components using real
-  implementation from the fixture. Do not mock domain objects.
+- **What we test:** the public API of each building block — constructors, factory methods, and the
+  behaviours they expose. We use the BankAccount fixture as the concrete implementation.
+- **Prefer mocks and stubs** over real infrastructure or heavy setup:
+  - **Mocks (`createMock`):** Verify interactions (e.g. handler received this command, event bus published
+    these events).
+  - **Stubs (`createStub`):** Stand-ins that return values or satisfy a type without asserting calls.
+- **Do not mock domain objects** — use real implementations from the fixture.
+- **Test naming:** `test{Behavior}` or `test_{snake_case_behavior}` — describe *what* is verified.
+- **Edge cases matter more here** than in application code — consumers rely on our contracts behaving
+  predictably for nulls, empty strings, boundary values, etc.
+
+## Code review guidelines
+
+When reviewing a PR (or self-reviewing before pushing), verify:
+
+### Correctness
+
+- Does the change respect the **layer rules** above? No upward dependency leaks.
+- Are **invariants enforced** in the right place? (e.g. value validation inside the value object, not
+  left to the consumer.)
+- Does the new code work correctly with the **existing fixture**? If not, is the fixture updated?
+
+### Contract & compatibility
+
+- Is any **public or protected signature** changed? If so, is it backward-compatible? Flag breaking
+  changes explicitly.
+- Are new public methods **necessary**? Could the same goal be achieved without widening the API surface?
+- Do interfaces remain **lean**? Avoid "fat" interfaces — prefer composition or separate interfaces
+  (Interface Segregation).
+
+### Quality & style
+
+- `declare(strict_types=1);` present.
+- `readonly` and `final` used appropriately.
+- No `mixed` types without justification.
+- PSR-12 formatting. No commented-out code or `TODO` without a linked issue.
+- PHPStan level max passes (`make static-analyse`).
+
+### Tests
+
+- Are there **tests for the new or changed behaviour**? Check both happy path and edge cases.
+- Are mock/stub choices correct? (Mock for interaction verification, stub for stand-ins.)
+- Does `make all` pass?
+
+### Documentation
+
+- [docs/component-reference.md](../docs/component-reference.md) updated if a new interface or base class
+  is added.
+- Fixture updated if a new pattern is introduced.
+- Consumer-facing examples updated if the change affects how downstream projects use the package.
 
 ## Tooling
 
