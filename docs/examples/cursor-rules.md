@@ -44,7 +44,7 @@ src/
     └── Ports/
 
 tests/Unit/   # Mirrors src/ exactly
-````
+```
 
 | Rule | Why |
 | ------- | ---------- | -------- |

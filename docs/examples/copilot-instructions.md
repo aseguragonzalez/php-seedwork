@@ -309,6 +309,8 @@ declare(strict_types=1);
 
 namespace Application\Orders\PlaceOrder;
 
+use SeedWork\Application\Command;
+
 final readonly class PlaceOrderCommand extends Command
 {
     public function __construct(
@@ -346,7 +348,10 @@ final readonly class PlaceOrderHandler implements PlaceOrder
     {
     }
 
-    public function execute(PlaceOrderCommand $command): void
+    /**
+     * @param PlaceOrderCommand $command
+     */
+    public function handle(Command $command): void
     {
       $order = Order::create(
         details: new OrderDetails(

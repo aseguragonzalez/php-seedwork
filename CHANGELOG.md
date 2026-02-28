@@ -29,5 +29,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Documentation:** Component reference, coding standards, best practices;
   BankAccount fixture example (tests/Fixtures/BankAccount/).
 
-[Unreleased]: https://github.com/aseguragonzalez/php-seedwork/compare/php-seedwork-v0.0.0-alpha...HEAD
-[0.0.0-alpha]: https://github.com/aseguragonzalez/php-seedwork/releases/tag/php-seedwork-v0.0.0-alpha
+[Unreleased]: https://github.com/aseguragonzalez/php-seedwork/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/aseguragonzalez/php-seedwork/releases/tag/v0.1.0
+[0.0.0-alpha]: https://github.com/aseguragonzalez/php-seedwork/releases/tag/v0.0.0-alpha
