@@ -10,8 +10,6 @@ use SeedWork\Infrastructure\ContainerCommandBus;
 use Tests\Fixtures\BankAccount\Application\DepositMoney\DepositMoneyCommand;
 use Tests\Fixtures\BankAccount\Application\WithdrawMoney\WithdrawMoneyCommand;
 use Tests\Fixtures\BankAccount\Domain\Entities\BankAccountId;
-use Tests\Fixtures\BankAccount\Domain\ValueObjects\Currency;
-use Tests\Fixtures\BankAccount\Domain\ValueObjects\Money;
 use Tests\Fixtures\FakeContainer;
 
 final class ContainerCommandBusTest extends TestCase
@@ -79,16 +77,18 @@ final class ContainerCommandBusTest extends TestCase
     private function createDepositMoneyCommand(): DepositMoneyCommand
     {
         return new DepositMoneyCommand(
-            BankAccountId::create(),
-            new Money(100, Currency::USD)
+            BankAccountId::create()->value,
+            100,
+            'USD'
         );
     }
 
     private function createWithdrawMoneyCommand(): WithdrawMoneyCommand
     {
         return new WithdrawMoneyCommand(
-            BankAccountId::create(),
-            new Money(50, Currency::USD)
+            BankAccountId::create()->value,
+            50,
+            'USD'
         );
     }
 }
