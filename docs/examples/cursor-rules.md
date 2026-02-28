@@ -59,14 +59,14 @@ Always extend or implement these — never redefine their behavior.
 
 | Component | Base class | Key rules |
 | ------- | ---------- | -------- |
-| Aggregate Root | `Seedwork\Domain\AggregateRoot` | Private constructor + `create()` / `build()`. Emit events. Enforce invariants. |
-| Entity | `Seedwork\Domain\Entity` | Identity by `EntityId`. Equality by id. |
-| Value Object | `Seedwork\Domain\ValueObject` | `readonly`. Compared by value. Validate in constructor. |
-| Domain Event | `Seedwork\Domain\DomainEvent` | Past-tense name. `create()` static constructor. Serializable payload. |
-| Domain Exception | `Seedwork\Domain\Exceptions\DomainException` | Also: `ValueException`, `NotFoundResource`. |
-| Repository | `Seedwork\Domain\Repository` | Interface in Domain. Implementation in Infrastructure. |
-| Command Handler | `Seedwork\Application\CommandHandler` | Write use case. `execute(Command): void`. |
-| Query Handler | `Seedwork\Application\QueryHandler` | Read use case. `execute(Query): TResult`. No side effects. |
+| Aggregate Root | `SeedWork\Domain\AggregateRoot` | Private constructor + `create()` / `build()`. Emit events. Enforce invariants. |
+| Entity | `SeedWork\Domain\Entity` | Identity by `EntityId`. Equality by id. |
+| Value Object | `SeedWork\Domain\ValueObject` | `readonly`. Compared by value. Validate in constructor. |
+| Domain Event | `SeedWork\Domain\DomainEvent` | Past-tense name. `create()` static constructor. Serializable payload. |
+| Domain Exception | `SeedWork\Domain\Exceptions\DomainException` | Also: `ValueException`, `NotFoundResource`. |
+| Repository | `SeedWork\Domain\Repository` | Interface in Domain. Implementation in Infrastructure. |
+| Command Handler | `SeedWork\Application\CommandHandler` | Write use case. `handle(Command): void`. |
+| Query Handler | `SeedWork\Application\QueryHandler` | Read use case. `handle(Query): TResult`. No side effects. |
 
 ## Domain Layer Patterns
 
