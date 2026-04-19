@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Dependencies:** Bumped `friendsofphp/php-cs-fixer` from 3.94.2 to 3.95.1.
+
 ## [0.1.1] - 2026-02-27
 
 ### Changed
@@ -36,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Documentation:** Component reference, coding standards, best practices;
   BankAccount fixture example (tests/Fixtures/BankAccount/).
 
-[Unreleased]: https://github.com/aseguragonzalez/php-seedwork/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/aseguragonzalez/php-seedwork/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/aseguragonzalez/php-seedwork/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/aseguragonzalez/php-seedwork/releases/tag/v0.1.0
 [0.0.0-alpha]: https://github.com/aseguragonzalez/php-seedwork/releases/tag/v0.0.0-alpha
