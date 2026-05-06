@@ -32,10 +32,6 @@ SeedWork sits between project conventions and application/domain code.
   `DomainEventBus` (e.g. `DeferredDomainEventBus`). Controllers dispatch to use
   cases; middleware or similar calls `DomainEventBus::publish()` after handling
   a request.
-- **Shared layer (`SeedWork\Shared\`):** Cross-cutting ports that do not belong
-  to Domain, Application, or Infrastructure. Currently contains only `Logger`.
-  Domain code must never depend on Shared; Application and Infrastructure may use
-  it. Shared must not depend on any other layer.
 
 ## Requirements
 
