@@ -1,0 +1,47 @@
+name: PHP SeedWork Release
+
+on:
+  push:
+    branches:
+    - main
+
+jobs:
+  quality:
+    uses: ./.github/workflows/quality.yml
+
+  release:
+    name: Release
+    needs: quality
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+
+    steps:
+    - name: Create GitHub App token
+      uses: actions/create-github-app-token@v1
+      id: app-token
+      with:
+        app-id: ${{ secrets.RELEASER_APP_ID }}
+        private-key: ${{ secrets.RELEASER_PRIVATE_KEY }}
+
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ steps.app-token.outputs.token }}
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22
+
+    - name: Run semantic-release
+      uses: cycjimmy/semantic-release-action@v4
+      with:
+        extra_plugins: |
+          @semantic-release/changelog
+          @semantic-release/git
+      env:
+        GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}

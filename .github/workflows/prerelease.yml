@@ -1,0 +1,71 @@
+name: PHP SeedWork Pre-release
+
+on:
+  workflow_dispatch:
+    inputs:
+      preid:
+        description: 'Pre-release identifier (e.g. pr-42, alpha, beta)'
+        required: true
+        type: string
+
+jobs:
+  quality:
+    uses: ./.github/workflows/quality.yml
+
+  prerelease:
+    name: Pre-release
+    needs: quality
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Compute pre-release version
+      id: version
+      run: |
+        LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+        BASE_VERSION=${LAST_TAG#v}
+        PRERELEASE_VERSION="${BASE_VERSION}-${{ inputs.preid }}.${{ github.run_number }}.${{ github.run_attempt }}"
+        echo "version=${PRERELEASE_VERSION}" >> "$GITHUB_OUTPUT"
+        echo "tag=v${PRERELEASE_VERSION}" >> "$GITHUB_OUTPUT"
+
+    - name: Check tag does not already exist
+      run: |
+        if git ls-remote --exit-code --tags origin "refs/tags/${{ steps.version.outputs.tag }}" 2>/dev/null; then
+          echo "Tag ${{ steps.version.outputs.tag }} already exists."
+          exit 1
+        fi
+
+    - name: Create and push pre-release tag
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git tag -a "${{ steps.version.outputs.tag }}" -m "Pre-release ${{ steps.version.outputs.tag }}"
+        git push origin "${{ steps.version.outputs.tag }}"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Create GitHub pre-release
+      run: |
+        gh release create "${{ steps.version.outputs.tag }}" \
+          --prerelease \
+          --title "PHP SeedWork ${{ steps.version.outputs.tag }}" \
+          --generate-notes
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Summary
+      run: |
+        echo "### Pre-release created" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Version:** \`${{ steps.version.outputs.version }}\`" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Install via Composer:**" >> $GITHUB_STEP_SUMMARY
+        echo '```bash' >> $GITHUB_STEP_SUMMARY
+        echo "composer require aseguragonzalez/php-seedwork:${{ steps.version.outputs.version }}@dev" >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY

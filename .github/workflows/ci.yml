@@ -2,43 +2,20 @@ name: PHP SeedWork CI
 
 permissions:
   contents: read
+  pull-requests: read
 
 on:
   pull_request:
 
 jobs:
-  validate:
-    name: Validate SeedWork Package
+  quality:
+    uses: ./.github/workflows/quality.yml
+
+  validate-pr-title:
+    name: Validate PR Title
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-
-    - name: Check VERSION and CHANGELOG
+    - name: Validate PR title follows Conventional Commits
+      uses: amannn/action-semantic-pull-request@v5
       env:
-        CHECK_UPDATED: 1
-        BASE_REF: ${{ github.base_ref }}
-      run: |
-        git fetch origin "${{ github.base_ref }}"
-        ./scripts/check-version-changelog.sh
-
-    - name: Set up PHP 8.4
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: 8.4
-
-    - name: Install SeedWork dependencies
-      run: composer install --no-progress
-
-    - name: Run pre-commit checks
-      run: |
-        if [ -f .pre-commit-config.yaml ]; then
-          pip install pre-commit
-          pre-commit run --all-files
-        fi
-
-    - name: Tests
-      run: make test
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

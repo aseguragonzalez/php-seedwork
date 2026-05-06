@@ -1,0 +1,33 @@
+name: Quality
+
+on:
+  workflow_call:
+
+jobs:
+  quality:
+    name: Quality Check
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Set up PHP 8.4
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 8.4
+
+    - name: Install dependencies
+      run: composer install --no-progress
+
+    - name: Format check
+      run: make format-check
+
+    - name: Lint
+      run: make lint
+
+    - name: Static analysis
+      run: make static-analyse
+
+    - name: Tests
+      run: make test
