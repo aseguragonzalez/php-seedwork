@@ -11,6 +11,10 @@ namespace SeedWork\Application;
  * {@see QueryValidator}) before a command or query reaches its handler.
  * Callers inspect {@see $errors} to produce user-facing messages.
  *
+ * Intentionally extends \Exception (not DomainException) because this is an
+ * application-layer concern — input validation at the boundary — distinct from
+ * domain invariant violations expressed by DomainException.
+ *
  * @see ValidationError  A single field-level error detail.
  * @see CommandValidator Application port that validates commands.
  * @see QueryValidator   Application port that validates queries.
@@ -18,7 +22,7 @@ namespace SeedWork\Application;
 final class ValidationErrors extends \Exception
 {
     /**
-     * @param array<ValidationError> $errors One or more field-level validation failures.
+     * @param array<ValidationError> $errors Field-level validation failures; may be empty.
      */
     public function __construct(public readonly array $errors)
     {

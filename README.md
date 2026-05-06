@@ -32,6 +32,10 @@ SeedWork sits between project conventions and application/domain code.
   `DomainEventBus` (e.g. `DeferredDomainEventBus`). Controllers dispatch to use
   cases; middleware or similar calls `DomainEventBus::publish()` after handling
   a request.
+- **Shared layer (`SeedWork\Shared\`):** Cross-cutting ports that do not belong
+  to Domain, Application, or Infrastructure. Currently contains only `Logger`.
+  Domain code must never depend on Shared; Application and Infrastructure may use
+  it. Shared must not depend on any other layer.
 
 ## Requirements
 
@@ -94,18 +98,27 @@ From the root directory of the project (where the `Makefile` is located):
 
 ## Releasing
 
-CI checks that `VERSION` and `CHANGELOG.md` are present, well-formed, and in sync
-(the version in `VERSION` must match the first versioned section in `CHANGELOG.md`).
-PRs that change `src/` or `composer.json` must also update `VERSION` and/or `CHANGELOG.md`.
+Releases are fully automated via [semantic-release](https://semantic-release.gitbook.io).
+No manual version bumps or CHANGELOG edits are needed.
 
-1. Edit `VERSION` in this directory with the new semantic version (e.g.
-   `0.1.0`, `0.2.0-alpha`).
-2. Commit and push to `main`, or merge a pull request.
-3. The CD workflow runs on push to `main`. If the tag `v{VERSION}` does not exist,
-   it runs the CI workflow, which runs checks, builds the package, and creates a
-   GitHub Release with the zip artifact and tag `v{VERSION}`.
-4. No manual `git tag` or `git push --tags` is required. When editing CHANGELOG
-   links for new releases, use the tag format `vX.Y.Z` (e.g. `.../releases/tag/v0.1.0`).
+- **Automatic:** Merging to `main` triggers the `publish.yml` workflow. semantic-release
+  analyses the commits since the last release, computes the next version following
+  [Conventional Commits](https://www.conventionalcommits.org), updates `CHANGELOG.md`,
+  creates a git tag, and publishes a GitHub Release.
+- **Pre-release:** Trigger the `prerelease.yml` workflow manually (workflow dispatch)
+  with a `preid` like `pr-42` or `beta`. This creates a tagged pre-release without
+  touching `main`.
+
+### Commit message convention
+
+| Prefix | Effect |
+|--------|--------|
+| `fix:` | Patch release (0.0.x) |
+| `feat:` | Minor release (0.x.0) |
+| `feat!:` or `BREAKING CHANGE:` | Major release (x.0.0) |
+| `chore:`, `docs:`, `test:` | No release |
+
+The PR title is also validated against Conventional Commits in CI.
 
 ## References
 

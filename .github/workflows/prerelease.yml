@@ -8,6 +8,8 @@ on:
         required: true
         type: string
 
+permissions: {}
+
 jobs:
   quality:
     uses: ./.github/workflows/quality.yml
