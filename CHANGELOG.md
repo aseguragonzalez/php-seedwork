@@ -1,3 +1,10 @@
+# [0.2.0](https://github.com/aseguragonzalez/php-seedwork/compare/v0.1.1...v0.2.0) (2026-05-07)
+
+
+### Features
+
+* align with ts-seedwork — semantic release, new building blocks and repo config ([#23](https://github.com/aseguragonzalez/php-seedwork/issues/23)) ([f774a3f](https://github.com/aseguragonzalez/php-seedwork/commit/f774a3f40b35628aa2f67bf27d48323baa6e59ea))
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
