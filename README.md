@@ -73,8 +73,8 @@ Source and issue tracker: [php-seedwork](https://github.com/aseguragonzalez/php-
 
 ## Development
 
-If you plan to contribute, please read [CONTRIBUTING.md](CONTRIBUTING.md) and
-[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+If you plan to contribute, please read [CONTRIBUTING.md](.github/CONTRIBUTING.md) and
+[CODE_OF_CONDUCT.md](.github/CODE_OF_CONDUCT.md).
 
 **Debugging:** The PHP debug port in this project is **9000** (not 9003). Configure your IDE or Xdebug client to
 connect to port 9000 when debugging tests or scripts.
