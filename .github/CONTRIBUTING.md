@@ -61,7 +61,7 @@ Individual targets: `make format`, `make format-check`, `make lint`,
   with DDD, Clean Architecture, and this package’s patterns.
 - Code must be PSR-12. Use `make format` and `make lint` so your changes pass
   the automated checks.
-- When adding or changing patterns, update the [BankAccount fixture](tests/Fixtures/BankAccount/)
+- When adding or changing patterns, update the [BankAccount example](docs/examples/BankAccount/)
   and the [documentation](docs/) as needed (see the project rules).
 
 ## Pull request process
@@ -69,7 +69,7 @@ Individual targets: `make format`, `make format-check`, `make lint`,
 1. Branch from `main`. One logical change per pull request.
 2. Ensure `make all` passes locally (CI runs the same checks).
 3. Write clear commit messages and a short PR description.
-4. For new patterns or larger changes, consider the [BankAccount fixture](tests/Fixtures/BankAccount/)
+4. For new patterns or larger changes, consider the [BankAccount example](docs/examples/BankAccount/)
   and [component reference](docs/component-reference.md) as references.
 
 Maintainers will review and may request changes. Once approved, your PR can be

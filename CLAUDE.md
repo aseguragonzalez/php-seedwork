@@ -35,9 +35,9 @@ Never leak Infrastructure or framework types into Domain or Application.
 
 ## Fixture and examples
 
-- Canonical fixture: `tests/Fixtures/BankAccount/` — full bounded context showing how every building
+- Canonical example: `docs/examples/BankAccount/` — full bounded context showing how every building
  block is used. **Read this before creating new patterns.**
-- When adding a new base class or interface, add a concrete implementation in the fixture.
+- When adding a new base class or interface, add a concrete implementation in the example.
 - Update consumer examples in `docs/examples/` when changes affect downstream usage.
 
 ## Testing

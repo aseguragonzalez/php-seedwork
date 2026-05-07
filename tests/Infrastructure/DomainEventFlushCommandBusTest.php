@@ -10,13 +10,13 @@ use SeedWork\Application\DomainEventHandler;
 use SeedWork\Domain\DomainEvent;
 use SeedWork\Infrastructure\DeferredDomainEventBus;
 use SeedWork\Infrastructure\DomainEventFlushCommandBus;
-use Tests\Fixtures\BankAccount\Application\DepositMoney\DepositMoneyCommand;
-use Tests\Fixtures\BankAccount\Application\MoneyDeposited\MoneyDepositedEventHandler;
-use Tests\Fixtures\BankAccount\Domain\Entities\BankAccountId;
-use Tests\Fixtures\BankAccount\Domain\Entities\TransactionId;
-use Tests\Fixtures\BankAccount\Domain\Events\MoneyDeposited;
-use Tests\Fixtures\BankAccount\Domain\ValueObjects\Currency;
-use Tests\Fixtures\BankAccount\Domain\ValueObjects\Money;
+use Examples\BankAccount\Application\DepositMoney\DepositMoneyCommand;
+use Examples\BankAccount\Application\MoneyDeposited\MoneyDepositedEventHandler;
+use Examples\BankAccount\Domain\Entities\BankAccountId;
+use Examples\BankAccount\Domain\Entities\TransactionId;
+use Examples\BankAccount\Domain\Events\MoneyDeposited;
+use Examples\BankAccount\Domain\ValueObjects\Currency;
+use Examples\BankAccount\Domain\ValueObjects\Money;
 use Tests\Fixtures\FakeContainer;
 
 final class DomainEventFlushCommandBusTest extends TestCase

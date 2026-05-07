@@ -10,8 +10,8 @@ use SeedWork\Application\CommandValidator;
 use SeedWork\Application\ValidationError;
 use SeedWork\Application\ValidationErrors;
 use SeedWork\Infrastructure\ValidationCommandBus;
-use Tests\Fixtures\BankAccount\Application\DepositMoney\DepositMoneyCommand;
-use Tests\Fixtures\BankAccount\Domain\Entities\BankAccountId;
+use Examples\BankAccount\Application\DepositMoney\DepositMoneyCommand;
+use Examples\BankAccount\Domain\Entities\BankAccountId;
 
 final class ValidationCommandBusTest extends TestCase
 {

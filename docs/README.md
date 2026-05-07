@@ -14,10 +14,9 @@ PHP applications.
 
 ## Complete code examples
 
-A full working example that uses all SeedWork building blocks lives in the test
-suite:
+A full working example that uses all SeedWork building blocks lives in:
 
-- **[tests/Fixtures/BankAccount/](../tests/Fixtures/BankAccount/)** — Domain
+- **[examples/BankAccount/](examples/BankAccount/)** — Domain
   (aggregate root, entities, value objects, events, repository interface, obtainer),
   application (commands, queries, command/query handlers, event handlers), and
   infrastructure (in-memory aggregate repository, in-memory query repository for

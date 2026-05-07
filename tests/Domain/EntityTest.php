@@ -6,10 +6,10 @@ namespace Tests\Domain;
 
 use PHPUnit\Framework\TestCase;
 use SeedWork\Domain\Exceptions\ValueException;
-use Tests\Fixtures\BankAccount\Domain\Entities\Transaction;
-use Tests\Fixtures\BankAccount\Domain\ValueObjects\Currency;
-use Tests\Fixtures\BankAccount\Domain\ValueObjects\Money;
-use Tests\Fixtures\BankAccount\Domain\ValueObjects\TransactionType;
+use Examples\BankAccount\Domain\Entities\Transaction;
+use Examples\BankAccount\Domain\ValueObjects\Currency;
+use Examples\BankAccount\Domain\ValueObjects\Money;
+use Examples\BankAccount\Domain\ValueObjects\TransactionType;
 
 final class EntityTest extends TestCase
 {

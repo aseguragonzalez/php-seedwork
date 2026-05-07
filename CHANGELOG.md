@@ -45,7 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Infrastructure layer:** `ContainerCommandBus`, `ContainerQueryBus`;
   `TransactionalCommandBus`; `DeferredDomainEventBus`, `DomainEventFlushCommandBus`.
 - **Documentation:** Component reference, coding standards, best practices;
-  BankAccount fixture example (tests/Fixtures/BankAccount/).
+  BankAccount fixture example (docs/examples/BankAccount/).
 
 [Unreleased]: https://github.com/aseguragonzalez/php-seedwork/compare/v0.1.1...HEAD
 [0.1.1]: https://github.com/aseguragonzalez/php-seedwork/compare/v0.1.0...v0.1.1

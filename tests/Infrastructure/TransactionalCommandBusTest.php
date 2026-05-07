@@ -8,8 +8,8 @@ use PHPUnit\Framework\TestCase;
 use SeedWork\Application\CommandBus;
 use SeedWork\Domain\UnitOfWork;
 use SeedWork\Infrastructure\TransactionalCommandBus;
-use Tests\Fixtures\BankAccount\Application\DepositMoney\DepositMoneyCommand;
-use Tests\Fixtures\BankAccount\Domain\Entities\BankAccountId;
+use Examples\BankAccount\Application\DepositMoney\DepositMoneyCommand;
+use Examples\BankAccount\Domain\Entities\BankAccountId;
 
 final class TransactionalCommandBusTest extends TestCase
 {

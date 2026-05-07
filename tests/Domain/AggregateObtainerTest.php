@@ -6,10 +6,10 @@ namespace Tests\Domain;
 
 use PHPUnit\Framework\TestCase;
 use SeedWork\Domain\Exceptions\NotFoundResource;
-use Tests\Fixtures\BankAccount\Domain\BankAccountObtainer;
-use Tests\Fixtures\BankAccount\Domain\Entities\BankAccount;
-use Tests\Fixtures\BankAccount\Domain\Entities\BankAccountId;
-use Tests\Fixtures\BankAccount\Infrastructure\Repositories\InMemoryBankAccountRepository;
+use Examples\BankAccount\Domain\BankAccountObtainer;
+use Examples\BankAccount\Domain\Entities\BankAccount;
+use Examples\BankAccount\Domain\Entities\BankAccountId;
+use Examples\BankAccount\Infrastructure\Repositories\InMemoryBankAccountRepository;
 
 final class AggregateObtainerTest extends TestCase
 {

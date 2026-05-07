@@ -64,7 +64,7 @@ After installation, the library is available under the `SeedWork\` namespace.
   guidelines.
 - **[Best practices](docs/best-practices.md)** — How to use the package in your
   project.
-- **[tests/Fixtures/BankAccount/](tests/Fixtures/BankAccount/)** — Full
+- **[docs/examples/BankAccount/](docs/examples/BankAccount/)** — Full
   working example (including query handlers and query repository for
   projections) about how to use the package.
 

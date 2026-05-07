@@ -7,16 +7,16 @@ namespace Tests\Infrastructure;
 use PHPUnit\Framework\TestCase;
 use SeedWork\Application\DomainEventHandler;
 use SeedWork\Infrastructure\DeferredDomainEventBus;
-use Tests\Fixtures\BankAccount\Application\DepositMoney\DepositMoney;
-use Tests\Fixtures\BankAccount\Application\DepositMoney\DepositMoneyCommandHandler;
-use Tests\Fixtures\BankAccount\Application\MoneyDeposited\MoneyDepositedEventHandler;
-use Tests\Fixtures\BankAccount\Application\MoneyWithdrawn\MoneyWithdrawnEventHandler;
-use Tests\Fixtures\BankAccount\Domain\Entities\BankAccountId;
-use Tests\Fixtures\BankAccount\Domain\Entities\TransactionId;
-use Tests\Fixtures\BankAccount\Domain\Events\MoneyDeposited;
-use Tests\Fixtures\BankAccount\Domain\Events\MoneyWithdrawn;
-use Tests\Fixtures\BankAccount\Domain\ValueObjects\Currency;
-use Tests\Fixtures\BankAccount\Domain\ValueObjects\Money;
+use Examples\BankAccount\Application\DepositMoney\DepositMoney;
+use Examples\BankAccount\Application\DepositMoney\DepositMoneyCommandHandler;
+use Examples\BankAccount\Application\MoneyDeposited\MoneyDepositedEventHandler;
+use Examples\BankAccount\Application\MoneyWithdrawn\MoneyWithdrawnEventHandler;
+use Examples\BankAccount\Domain\Entities\BankAccountId;
+use Examples\BankAccount\Domain\Entities\TransactionId;
+use Examples\BankAccount\Domain\Events\MoneyDeposited;
+use Examples\BankAccount\Domain\Events\MoneyWithdrawn;
+use Examples\BankAccount\Domain\ValueObjects\Currency;
+use Examples\BankAccount\Domain\ValueObjects\Money;
 use Tests\Fixtures\FakeContainer;
 
 final class DeferredDomainEventBusTest extends TestCase
@@ -120,7 +120,7 @@ final class DeferredDomainEventBusTest extends TestCase
         $bus->publish([$this->createMoneyDepositedEvent()]);
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            'Handler for event type Tests\Fixtures\BankAccount\Domain\Events\MoneyDeposited is not a valid handler.'
+            'Handler for event type Examples\BankAccount\Domain\Events\MoneyDeposited is not a valid handler.'
         );
 
         $bus->flush();

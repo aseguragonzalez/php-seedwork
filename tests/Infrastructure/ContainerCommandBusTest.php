@@ -7,9 +7,9 @@ namespace Tests\Infrastructure;
 use PHPUnit\Framework\TestCase;
 use SeedWork\Application\CommandHandler;
 use SeedWork\Infrastructure\ContainerCommandBus;
-use Tests\Fixtures\BankAccount\Application\DepositMoney\DepositMoneyCommand;
-use Tests\Fixtures\BankAccount\Application\WithdrawMoney\WithdrawMoneyCommand;
-use Tests\Fixtures\BankAccount\Domain\Entities\BankAccountId;
+use Examples\BankAccount\Application\DepositMoney\DepositMoneyCommand;
+use Examples\BankAccount\Application\WithdrawMoney\WithdrawMoneyCommand;
+use Examples\BankAccount\Domain\Entities\BankAccountId;
 use Tests\Fixtures\FakeContainer;
 
 final class ContainerCommandBusTest extends TestCase
@@ -54,7 +54,7 @@ final class ContainerCommandBusTest extends TestCase
 
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            'No handler registered for command Tests\Fixtures\BankAccount\Application\DepositMoney\DepositMoneyCommand.'
+            'No handler registered for command Examples\BankAccount\Application\DepositMoney\DepositMoneyCommand.'
         );
 
         $bus->dispatch($command);
@@ -67,7 +67,7 @@ final class ContainerCommandBusTest extends TestCase
         $bus = new ContainerCommandBus($container);
         $bus->register(DepositMoneyCommand::class, 'depositHandler');
         $this->expectException(\InvalidArgumentException::class);
-        $expected = 'Handler for command type Tests\Fixtures\BankAccount\Application\DepositMoney'
+        $expected = 'Handler for command type Examples\BankAccount\Application\DepositMoney'
             . '\DepositMoneyCommand is not a valid handler.';
         $this->expectExceptionMessage($expected);
 

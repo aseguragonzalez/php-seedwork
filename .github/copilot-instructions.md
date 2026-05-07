@@ -64,7 +64,7 @@ Because every component is a public contract consumed by other projects:
 
 Update examples and fixtures each time you add or change a pattern.
 
-- **Canonical example:** [tests/Fixtures/BankAccount/](../tests/Fixtures/BankAccount/) — full bounded
+- **Canonical example:** [docs/examples/BankAccount/](../docs/examples/BankAccount/) — full bounded
   context: domain (aggregate, entities, value objects, events, repository interface, obtainer),
   application (commands, queries, handlers, event handlers), infrastructure (in-memory repository).
   **Always consult this fixture** before creating new patterns — follow its structure and naming.
