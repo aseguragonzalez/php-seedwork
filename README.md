@@ -1,5 +1,13 @@
 # PHP SeedWork
 
+[![Packagist Version](https://img.shields.io/packagist/v/aseguragonzalez/php-seedwork)](https://packagist.org/packages/aseguragonzalez/php-seedwork)
+[![PHP](https://img.shields.io/packagist/php-v/aseguragonzalez/php-seedwork)](https://packagist.org/packages/aseguragonzalez/php-seedwork)
+[![License: MIT](https://img.shields.io/packagist/l/aseguragonzalez/php-seedwork)](LICENSE)
+[![CI](https://github.com/aseguragonzalez/php-seedwork/actions/workflows/ci.yml/badge.svg)](https://github.com/aseguragonzalez/php-seedwork/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/aseguragonzalez/php-seedwork/branch/main/graph/badge.svg)](https://codecov.io/gh/aseguragonzalez/php-seedwork)
+[![PHPStan](https://img.shields.io/badge/PHPStan-max-blue)](https://phpstan.org/)
+[![PSR-12](https://img.shields.io/badge/style-PSR--12-brightgreen)](https://www.php-fig.org/psr/psr-12/)
+
 DDD and Hexagonal (Clean) Architecture building blocks (aggregates, entities, value
 objects, command/query handlers, etc).
 
