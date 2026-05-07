@@ -80,7 +80,7 @@ merged.
 **Do not open public issues for security vulnerabilities.**
 
 Please report security issues privately as described in our
-[Security Policy](.github/SECURITY.md) (GitHub Security Advisories or email to
+[Security Policy](SECURITY.md) (GitHub Security Advisories or email to
 the maintainer).
 
 ## License

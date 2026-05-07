@@ -57,7 +57,7 @@ address, posting via an official social media account, or acting as an
 appointed representative at an online or offline event.
 
 **Security issues:** For reporting security vulnerabilities, please use our
-[Security Policy](.github/SECURITY.md) (private advisory or email). Do not
+[Security Policy](SECURITY.md) (private advisory or email). Do not
 report security vulnerabilities as Code of Conduct matters.
 
 ## Enforcement

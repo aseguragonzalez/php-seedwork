@@ -1,5 +1,13 @@
 # PHP SeedWork
 
+[![Packagist Version](https://img.shields.io/packagist/v/aseguragonzalez/php-seedwork)](https://packagist.org/packages/aseguragonzalez/php-seedwork)
+[![PHP](https://img.shields.io/packagist/php-v/aseguragonzalez/php-seedwork)](https://packagist.org/packages/aseguragonzalez/php-seedwork)
+[![License: MIT](https://img.shields.io/packagist/l/aseguragonzalez/php-seedwork)](LICENSE)
+[![CI](https://github.com/aseguragonzalez/php-seedwork/actions/workflows/ci.yml/badge.svg)](https://github.com/aseguragonzalez/php-seedwork/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/aseguragonzalez/php-seedwork/branch/main/graph/badge.svg)](https://codecov.io/gh/aseguragonzalez/php-seedwork)
+[![PHPStan](https://img.shields.io/badge/PHPStan-max-blue)](https://phpstan.org/)
+[![PSR-12](https://img.shields.io/badge/style-PSR--12-brightgreen)](https://www.php-fig.org/psr/psr-12/)
+
 DDD and Hexagonal (Clean) Architecture building blocks (aggregates, entities, value
 objects, command/query handlers, etc).
 
@@ -26,8 +34,7 @@ SeedWork sits between project conventions and application/domain code.
   `ValueException`, and defines repository interfaces extending `Repository`.
 - **Application layer:** Use case interfaces extend `CommandHandler`
   or `QueryHandler` and implement `handle()`. Handlers
-  implement those interfaces and depend on domain repository interfaces (and
-  optionally `QueryRepository` for the read side).
+  implement those interfaces and depend on domain repository interfaces.
 - **Infrastructure layer:** Implements `Repository` and optionally
   `DomainEventBus` (e.g. `DeferredDomainEventBus`). Controllers dispatch to use
   cases; middleware or similar calls `DomainEventBus::publish()` after handling
@@ -74,8 +81,8 @@ Source and issue tracker: [php-seedwork](https://github.com/aseguragonzalez/php-
 
 ## Development
 
-If you plan to contribute, please read [CONTRIBUTING.md](CONTRIBUTING.md) and
-[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+If you plan to contribute, please read [CONTRIBUTING.md](.github/CONTRIBUTING.md) and
+[CODE_OF_CONDUCT.md](.github/CODE_OF_CONDUCT.md).
 
 **Debugging:** The PHP debug port in this project is **9000** (not 9003). Configure your IDE or Xdebug client to
 connect to port 9000 when debugging tests or scripts.
@@ -94,18 +101,27 @@ From the root directory of the project (where the `Makefile` is located):
 
 ## Releasing
 
-CI checks that `VERSION` and `CHANGELOG.md` are present, well-formed, and in sync
-(the version in `VERSION` must match the first versioned section in `CHANGELOG.md`).
-PRs that change `src/` or `composer.json` must also update `VERSION` and/or `CHANGELOG.md`.
+Releases are fully automated via [semantic-release](https://semantic-release.gitbook.io).
+No manual version bumps or CHANGELOG edits are needed.
 
-1. Edit `VERSION` in this directory with the new semantic version (e.g.
-   `0.1.0`, `0.2.0-alpha`).
-2. Commit and push to `main`, or merge a pull request.
-3. The CD workflow runs on push to `main`. If the tag `v{VERSION}` does not exist,
-   it runs the CI workflow, which runs checks, builds the package, and creates a
-   GitHub Release with the zip artifact and tag `v{VERSION}`.
-4. No manual `git tag` or `git push --tags` is required. When editing CHANGELOG
-   links for new releases, use the tag format `vX.Y.Z` (e.g. `.../releases/tag/v0.1.0`).
+- **Automatic:** Merging to `main` triggers the `publish.yml` workflow. semantic-release
+  analyses the commits since the last release, computes the next version following
+  [Conventional Commits](https://www.conventionalcommits.org), updates `CHANGELOG.md`,
+  creates a git tag, and publishes a GitHub Release.
+- **Pre-release:** Trigger the `prerelease.yml` workflow manually (workflow dispatch)
+  with a `preid` like `pr-42` or `beta`. This creates a tagged pre-release without
+  touching `main`.
+
+### Commit message convention
+
+| Prefix | Effect |
+|--------|--------|
+| `fix:` | Patch release (0.0.x) |
+| `feat:` | Minor release (0.x.0) |
+| `feat!:` or `BREAKING CHANGE:` | Major release (x.0.0) |
+| `chore:`, `docs:`, `test:` | No release |
+
+The PR title is also validated against Conventional Commits in CI.
 
 ## References
 
