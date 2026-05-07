@@ -6,8 +6,8 @@ namespace Tests\Domain;
 
 use PHPUnit\Framework\TestCase;
 use SeedWork\Domain\Exceptions\ValueException;
-use Tests\Fixtures\BankAccount\Domain\ValueObjects\Currency;
-use Tests\Fixtures\BankAccount\Domain\ValueObjects\Money;
+use Examples\BankAccount\Domain\ValueObjects\Currency;
+use Examples\BankAccount\Domain\ValueObjects\Money;
 
 final class ValueObjectTest extends TestCase
 {

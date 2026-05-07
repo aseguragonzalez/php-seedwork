@@ -11,8 +11,8 @@ use SeedWork\Application\QueryValidator;
 use SeedWork\Application\ValidationError;
 use SeedWork\Application\ValidationErrors;
 use SeedWork\Infrastructure\ValidationQueryBus;
-use Tests\Fixtures\BankAccount\Application\GetBankAccountStatus\GetBankAccountStatusQuery;
-use Tests\Fixtures\BankAccount\Domain\Entities\BankAccountId;
+use Examples\BankAccount\Application\GetBankAccountStatus\GetBankAccountStatusQuery;
+use Examples\BankAccount\Domain\Entities\BankAccountId;
 
 final class ValidationQueryBusTest extends TestCase
 {

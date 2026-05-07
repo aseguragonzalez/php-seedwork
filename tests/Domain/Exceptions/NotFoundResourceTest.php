@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use SeedWork\Domain\EntityId;
 use SeedWork\Domain\Exceptions\DomainException;
 use SeedWork\Domain\Exceptions\NotFoundResource;
-use Tests\Fixtures\BankAccount\Domain\Entities\BankAccountId;
+use Examples\BankAccount\Domain\Entities\BankAccountId;
 
 final class NotFoundResourceTest extends TestCase
 {

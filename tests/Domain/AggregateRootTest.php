@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\Domain;
 
 use PHPUnit\Framework\TestCase;
-use Tests\Fixtures\BankAccount\Domain\Entities\BankAccount;
-use Tests\Fixtures\BankAccount\Domain\ValueObjects\Currency;
-use Tests\Fixtures\BankAccount\Domain\ValueObjects\Money;
+use Examples\BankAccount\Domain\Entities\BankAccount;
+use Examples\BankAccount\Domain\ValueObjects\Currency;
+use Examples\BankAccount\Domain\ValueObjects\Money;
 
 final class AggregateRootTest extends TestCase
 {

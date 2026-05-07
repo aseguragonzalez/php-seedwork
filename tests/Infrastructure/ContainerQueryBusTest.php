@@ -8,13 +8,13 @@ use PHPUnit\Framework\TestCase;
 use SeedWork\Application\QueryHandler;
 use SeedWork\Application\QueryResult;
 use SeedWork\Infrastructure\ContainerQueryBus;
-use Tests\Fixtures\BankAccount\Application\GetBankAccountStatus\GetBankAccountStatusQueryHandler;
-use Tests\Fixtures\BankAccount\Application\GetBankAccountStatus\BankAccountStatusResult;
-use Tests\Fixtures\BankAccount\Application\GetBankAccountStatus\GetBankAccountStatusQuery;
-use Tests\Fixtures\BankAccount\Infrastructure\Repositories\InMemoryBankAccountRepository;
-use Tests\Fixtures\BankAccount\Domain\Entities\BankAccount;
-use Tests\Fixtures\BankAccount\Domain\Entities\BankAccountId;
-use Tests\Fixtures\BankAccount\Domain\ValueObjects\AccountBalance;
+use Examples\BankAccount\Application\GetBankAccountStatus\GetBankAccountStatusQueryHandler;
+use Examples\BankAccount\Application\GetBankAccountStatus\BankAccountStatusResult;
+use Examples\BankAccount\Application\GetBankAccountStatus\GetBankAccountStatusQuery;
+use Examples\BankAccount\Infrastructure\Repositories\InMemoryBankAccountRepository;
+use Examples\BankAccount\Domain\Entities\BankAccount;
+use Examples\BankAccount\Domain\Entities\BankAccountId;
+use Examples\BankAccount\Domain\ValueObjects\AccountBalance;
 use Tests\Fixtures\FakeContainer;
 
 final class ContainerQueryBusTest extends TestCase
@@ -58,7 +58,7 @@ final class ContainerQueryBusTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(
             'No handler registered for query ' .
-            'Tests\Fixtures\BankAccount\Application\GetBankAccountStatus\GetBankAccountStatusQuery.'
+            'Examples\BankAccount\Application\GetBankAccountStatus\GetBankAccountStatusQuery.'
         );
 
         $bus->ask($query);
@@ -76,7 +76,7 @@ final class ContainerQueryBusTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(
             'Handler for query type ' .
-            'Tests\Fixtures\BankAccount\Application\GetBankAccountStatus' .
+            'Examples\BankAccount\Application\GetBankAccountStatus' .
             '\GetBankAccountStatusQuery is not a valid handler.'
         );
 

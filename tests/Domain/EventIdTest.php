@@ -6,7 +6,7 @@ namespace Tests\Domain;
 
 use PHPUnit\Framework\TestCase;
 use SeedWork\Domain\Exceptions\ValueException;
-use Tests\Fixtures\BankAccount\Domain\Events\BankAccountEventId;
+use Examples\BankAccount\Domain\Events\BankAccountEventId;
 
 final class EventIdTest extends TestCase
 {

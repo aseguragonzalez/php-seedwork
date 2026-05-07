@@ -6,7 +6,7 @@ namespace Tests\Domain;
 
 use PHPUnit\Framework\TestCase;
 use SeedWork\Domain\Exceptions\ValueException;
-use Tests\Fixtures\BankAccount\Domain\Entities\BankAccountId;
+use Examples\BankAccount\Domain\Entities\BankAccountId;
 
 final class EntityIdTest extends TestCase
 {
