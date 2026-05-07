@@ -12,6 +12,8 @@ permissions: {}
 
 jobs:
   quality:
+    permissions:
+      contents: read
     uses: ./.github/workflows/quality.yml
     permissions:
       contents: read
