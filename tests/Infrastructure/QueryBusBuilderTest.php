@@ -14,7 +14,7 @@ final class QueryBusBuilderTest extends TestCase
 {
     public function testBuildReturnsBaseQueryBusWhenNoDecoratorsAdded(): void
     {
-        $innerBus = $this->createMock(QueryBus::class);
+        $innerBus = $this->createStub(QueryBus::class);
 
         $result = QueryBusBuilder::from($innerBus)->build();
 
@@ -23,8 +23,8 @@ final class QueryBusBuilderTest extends TestCase
 
     public function testWithValidationWrapsCurrentBus(): void
     {
-        $innerBus = $this->createMock(QueryBus::class);
-        $validator = $this->createMock(QueryValidator::class);
+        $innerBus = $this->createStub(QueryBus::class);
+        $validator = $this->createStub(QueryValidator::class);
 
         $result = QueryBusBuilder::from($innerBus)->withValidation($validator)->build();
 
@@ -33,8 +33,8 @@ final class QueryBusBuilderTest extends TestCase
 
     public function testChainReturnsSameBuilderInstance(): void
     {
-        $innerBus = $this->createMock(QueryBus::class);
-        $validator = $this->createMock(QueryValidator::class);
+        $innerBus = $this->createStub(QueryBus::class);
+        $validator = $this->createStub(QueryValidator::class);
         $builder = QueryBusBuilder::from($innerBus);
 
         $same = $builder->withValidation($validator);

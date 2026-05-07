@@ -26,8 +26,7 @@ SeedWork sits between project conventions and application/domain code.
   `ValueException`, and defines repository interfaces extending `Repository`.
 - **Application layer:** Use case interfaces extend `CommandHandler`
   or `QueryHandler` and implement `handle()`. Handlers
-  implement those interfaces and depend on domain repository interfaces (and
-  optionally `QueryRepository` for the read side).
+  implement those interfaces and depend on domain repository interfaces.
 - **Infrastructure layer:** Implements `Repository` and optionally
   `DomainEventBus` (e.g. `DeferredDomainEventBus`). Controllers dispatch to use
   cases; middleware or similar calls `DomainEventBus::publish()` after handling

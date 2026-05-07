@@ -19,7 +19,7 @@ final class CommandBusBuilderTest extends TestCase
 {
     public function testBuildReturnsBaseCommandBusWhenNoDecoratorsAdded(): void
     {
-        $innerBus = $this->createMock(CommandBus::class);
+        $innerBus = $this->createStub(CommandBus::class);
 
         $result = CommandBusBuilder::from($innerBus)->build();
 
@@ -28,8 +28,8 @@ final class CommandBusBuilderTest extends TestCase
 
     public function testWithTransactionalWrapsCurrentBus(): void
     {
-        $innerBus = $this->createMock(CommandBus::class);
-        $unitOfWork = $this->createMock(UnitOfWork::class);
+        $innerBus = $this->createStub(CommandBus::class);
+        $unitOfWork = $this->createStub(UnitOfWork::class);
 
         $result = CommandBusBuilder::from($innerBus)->withTransactional($unitOfWork)->build();
 
@@ -38,8 +38,8 @@ final class CommandBusBuilderTest extends TestCase
 
     public function testWithValidationWrapsCurrentBus(): void
     {
-        $innerBus = $this->createMock(CommandBus::class);
-        $validator = $this->createMock(CommandValidator::class);
+        $innerBus = $this->createStub(CommandBus::class);
+        $validator = $this->createStub(CommandValidator::class);
 
         $result = CommandBusBuilder::from($innerBus)->withValidation($validator)->build();
 
@@ -48,7 +48,7 @@ final class CommandBusBuilderTest extends TestCase
 
     public function testWithEventFlushingWrapsCurrentBus(): void
     {
-        $innerBus = $this->createMock(CommandBus::class);
+        $innerBus = $this->createStub(CommandBus::class);
         $deferredEventBus = new DeferredDomainEventBus(new FakeContainer([]));
 
         $result = CommandBusBuilder::from($innerBus)->withEventFlushing($deferredEventBus)->build();
@@ -58,9 +58,9 @@ final class CommandBusBuilderTest extends TestCase
 
     public function testFullChainOutermostLayerIsValidation(): void
     {
-        $innerBus = $this->createMock(CommandBus::class);
-        $unitOfWork = $this->createMock(UnitOfWork::class);
-        $validator = $this->createMock(CommandValidator::class);
+        $innerBus = $this->createStub(CommandBus::class);
+        $unitOfWork = $this->createStub(UnitOfWork::class);
+        $validator = $this->createStub(CommandValidator::class);
         $deferredEventBus = new DeferredDomainEventBus(new FakeContainer([]));
 
         $result = CommandBusBuilder::from($innerBus)

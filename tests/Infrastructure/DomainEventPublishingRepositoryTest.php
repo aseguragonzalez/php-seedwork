@@ -31,10 +31,10 @@ final class DomainEventPublishingRepositoryTest extends TestCase
     public function testSavePublishesEventsReturnedByAggregate(): void
     {
         $events = ['event-a', 'event-b'];
-        $aggregate = $this->createMock(AggregateRoot::class);
+        $aggregate = $this->createStub(AggregateRoot::class);
         $aggregate->method('collectEvents')->willReturn($events);
 
-        $repository = $this->createMock(Repository::class);
+        $repository = $this->createStub(Repository::class);
 
         $eventBus = $this->createMock(DomainEventBus::class);
         $eventBus->expects($this->once())->method('publish')->with($events);
@@ -48,7 +48,7 @@ final class DomainEventPublishingRepositoryTest extends TestCase
         $aggregate = $this->createMock(AggregateRoot::class);
         $aggregate->expects($this->never())->method('collectEvents');
 
-        $repository = $this->createMock(Repository::class);
+        $repository = $this->createStub(Repository::class);
         $repository->method('save')->willThrowException(new \RuntimeException('DB error'));
 
         $eventBus = $this->createMock(DomainEventBus::class);
@@ -63,13 +63,13 @@ final class DomainEventPublishingRepositoryTest extends TestCase
 
     public function testFindByDelegatesToInnerRepository(): void
     {
-        $id = $this->createMock(EntityId::class);
-        $aggregate = $this->createMock(AggregateRoot::class);
+        $id = $this->createStub(EntityId::class);
+        $aggregate = $this->createStub(AggregateRoot::class);
 
         $repository = $this->createMock(Repository::class);
         $repository->expects($this->once())->method('findBy')->with($id)->willReturn($aggregate);
 
-        $eventBus = $this->createMock(DomainEventBus::class);
+        $eventBus = $this->createStub(DomainEventBus::class);
 
         $publishingRepo = new DomainEventPublishingRepository($repository, $eventBus);
         $result = $publishingRepo->findBy($id);
@@ -79,12 +79,12 @@ final class DomainEventPublishingRepositoryTest extends TestCase
 
     public function testDeleteByDelegatesToInnerRepository(): void
     {
-        $id = $this->createMock(EntityId::class);
+        $id = $this->createStub(EntityId::class);
 
         $repository = $this->createMock(Repository::class);
         $repository->expects($this->once())->method('deleteBy')->with($id);
 
-        $eventBus = $this->createMock(DomainEventBus::class);
+        $eventBus = $this->createStub(DomainEventBus::class);
 
         $publishingRepo = new DomainEventPublishingRepository($repository, $eventBus);
         $publishingRepo->deleteBy($id);

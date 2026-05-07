@@ -19,7 +19,7 @@ final class ValidationQueryBusTest extends TestCase
     public function testAskValidatesQueryBeforeDelegating(): void
     {
         $query = $this->createGetBankAccountStatusQuery();
-        $result = $this->createMock(QueryResult::class);
+        $result = $this->createStub(QueryResult::class);
         $validator = $this->createMock(QueryValidator::class);
         $validator->expects($this->once())->method('validate')->with($query);
         $innerBus = $this->createMock(QueryBus::class);
