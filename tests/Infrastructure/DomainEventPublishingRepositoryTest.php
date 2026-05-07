@@ -7,6 +7,7 @@ namespace Tests\Infrastructure;
 use PHPUnit\Framework\TestCase;
 use SeedWork\Application\DomainEventBus;
 use SeedWork\Domain\AggregateRoot;
+use SeedWork\Domain\DomainEvent;
 use SeedWork\Domain\EntityId;
 use SeedWork\Domain\Repository;
 use SeedWork\Infrastructure\DomainEventPublishingRepository;
@@ -30,7 +31,9 @@ final class DomainEventPublishingRepositoryTest extends TestCase
 
     public function testSavePublishesEventsReturnedByAggregate(): void
     {
-        $events = ['event-a', 'event-b'];
+        $eventA = $this->createMock(DomainEvent::class);
+        $eventB = $this->createMock(DomainEvent::class);
+        $events = [$eventA, $eventB];
         $aggregate = $this->createStub(AggregateRoot::class);
         $aggregate->method('collectEvents')->willReturn($events);
 

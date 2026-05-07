@@ -11,7 +11,7 @@ use SeedWork\Application\QueryValidator;
 use SeedWork\Application\ValidationErrors;
 
 /**
- * QueryBus decorator that validates the query before delegating dispatch.
+ * QueryBus decorator that validates the query before delegating to the inner bus via ask().
  *
  * Applies the injected {@see QueryValidator} first; throws {@see ValidationErrors}
  * on failure without reaching the inner bus. Stack this as the outermost decorator

@@ -13,6 +13,8 @@ permissions: {}
 jobs:
   quality:
     uses: ./.github/workflows/quality.yml
+    permissions:
+      contents: read
 
   prerelease:
     name: Pre-release
