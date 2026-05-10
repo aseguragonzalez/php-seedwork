@@ -5,30 +5,30 @@ declare(strict_types=1);
 namespace SeedWork\Infrastructure;
 
 use SeedWork\Application\CommandBus;
-use SeedWork\Application\CommandValidator;
 use SeedWork\Domain\UnitOfWork;
 
 /**
  * Fluent builder for composing a CommandBus pipeline from a base bus and
  * optional decorator layers.
  *
- * Start with any base CommandBus (e.g. {@see ContainerCommandBus}) and chain
- * decorators. Each call wraps the current bus in the next layer.
+ * The default base bus is {@see RegistryCommandBus}. Start with
+ * {@see CommandBusBuilder::new()} (zero-arg) or {@see CommandBusBuilder::from()}
+ * with a custom base, then chain decorators.
  *
  * Recommended composition order (call in this sequence so the outermost layer
  * is added last):
- *   from(base) > withEventFlushing() > withTransactional() > withValidation() > build()
+ *   from(base) > withDomainEventFlushing() > withTransactional() > withValidation() > build()
  *
  * Example:
  * <code>
- * $bus = CommandBusBuilder::from($containerBus)
- *     ->withEventFlushing($deferredEventBus)
+ * $bus = CommandBusBuilder::new()
+ *     ->withDomainEventFlushing($deferredEventBus)
  *     ->withTransactional($unitOfWork)
- *     ->withValidation($validator)
+ *     ->withValidation()
  *     ->build();
  * </code>
  *
- * @see ContainerCommandBus        Default base bus.
+ * @see RegistryCommandBus         Default base bus.
  * @see DomainEventFlushCommandBus Event-flush decorator.
  * @see TransactionalCommandBus    Transaction decorator.
  * @see ValidationCommandBus       Validation decorator.
@@ -39,15 +39,40 @@ final class CommandBusBuilder
     {
     }
 
+    /**
+     * Creates a builder with a {@see RegistryCommandBus} as the base bus.
+     */
+    public static function new(): self
+    {
+        return new self(new RegistryCommandBus());
+    }
+
+    /**
+     * Creates a builder with the given command bus as the base.
+     */
     public static function from(CommandBus $commandBus): self
     {
         return new self($commandBus);
     }
 
     /**
+     * Returns the inner {@see RegistryCommandBus} for handler registration.
+     * Only available when the base bus is a RegistryCommandBus.
+     *
+     * @throws \LogicException When the base bus is not a RegistryCommandBus.
+     */
+    public function registry(): RegistryCommandBus
+    {
+        if (!$this->commandBus instanceof RegistryCommandBus) {
+            throw new \LogicException('Base bus is not a RegistryCommandBus.');
+        }
+        return $this->commandBus;
+    }
+
+    /**
      * Wraps the current bus in a {@see DomainEventFlushCommandBus}.
      */
-    public function withEventFlushing(DeferredDomainEventBus $domainEventBus): self
+    public function withDomainEventFlushing(DeferredDomainEventBus $domainEventBus): self
     {
         $this->commandBus = new DomainEventFlushCommandBus($this->commandBus, $domainEventBus);
         return $this;
@@ -65,9 +90,9 @@ final class CommandBusBuilder
     /**
      * Wraps the current bus in a {@see ValidationCommandBus}.
      */
-    public function withValidation(CommandValidator $validator): self
+    public function withValidation(): self
     {
-        $this->commandBus = new ValidationCommandBus($this->commandBus, $validator);
+        $this->commandBus = new ValidationCommandBus($this->commandBus);
         return $this;
     }
 

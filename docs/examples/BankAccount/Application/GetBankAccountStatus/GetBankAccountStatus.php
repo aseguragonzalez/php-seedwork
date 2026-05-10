@@ -7,9 +7,9 @@ namespace Examples\BankAccount\Application\GetBankAccountStatus;
 use SeedWork\Application\QueryHandler;
 
 /**
- * Application service that handles GetBankAccountStatusQuery and returns BankAccountStatusResult.
+ * Application service that handles GetBankAccountStatusQuery and returns Maybe<BankAccountStatusResult>.
  *
- * @extends QueryHandler<GetBankAccountStatusQuery, BankAccountStatusResult>
+ * @extends QueryHandler<GetBankAccountStatusQuery>
  */
 interface GetBankAccountStatus extends QueryHandler
 {

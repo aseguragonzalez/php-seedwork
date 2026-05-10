@@ -6,14 +6,13 @@ namespace Tests\Infrastructure;
 
 use PHPUnit\Framework\TestCase;
 use SeedWork\Application\CommandBus;
-use SeedWork\Application\CommandValidator;
 use SeedWork\Domain\UnitOfWork;
 use SeedWork\Infrastructure\CommandBusBuilder;
 use SeedWork\Infrastructure\DeferredDomainEventBus;
 use SeedWork\Infrastructure\DomainEventFlushCommandBus;
+use SeedWork\Infrastructure\RegistryCommandBus;
 use SeedWork\Infrastructure\TransactionalCommandBus;
 use SeedWork\Infrastructure\ValidationCommandBus;
-use Tests\Fixtures\FakeContainer;
 
 final class CommandBusBuilderTest extends TestCase
 {
@@ -24,6 +23,13 @@ final class CommandBusBuilderTest extends TestCase
         $result = CommandBusBuilder::from($innerBus)->build();
 
         self::assertSame($innerBus, $result);
+    }
+
+    public function testNewCreatesRegistryCommandBusAsDefault(): void
+    {
+        $result = CommandBusBuilder::new()->build();
+
+        self::assertInstanceOf(RegistryCommandBus::class, $result);
     }
 
     public function testWithTransactionalWrapsCurrentBus(): void
@@ -39,19 +45,18 @@ final class CommandBusBuilderTest extends TestCase
     public function testWithValidationWrapsCurrentBus(): void
     {
         $innerBus = $this->createStub(CommandBus::class);
-        $validator = $this->createStub(CommandValidator::class);
 
-        $result = CommandBusBuilder::from($innerBus)->withValidation($validator)->build();
+        $result = CommandBusBuilder::from($innerBus)->withValidation()->build();
 
         self::assertInstanceOf(ValidationCommandBus::class, $result);
     }
 
-    public function testWithEventFlushingWrapsCurrentBus(): void
+    public function testWithDomainEventFlushingWrapsCurrentBus(): void
     {
         $innerBus = $this->createStub(CommandBus::class);
-        $deferredEventBus = new DeferredDomainEventBus(new FakeContainer([]));
+        $deferredEventBus = new DeferredDomainEventBus();
 
-        $result = CommandBusBuilder::from($innerBus)->withEventFlushing($deferredEventBus)->build();
+        $result = CommandBusBuilder::from($innerBus)->withDomainEventFlushing($deferredEventBus)->build();
 
         self::assertInstanceOf(DomainEventFlushCommandBus::class, $result);
     }
@@ -60,13 +65,12 @@ final class CommandBusBuilderTest extends TestCase
     {
         $innerBus = $this->createStub(CommandBus::class);
         $unitOfWork = $this->createStub(UnitOfWork::class);
-        $validator = $this->createStub(CommandValidator::class);
-        $deferredEventBus = new DeferredDomainEventBus(new FakeContainer([]));
+        $deferredEventBus = new DeferredDomainEventBus();
 
         $result = CommandBusBuilder::from($innerBus)
-            ->withEventFlushing($deferredEventBus)
+            ->withDomainEventFlushing($deferredEventBus)
             ->withTransactional($unitOfWork)
-            ->withValidation($validator)
+            ->withValidation()
             ->build();
 
         self::assertInstanceOf(ValidationCommandBus::class, $result);

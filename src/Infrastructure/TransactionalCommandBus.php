@@ -6,18 +6,20 @@ namespace SeedWork\Infrastructure;
 
 use SeedWork\Application\Command;
 use SeedWork\Application\CommandBus;
+use SeedWork\Application\Result;
 use SeedWork\Domain\UnitOfWork;
 
 /**
- * CommandBus that runs each dispatch inside a unit of work: creates a session,
- * dispatches to the decorated command bus, then commits on success or rolls back on throw.
- * Exceptions are rethrown after rollback.
+ * CommandBus decorator that runs each dispatch inside a unit of work: creates a
+ * session, dispatches to the decorated command bus, then commits on success
+ * (including Result::failed — the domain rejected it cleanly) or rolls back on
+ * infrastructure exceptions.
  *
- * Usage: Wrap your CommandBus (e.g. ContainerCommandBus) with this and inject
- * a UnitOfWork implementation. When using both this and DomainEventFlushCommandBus,
- * put TransactionalCommandBus on the outside so the transaction wraps the
- * command and event flush (e.g. new TransactionalCommandBus(
- *     new DomainEventFlushCommandBus(containerBus, eventBus), unitOfWork)).
+ * - Result::ok() or Result::failed() → commit (no infrastructure error).
+ * - Throwable                        → rollback and rethrow.
+ *
+ * Recommended stacking (outer → inner):
+ *   ValidationCommandBus > TransactionalCommandBus > DomainEventFlushCommandBus > RegistryCommandBus
  *
  * @see CommandBus Application port.
  * @see UnitOfWork Transaction boundary contract.
@@ -25,24 +27,25 @@ use SeedWork\Domain\UnitOfWork;
 final class TransactionalCommandBus implements CommandBus
 {
     public function __construct(
-        private readonly CommandBus $commandBus,
+        private readonly CommandBus $inner,
         private readonly UnitOfWork $unitOfWork,
     ) {
     }
 
     /**
-     * Dispatches the command within a unit-of-work session; commits on success,
-     * rolls back on any throwable and rethrows.
+     * Dispatches the command within a unit-of-work session; commits on result
+     * (ok or failed), rolls back and rethrows on any throwable.
      *
      * @param Command $command The command to dispatch.
+     * @return Result The result from the inner bus.
      */
-    public function dispatch(Command $command): void
+    public function dispatch(Command $command): Result
     {
         $this->unitOfWork->createSession();
-
         try {
-            $this->commandBus->dispatch($command);
+            $result = $this->inner->dispatch($command);
             $this->unitOfWork->commit();
+            return $result;
         } catch (\Throwable $e) {
             $this->unitOfWork->rollback();
             throw $e;

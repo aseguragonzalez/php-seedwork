@@ -6,15 +6,15 @@ namespace SeedWork\Infrastructure;
 
 use SeedWork\Application\Command;
 use SeedWork\Application\CommandBus;
+use SeedWork\Application\Result;
 
 /**
- * CommandBus decorator that flushes the DeferredDomainEventBus after each
- * command is executed successfully. Ensures domain events published during
- * command handling are dispatched to subscribers once the command completes.
- * If the command throws, flush() is not called and the exception propagates.
+ * CommandBus decorator that flushes the {@see DeferredDomainEventBus} after each
+ * successful command, or clears it when the command returns {@see Result::failed()}.
  *
- * Usage: Wrap your real CommandBus (e.g. ContainerCommandBus) with this
- * decorator and inject the same DeferredDomainEventBus used by your handlers.
+ * - Result::ok()   → flush() — dispatch buffered domain events.
+ * - Result::failed() → clear() — discard events; domain rejected the operation.
+ * - Throwable      → propagates; flush/clear is not called.
  *
  * @see CommandBus Application port.
  * @see DeferredDomainEventBus Event bus that buffers and flushes.
@@ -22,20 +22,26 @@ use SeedWork\Application\CommandBus;
 final class DomainEventFlushCommandBus implements CommandBus
 {
     public function __construct(
-        private readonly CommandBus $commandBus,
-        private readonly DeferredDomainEventBus $domainEventBus
+        private readonly CommandBus $inner,
+        private readonly DeferredDomainEventBus $eventBus
     ) {
     }
 
     /**
-     * Dispatches the command to the inner bus, then flushes the event bus
-     * only when the command completes without throwing.
+     * Dispatches the command to the inner bus. Flushes the event bus on ok,
+     * clears it on fail. Exceptions from the inner bus propagate unchanged.
      *
      * @param Command $command The command to dispatch.
+     * @return Result The result from the inner bus.
      */
-    public function dispatch(Command $command): void
+    public function dispatch(Command $command): Result
     {
-        $this->commandBus->dispatch($command);
-        $this->domainEventBus->flush();
+        $result = $this->inner->dispatch($command);
+        if ($result->isOk()) {
+            $this->eventBus->flush();
+        } else {
+            $this->eventBus->clear();
+        }
+        return $result;
     }
 }

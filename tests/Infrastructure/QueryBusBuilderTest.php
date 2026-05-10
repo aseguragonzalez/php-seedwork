@@ -6,8 +6,8 @@ namespace Tests\Infrastructure;
 
 use PHPUnit\Framework\TestCase;
 use SeedWork\Application\QueryBus;
-use SeedWork\Application\QueryValidator;
 use SeedWork\Infrastructure\QueryBusBuilder;
+use SeedWork\Infrastructure\RegistryQueryBus;
 use SeedWork\Infrastructure\ValidationQueryBus;
 
 final class QueryBusBuilderTest extends TestCase
@@ -21,12 +21,18 @@ final class QueryBusBuilderTest extends TestCase
         self::assertSame($innerBus, $result);
     }
 
+    public function testNewCreatesRegistryQueryBusAsDefault(): void
+    {
+        $result = QueryBusBuilder::new()->build();
+
+        self::assertInstanceOf(RegistryQueryBus::class, $result);
+    }
+
     public function testWithValidationWrapsCurrentBus(): void
     {
         $innerBus = $this->createStub(QueryBus::class);
-        $validator = $this->createStub(QueryValidator::class);
 
-        $result = QueryBusBuilder::from($innerBus)->withValidation($validator)->build();
+        $result = QueryBusBuilder::from($innerBus)->withValidation()->build();
 
         self::assertInstanceOf(ValidationQueryBus::class, $result);
     }
@@ -34,10 +40,9 @@ final class QueryBusBuilderTest extends TestCase
     public function testChainReturnsSameBuilderInstance(): void
     {
         $innerBus = $this->createStub(QueryBus::class);
-        $validator = $this->createStub(QueryValidator::class);
         $builder = QueryBusBuilder::from($innerBus);
 
-        $same = $builder->withValidation($validator);
+        $same = $builder->withValidation();
 
         self::assertSame($builder, $same);
     }

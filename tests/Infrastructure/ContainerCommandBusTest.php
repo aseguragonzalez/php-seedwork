@@ -23,7 +23,9 @@ final class ContainerCommandBusTest extends TestCase
         $bus = new ContainerCommandBus($container);
 
         $bus->register(DepositMoneyCommand::class, 'depositHandler');
-        $bus->dispatch($command);
+        $result = $bus->dispatch($command);
+
+        $this->assertTrue($result->isOk());
     }
 
     public function testDispatchInvokesCorrectHandlerPerCommandType(): void

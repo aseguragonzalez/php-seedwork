@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace Tests\Infrastructure;
 
 use PHPUnit\Framework\TestCase;
+use SeedWork\Application\Maybe;
 use SeedWork\Application\QueryHandler;
-use SeedWork\Application\QueryResult;
 use SeedWork\Infrastructure\ContainerQueryBus;
-use Examples\BankAccount\Application\GetBankAccountStatus\GetBankAccountStatusQueryHandler;
 use Examples\BankAccount\Application\GetBankAccountStatus\BankAccountStatusResult;
 use Examples\BankAccount\Application\GetBankAccountStatus\GetBankAccountStatusQuery;
-use Examples\BankAccount\Infrastructure\Repositories\InMemoryBankAccountRepository;
+use Examples\BankAccount\Application\GetBankAccountStatus\GetBankAccountStatusQueryHandler;
 use Examples\BankAccount\Domain\Entities\BankAccount;
 use Examples\BankAccount\Domain\Entities\BankAccountId;
 use Examples\BankAccount\Domain\ValueObjects\AccountBalance;
+use Examples\BankAccount\Infrastructure\Repositories\InMemoryBankAccountRepository;
 use Tests\Fixtures\FakeContainer;
 
 final class ContainerQueryBusTest extends TestCase
@@ -22,16 +22,16 @@ final class ContainerQueryBusTest extends TestCase
     public function testAskReturnsResultFromRegisteredHandler(): void
     {
         $query = $this->createGetBankAccountStatusQuery();
-        $stubResult = $this->createStubQueryResult();
+        $expectedMaybe = Maybe::just($this->createStubResult());
         $handler = $this->createStub(QueryHandler::class);
-        $handler->method('handle')->willReturn($stubResult);
+        $handler->method('handle')->willReturn($expectedMaybe);
         $container = new FakeContainer(['statusHandler' => $handler]);
         $bus = new ContainerQueryBus($container);
         $bus->register(GetBankAccountStatusQuery::class, 'statusHandler');
 
         $result = $bus->ask($query);
 
-        $this->assertSame($stubResult, $result);
+        $this->assertSame($expectedMaybe, $result);
     }
 
     public function testAskInvokesHandlerWithQuery(): void
@@ -41,7 +41,7 @@ final class ContainerQueryBusTest extends TestCase
         $handler->expects($this->once())
             ->method('handle')
             ->with($query)
-            ->willReturn($this->createStubQueryResult());
+            ->willReturn(Maybe::nothing());
         $container = new FakeContainer(['statusHandler' => $handler]);
         $bus = new ContainerQueryBus($container);
         $bus->register(GetBankAccountStatusQuery::class, 'statusHandler');
@@ -83,20 +83,6 @@ final class ContainerQueryBusTest extends TestCase
         $bus->ask($query);
     }
 
-    private function createGetBankAccountStatusQuery(): GetBankAccountStatusQuery
-    {
-        return new GetBankAccountStatusQuery(BankAccountId::create()->value);
-    }
-
-    private function createStubQueryResult(): QueryResult
-    {
-        return new BankAccountStatusResult(
-            BankAccountId::create(),
-            AccountBalance::zero(),
-            []
-        );
-    }
-
     public function testGetBankAccountStatusQueryHandlerReturnsAggregateData(): void
     {
         $repository = new InMemoryBankAccountRepository();
@@ -109,11 +95,27 @@ final class ContainerQueryBusTest extends TestCase
         $bus->register(GetBankAccountStatusQuery::class, 'statusHandler');
 
         $query = new GetBankAccountStatusQuery($account->id->value);
-        $result = $bus->ask($query);
+        $maybe = $bus->ask($query);
 
+        $this->assertTrue($maybe->hasValue());
+        $result = $maybe->value();
         $this->assertInstanceOf(BankAccountStatusResult::class, $result);
         $this->assertTrue($result->accountId->equals($account->id));
         $this->assertSame(0, $result->balance->amount);
         $this->assertSame([], $result->transactions);
+    }
+
+    private function createGetBankAccountStatusQuery(): GetBankAccountStatusQuery
+    {
+        return new GetBankAccountStatusQuery(BankAccountId::create()->value);
+    }
+
+    private function createStubResult(): BankAccountStatusResult
+    {
+        return new BankAccountStatusResult(
+            BankAccountId::create(),
+            AccountBalance::zero(),
+            []
+        );
     }
 }

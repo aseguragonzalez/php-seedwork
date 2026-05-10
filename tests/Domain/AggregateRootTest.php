@@ -6,6 +6,8 @@ namespace Tests\Domain;
 
 use PHPUnit\Framework\TestCase;
 use Examples\BankAccount\Domain\Entities\BankAccount;
+use Examples\BankAccount\Domain\Events\MoneyDeposited;
+use Examples\BankAccount\Domain\Events\MoneyWithdrawn;
 use Examples\BankAccount\Domain\ValueObjects\Currency;
 use Examples\BankAccount\Domain\ValueObjects\Money;
 
@@ -34,7 +36,7 @@ final class AggregateRootTest extends TestCase
         $events = $account->collectEvents();
 
         $this->assertCount(2, $events);
-        $this->assertSame('bank_account.money_deposited', $events[0]->type);
-        $this->assertSame('bank_account.money_withdrawn', $events[1]->type);
+        $this->assertInstanceOf(MoneyDeposited::class, $events[0]);
+        $this->assertInstanceOf(MoneyWithdrawn::class, $events[1]);
     }
 }
