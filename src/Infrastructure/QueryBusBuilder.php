@@ -19,6 +19,7 @@ use SeedWork\Application\QueryBus;
  * $bus = QueryBusBuilder::new()
  *     ->withValidation()
  *     ->build();
+ * $bus->registry()->register(MyQuery::class, new MyQueryHandler());
  * </code>
  *
  * @see RegistryQueryBus   Default base bus.
@@ -26,8 +27,13 @@ use SeedWork\Application\QueryBus;
  */
 final class QueryBusBuilder
 {
-    private function __construct(private QueryBus $queryBus)
+    private readonly RegistryQueryBus $registryBus;
+    private QueryBus $queryBus;
+
+    public function __construct()
     {
+        $this->registryBus = new RegistryQueryBus();
+        $this->queryBus = $this->registryBus;
     }
 
     /**
@@ -35,29 +41,32 @@ final class QueryBusBuilder
      */
     public static function new(): self
     {
-        return new self(new RegistryQueryBus());
+        return new self();
     }
 
     /**
      * Creates a builder with the given query bus as the base.
+     * Note: {@see registry()} is not available when using a custom base.
+     *
+     * @deprecated Use {@see QueryBusBuilder::new()} for the default RegistryQueryBus base.
      */
     public static function from(QueryBus $queryBus): self
     {
-        return new self($queryBus);
+        $builder = new self();
+        $builder->queryBus = $queryBus;
+        return $builder;
     }
 
     /**
      * Returns the inner {@see RegistryQueryBus} for handler registration.
-     * Only available when the base bus is a RegistryQueryBus.
      *
-     * @throws \LogicException When the base bus is not a RegistryQueryBus.
+     * When built with {@see new()}, always returns the same registry instance
+     * regardless of how many decorators have been added. When built with
+     * {@see from()}, returns the internal registry (not the custom base).
      */
     public function registry(): RegistryQueryBus
     {
-        if (!$this->queryBus instanceof RegistryQueryBus) {
-            throw new \LogicException('Base bus is not a RegistryQueryBus.');
-        }
-        return $this->queryBus;
+        return $this->registryBus;
     }
 
     /**

@@ -86,4 +86,23 @@ final class CommandBusBuilderTest extends TestCase
 
         self::assertInstanceOf(ValidationCommandBus::class, $result);
     }
+
+    public function testRegistryReturnsSameInstanceBeforeAndAfterDecoration(): void
+    {
+        $builder = CommandBusBuilder::new();
+        $unitOfWork = $this->createStub(UnitOfWork::class);
+        $deferredEventBus = new DeferredDomainEventBus();
+
+        $registryBefore = $builder->registry();
+
+        $builder
+            ->withDomainEventCoordination($deferredEventBus)
+            ->withTransactional($unitOfWork)
+            ->withValidation();
+
+        $registryAfter = $builder->registry();
+
+        self::assertInstanceOf(RegistryCommandBus::class, $registryBefore);
+        self::assertSame($registryBefore, $registryAfter);
+    }
 }

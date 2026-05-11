@@ -20,17 +20,22 @@ final class Maybe
 {
     /** @param T|null $value */
     private function __construct(
-        private readonly mixed $value
+        private readonly mixed $value,
+        private readonly bool $hasValue
     ) {
     }
 
     /**
      * @param T $value
      * @return self<T>
+     * @throws \InvalidArgumentException When null is passed. Use {@see nothing()} instead.
      */
     public static function just(mixed $value): self
     {
-        return new self($value);
+        if ($value === null) {
+            throw new \InvalidArgumentException('Maybe::just() cannot contain null. Use Maybe::nothing() instead.');
+        }
+        return new self($value, true);
     }
 
     /**
@@ -38,12 +43,12 @@ final class Maybe
      */
     public static function nothing(): self
     {
-        return new self(null);
+        return new self(null, false);
     }
 
     public function hasValue(): bool
     {
-        return $this->value !== null;
+        return $this->hasValue;
     }
 
     /** @return T|null */

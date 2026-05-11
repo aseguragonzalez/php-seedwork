@@ -46,4 +46,18 @@ final class QueryBusBuilderTest extends TestCase
 
         self::assertSame($builder, $same);
     }
+
+    public function testRegistryReturnsSameInstanceBeforeAndAfterDecoration(): void
+    {
+        $builder = QueryBusBuilder::new();
+
+        $registryBefore = $builder->registry();
+
+        $builder->withValidation();
+
+        $registryAfter = $builder->registry();
+
+        self::assertInstanceOf(RegistryQueryBus::class, $registryBefore);
+        self::assertSame($registryBefore, $registryAfter);
+    }
 }

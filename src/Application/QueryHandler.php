@@ -15,8 +15,9 @@ namespace SeedWork\Application;
 interface QueryHandler
 {
     /**
-     * @param Query $query The query to handle.
+     * @param T $query The query to handle.
      * @return Maybe<mixed> The optional query result.
+     * @phpstan-ignore generics.variance
      */
     public function handle(Query $query): Maybe;
 }

@@ -27,6 +27,7 @@ use SeedWork\Domain\UnitOfWork;
  *     ->withTransactional($unitOfWork)
  *     ->withValidation()
  *     ->build();
+ * $bus->registry()->register(MyCommand::class, new MyCommandHandler());
  * </code>
  *
  * @see RegistryCommandBus                  Default base bus.
@@ -36,8 +37,13 @@ use SeedWork\Domain\UnitOfWork;
  */
 final class CommandBusBuilder
 {
-    private function __construct(private CommandBus $commandBus)
+    private readonly RegistryCommandBus $registryBus;
+    private CommandBus $commandBus;
+
+    public function __construct()
     {
+        $this->registryBus = new RegistryCommandBus();
+        $this->commandBus = $this->registryBus;
     }
 
     /**
@@ -45,29 +51,32 @@ final class CommandBusBuilder
      */
     public static function new(): self
     {
-        return new self(new RegistryCommandBus());
+        return new self();
     }
 
     /**
      * Creates a builder with the given command bus as the base.
+     * Note: {@see registry()} is not available when using a custom base.
+     *
+     * @deprecated Use {@see CommandBusBuilder::new()} for the default RegistryCommandBus base.
      */
     public static function from(CommandBus $commandBus): self
     {
-        return new self($commandBus);
+        $builder = new self();
+        $builder->commandBus = $commandBus;
+        return $builder;
     }
 
     /**
      * Returns the inner {@see RegistryCommandBus} for handler registration.
-     * Only available when the base bus is a RegistryCommandBus.
      *
-     * @throws \LogicException When the base bus is not a RegistryCommandBus.
+     * When built with {@see new()}, always returns the same registry instance
+     * regardless of how many decorators have been added. When built with
+     * {@see from()}, returns the internal registry (not the custom base).
      */
     public function registry(): RegistryCommandBus
     {
-        if (!$this->commandBus instanceof RegistryCommandBus) {
-            throw new \LogicException('Base bus is not a RegistryCommandBus.');
-        }
-        return $this->commandBus;
+        return $this->registryBus;
     }
 
     /**

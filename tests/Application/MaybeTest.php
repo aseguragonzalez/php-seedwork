@@ -40,4 +40,12 @@ final class MaybeTest extends TestCase
         $this->assertTrue($maybe->hasValue());
         $this->assertSame($obj, $maybe->value());
     }
+
+    public function testJustWithNullThrowsInvalidArgumentException(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Maybe::just() cannot contain null. Use Maybe::nothing() instead.');
+
+        Maybe::just(null);
+    }
 }
