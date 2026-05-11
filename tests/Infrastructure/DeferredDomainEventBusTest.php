@@ -9,6 +9,7 @@ use SeedWork\Application\DomainEventHandler;
 use SeedWork\Infrastructure\DeferredDomainEventBus;
 use Examples\BankAccount\Domain\Entities\BankAccountId;
 use Examples\BankAccount\Domain\Entities\TransactionId;
+use Examples\BankAccount\Domain\Events\BankAccountEventId;
 use Examples\BankAccount\Domain\Events\MoneyDeposited;
 use Examples\BankAccount\Domain\Events\MoneyWithdrawn;
 use Examples\BankAccount\Domain\ValueObjects\Currency;
@@ -16,7 +17,7 @@ use Examples\BankAccount\Domain\ValueObjects\Money;
 
 final class DeferredDomainEventBusTest extends TestCase
 {
-    public function testFlushDispatchesToSubscribedHandlersByEventType(): void
+    public function testDispatchDispatchesToSubscribedHandlersByEventType(): void
     {
         $event = $this->createMoneyDepositedEvent();
         $handler = $this->createMock(DomainEventHandler::class);
@@ -25,20 +26,20 @@ final class DeferredDomainEventBusTest extends TestCase
 
         $bus->subscribe(MoneyDeposited::class, $handler);
         $bus->publish([$event]);
-        $bus->flush();
+        $bus->dispatch();
     }
 
-    public function testFlushSkipsEventsWithNoSubscribedHandlers(): void
+    public function testDispatchSkipsEventsWithNoSubscribedHandlers(): void
     {
         $bus = new DeferredDomainEventBus();
         $event = $this->createMoneyDepositedEvent();
         $bus->publish([$event]);
-        $bus->flush();
+        $bus->dispatch();
 
         $this->addToAssertionCount(1);
     }
 
-    public function testFlushDispatchesMultipleEventTypesToTheirHandlers(): void
+    public function testDispatchesMultipleEventTypesToTheirHandlers(): void
     {
         $deposited = $this->createMoneyDepositedEvent();
         $withdrawn = $this->createMoneyWithdrawnEvent();
@@ -51,10 +52,10 @@ final class DeferredDomainEventBusTest extends TestCase
         $bus->subscribe(MoneyWithdrawn::class, $handlerWithdraw);
         $bus->publish([$deposited, $withdrawn]);
 
-        $bus->flush();
+        $bus->dispatch();
     }
 
-    public function testFlushInvokesMultipleHandlersForSameEventType(): void
+    public function testDispatchInvokesMultipleHandlersForSameEventType(): void
     {
         $event = $this->createMoneyDepositedEvent();
         $handler1 = $this->createMock(DomainEventHandler::class);
@@ -66,10 +67,10 @@ final class DeferredDomainEventBusTest extends TestCase
         $bus->subscribe(MoneyDeposited::class, $handler2);
         $bus->publish([$event]);
 
-        $bus->flush();
+        $bus->dispatch();
     }
 
-    public function testFlushClearsBufferAfterDispatch(): void
+    public function testDispatchClearsBufferAfterDispatch(): void
     {
         $event1 = $this->createMoneyDepositedEvent();
         $event2 = $this->createMoneyDepositedEvent();
@@ -86,15 +87,15 @@ final class DeferredDomainEventBusTest extends TestCase
         $bus->subscribe(MoneyDeposited::class, $handler);
 
         $bus->publish([$event1]);
-        $bus->flush();
+        $bus->dispatch();
 
         $bus->publish([$event2]);
-        $bus->flush();
+        $bus->dispatch();
 
         $this->assertSame([$event1, $event2], $received);
     }
 
-    public function testClearDiscardsBufferedEventsWithoutDispatching(): void
+    public function testDiscardDiscardsBufferedEventsWithoutDispatching(): void
     {
         $handler = $this->createMock(DomainEventHandler::class);
         $handler->expects($this->never())->method('handle');
@@ -102,10 +103,27 @@ final class DeferredDomainEventBusTest extends TestCase
         $bus = new DeferredDomainEventBus();
         $bus->subscribe(MoneyDeposited::class, $handler);
         $bus->publish([$this->createMoneyDepositedEvent()]);
-        $bus->clear();
-        $bus->flush();
+        $bus->discard();
+        $bus->dispatch();
 
         $this->addToAssertionCount(1);
+    }
+
+    public function testPublishIsIdempotentForSameEventId(): void
+    {
+        $eventId = BankAccountEventId::fromString('evt-idempotent-test.1');
+        $event = $this->createMoneyDepositedEventWithId($eventId);
+
+        $handler = $this->createMock(DomainEventHandler::class);
+        $handler->expects($this->once())->method('handle');
+
+        $bus = new DeferredDomainEventBus();
+        $bus->subscribe(MoneyDeposited::class, $handler);
+
+        // Publish the same event twice — handler must be invoked only once
+        $bus->publish([$event]);
+        $bus->publish([$event]);
+        $bus->dispatch();
     }
 
     private function createMoneyDepositedEvent(): MoneyDeposited
@@ -114,6 +132,16 @@ final class DeferredDomainEventBusTest extends TestCase
             new Money(100, Currency::USD),
             BankAccountId::create(),
             TransactionId::create()
+        );
+    }
+
+    private function createMoneyDepositedEventWithId(BankAccountEventId $id): MoneyDeposited
+    {
+        return MoneyDeposited::create(
+            new Money(100, Currency::USD),
+            BankAccountId::create(),
+            TransactionId::create(),
+            $id
         );
     }
 

@@ -10,16 +10,20 @@ use SeedWork\Domain\DomainEvent;
 
 /**
  * Registry-based implementation of {@see DomainEventBus} that buffers events and
- * dispatches them only when flush() is called (deferred dispatch).
+ * dispatches them only when dispatch() is called (deferred dispatch).
+ *
+ * The pending buffer is keyed by event id (string) for idempotency: publishing the
+ * same event twice (same {@see \SeedWork\Domain\EventId}) results in a single
+ * dispatch. This prevents double-handling when aggregates share events across calls.
  *
  * @see DomainEventBus Application port.
- * @see DomainEventHandler Handlers registered via subscribe() and invoked at flush.
+ * @see DomainEventHandler Handlers registered via subscribe() and invoked at dispatch.
  */
 final class DeferredDomainEventBus implements DomainEventBus
 {
     /** @var array<string, list<DomainEventHandler<DomainEvent>>> */
     private array $handlers = [];
-    /** @var list<DomainEvent> */
+    /** @var array<string, DomainEvent> keyed by event id for idempotency */
     private array $pending = [];
 
     /**
@@ -32,18 +36,26 @@ final class DeferredDomainEventBus implements DomainEventBus
     }
 
     /**
+     * Buffers events by id; duplicate ids (same event published twice) are ignored.
+     *
      * @param array<DomainEvent> $events Events to buffer.
      */
     public function publish(array $events): void
     {
         foreach ($events as $event) {
-            $this->pending[] = $event;
+            $id = $event->id->value;
+            if (!isset($this->pending[$id])) {
+                $this->pending[$id] = $event;
+            }
         }
     }
 
-    public function flush(): void
+    /**
+     * Dispatches all buffered events to their registered handlers, then clears the buffer.
+     */
+    public function dispatch(): void
     {
-        $events = $this->pending;
+        $events = array_values($this->pending);
         $this->pending = [];
         foreach ($events as $event) {
             $handlers = $this->handlers[$event::class] ?? [];
@@ -53,7 +65,10 @@ final class DeferredDomainEventBus implements DomainEventBus
         }
     }
 
-    public function clear(): void
+    /**
+     * Clears the buffer without dispatching. Use when the command was rejected.
+     */
+    public function discard(): void
     {
         $this->pending = [];
     }

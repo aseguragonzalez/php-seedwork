@@ -12,7 +12,7 @@ namespace SeedWork\Application;
  * via the outbox pattern for reliable delivery.
  *
  * @see IntegrationEvent Events published through this port.
- * @see OutboxRepository Outbox-based implementation.
+ * @see SeedWork\Infrastructure\IntegrationEventOutboxRepository Outbox-based implementation.
  */
 interface IntegrationEventPublisher
 {

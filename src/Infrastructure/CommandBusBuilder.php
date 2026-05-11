@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SeedWork\Infrastructure;
 
 use SeedWork\Application\CommandBus;
+use SeedWork\Application\DomainEventBus;
 use SeedWork\Domain\UnitOfWork;
 
 /**
@@ -17,21 +18,21 @@ use SeedWork\Domain\UnitOfWork;
  *
  * Recommended composition order (call in this sequence so the outermost layer
  * is added last):
- *   from(base) > withDomainEventFlushing() > withTransactional() > withValidation() > build()
+ *   from(base) > withDomainEventCoordination() > withTransactional() > withValidation() > build()
  *
  * Example:
  * <code>
  * $bus = CommandBusBuilder::new()
- *     ->withDomainEventFlushing($deferredEventBus)
+ *     ->withDomainEventCoordination($deferredEventBus)
  *     ->withTransactional($unitOfWork)
  *     ->withValidation()
  *     ->build();
  * </code>
  *
- * @see RegistryCommandBus         Default base bus.
- * @see DomainEventFlushCommandBus Event-flush decorator.
- * @see TransactionalCommandBus    Transaction decorator.
- * @see ValidationCommandBus       Validation decorator.
+ * @see RegistryCommandBus                  Default base bus.
+ * @see DomainEventCoordinatorCommandBus    Event-coordination decorator.
+ * @see TransactionalCommandBus             Transaction decorator.
+ * @see ValidationCommandBus               Validation decorator.
  */
 final class CommandBusBuilder
 {
@@ -70,11 +71,13 @@ final class CommandBusBuilder
     }
 
     /**
-     * Wraps the current bus in a {@see DomainEventFlushCommandBus}.
+     * Wraps the current bus in a {@see DomainEventCoordinatorCommandBus}.
+     *
+     * @param DomainEventBus $domainEventBus The event bus to coordinate.
      */
-    public function withDomainEventFlushing(DeferredDomainEventBus $domainEventBus): self
+    public function withDomainEventCoordination(DomainEventBus $domainEventBus): self
     {
-        $this->commandBus = new DomainEventFlushCommandBus($this->commandBus, $domainEventBus);
+        $this->commandBus = new DomainEventCoordinatorCommandBus($this->commandBus, $domainEventBus);
         return $this;
     }
 

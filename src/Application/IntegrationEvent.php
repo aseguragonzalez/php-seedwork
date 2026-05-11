@@ -12,7 +12,7 @@ namespace SeedWork\Application;
  * with explicit schema versioning (type + version) to support evolution.
  *
  * @see IntegrationEventPublisher Application port for publishing integration events.
- * @see OutboxRepository Outbox pattern for reliable delivery.
+ * @see IntegrationEventOutboxRepository Outbox pattern for reliable delivery.
  */
 abstract readonly class IntegrationEvent
 {

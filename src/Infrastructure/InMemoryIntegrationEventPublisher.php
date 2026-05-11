@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace SeedWork\Infrastructure;
 
 use SeedWork\Application\IntegrationEvent;
-use SeedWork\Application\IntegrationEventPublisher;
+use SeedWork\Application\IntegrationEventPublisherSpy;
 
 /**
- * In-memory implementation of {@see IntegrationEventPublisher} for use in tests.
+ * In-memory implementation of {@see IntegrationEventPublisherSpy} for use in tests.
  *
- * @see IntegrationEventPublisher Application port this implements.
+ * @see IntegrationEventPublisherSpy Test-focused extension implemented here.
  */
-final class InMemoryIntegrationEventPublisher implements IntegrationEventPublisher
+final class InMemoryIntegrationEventPublisher implements IntegrationEventPublisherSpy
 {
     /** @var list<IntegrationEvent> */
     private array $published = [];
@@ -30,12 +30,12 @@ final class InMemoryIntegrationEventPublisher implements IntegrationEventPublish
     /**
      * @return list<IntegrationEvent>
      */
-    public function getPublished(): array
+    public function published(): array
     {
         return $this->published;
     }
 
-    public function clear(): void
+    public function reset(): void
     {
         $this->published = [];
     }

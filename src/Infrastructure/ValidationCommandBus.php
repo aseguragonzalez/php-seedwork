@@ -19,7 +19,7 @@ use SeedWork\Application\ValidationErrors;
  * any transaction or event-flush layer.
  *
  * Recommended stacking order (outermost to innermost):
- *   ValidationCommandBus > TransactionalCommandBus > DomainEventFlushCommandBus > RegistryCommandBus
+ *   ValidationCommandBus > TransactionalCommandBus > DomainEventCoordinatorCommandBus > RegistryCommandBus
  *
  * @see CommandBus        Application port this decorates.
  * @see Command::validate() Validation is driven by the command itself.

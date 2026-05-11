@@ -4,34 +4,39 @@ declare(strict_types=1);
 
 namespace SeedWork\Infrastructure;
 
-use SeedWork\Application\IntegrationEvent;
-use SeedWork\Application\OutboxRecord;
-use SeedWork\Application\OutboxRepository;
-use SeedWork\Application\OutboxStatus;
+use SeedWork\Application\BackgroundTask;
 
 /**
- * In-memory implementation of {@see OutboxRepository} for use in tests and examples.
+ * In-memory implementation of {@see TaskOutboxRepositorySpy} for use in tests.
  *
  * Generates UUIDs with a simple random implementation to avoid external dependencies.
  *
- * @see OutboxRepository Application port this implements.
+ * @see TaskOutboxRepositorySpy Test-focused extension implemented here.
  */
-final class InMemoryOutboxRepository implements OutboxRepository
+final class InMemoryTaskOutboxRepository implements TaskOutboxRepositorySpy
 {
-    /** @var array<string, OutboxRecord> */
+    /** @var array<string, TaskOutboxRecord> */
     private array $records = [];
+
+    /**
+     * @return array<TaskOutboxRecord>
+     */
+    public function all(): array
+    {
+        return array_values($this->records);
+    }
 
     /**
      * Persists a new outbox record with Pending status.
      *
-     * @param IntegrationEvent $event The event to store.
+     * @param BackgroundTask $task The task to store.
      */
-    public function save(IntegrationEvent $event): void
+    public function save(BackgroundTask $task): void
     {
-        $record = new OutboxRecord(
+        $record = new TaskOutboxRecord(
             id: $this->generateId(),
-            event: $event,
-            status: OutboxStatus::Pending,
+            task: $task,
+            status: IntegrationEventOutboxStatus::Pending,
             attempts: 0,
             createdAt: new \DateTimeImmutable('now', new \DateTimeZone('UTC'))
         );
@@ -39,31 +44,30 @@ final class InMemoryOutboxRepository implements OutboxRepository
     }
 
     /**
-     * @return array<OutboxRecord>
+     * @return array<TaskOutboxRecord>
      */
     public function findPending(int $limit = 100): array
     {
         $pending = array_filter(
             $this->records,
-            fn (OutboxRecord $r) => $r->status === OutboxStatus::Pending
+            fn (TaskOutboxRecord $r) => $r->status === IntegrationEventOutboxStatus::Pending
         );
         return array_slice(array_values($pending), 0, $limit);
     }
 
-    public function markAsPublished(string $id): void
+    public function markAsDelivered(string $id): void
     {
         $record = $this->records[$id] ?? null;
         if ($record === null) {
             return;
         }
-        $this->records[$id] = new OutboxRecord(
+        $this->records[$id] = new TaskOutboxRecord(
             id: $record->id,
-            event: $record->event,
-            status: OutboxStatus::Published,
+            task: $record->task,
+            status: IntegrationEventOutboxStatus::Published,
             attempts: $record->attempts,
             createdAt: $record->createdAt,
-            lastError: $record->lastError,
-            publishedAt: new \DateTimeImmutable('now', new \DateTimeZone('UTC'))
+            deliveredAt: new \DateTimeImmutable('now', new \DateTimeZone('UTC'))
         );
     }
 
@@ -73,14 +77,19 @@ final class InMemoryOutboxRepository implements OutboxRepository
         if ($record === null) {
             return;
         }
-        $this->records[$id] = new OutboxRecord(
+        $this->records[$id] = new TaskOutboxRecord(
             id: $record->id,
-            event: $record->event,
-            status: OutboxStatus::Failed,
+            task: $record->task,
+            status: IntegrationEventOutboxStatus::Failed,
             attempts: $record->attempts + 1,
             createdAt: $record->createdAt,
             lastError: $error
         );
+    }
+
+    public function reset(): void
+    {
+        $this->records = [];
     }
 
     private function generateId(): string

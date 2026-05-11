@@ -7,21 +7,26 @@ namespace SeedWork\Application;
 use SeedWork\Domain\DomainEvent;
 
 /**
- * Application port for publishing and subscribing to Domain Events.
+ * Application port for the domain event bus: publish, subscribe, dispatch and discard.
+ *
+ * Combines {@see DomainEventBusPublisher} (buffer events) and
+ * {@see DomainEventBusSubscriber} (register handlers) with lifecycle operations:
+ *
+ * - dispatch() — run all buffered events through their handlers, then clear the buffer.
+ * - discard()  — clear the buffer without dispatching (use on command failure).
  *
  * @see DomainEvent Events published through this bus.
- * @see DomainEventHandler Handlers registered via subscribe(); handle() is invoked on publish.
+ * @see DomainEventHandler Handlers registered via subscribe(); handle() is invoked on dispatch.
  */
-interface DomainEventBus
+interface DomainEventBus extends DomainEventBusPublisher, DomainEventBusSubscriber
 {
     /**
-     * @param array<DomainEvent> $events Events to publish.
+     * Dispatches all buffered events to their registered handlers, then clears the buffer.
      */
-    public function publish(array $events): void;
+    public function dispatch(): void;
 
     /**
-     * @param string $eventType FQCN of the domain event (e.g. MoneyDeposited::class).
-     * @param DomainEventHandler<DomainEvent> $handler Handler instance to invoke.
+     * Clears the buffer without dispatching. Use when the command was rejected.
      */
-    public function subscribe(string $eventType, DomainEventHandler $handler): void;
+    public function discard(): void;
 }

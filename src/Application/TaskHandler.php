@@ -7,12 +7,12 @@ namespace SeedWork\Application;
 /**
  * Contract for executing a single type of background task.
  *
- * Handlers are registered on a {@see TaskBus} via register($taskType, $handler).
- * When a task of that type is dispatched, the bus invokes handle() with the task.
- * Implement handle() idempotently when tasks may be retried.
+ * Handlers are registered on a scheduler or task bus and invoked when a task of
+ * matching type is ready for execution. Implement handle() idempotently when
+ * tasks may be retried.
  *
  * @see BackgroundTask Tasks passed to handle().
- * @see TaskBus        Dispatches tasks to the appropriate handler.
+ * @see TaskScheduler  Port for scheduling tasks.
  */
 interface TaskHandler
 {

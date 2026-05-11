@@ -6,20 +6,19 @@ namespace SeedWork\Infrastructure;
 
 use SeedWork\Application\IntegrationEvent;
 use SeedWork\Application\IntegrationEventPublisher;
-use SeedWork\Application\OutboxRepository;
 
 /**
  * {@see IntegrationEventPublisher} that persists events via the transactional
- * outbox pattern. Each event is stored as a pending {@see \SeedWork\Application\OutboxRecord}
- * in the {@see OutboxRepository} for reliable async delivery.
+ * outbox pattern. Each event is stored as a pending {@see IntegrationEventOutboxRecord}
+ * in the {@see IntegrationEventOutboxRepository} for reliable async delivery.
  *
- * @see OutboxRepository  Repository that stores the outbox records.
- * @see IntegrationEvent  Events stored by this publisher.
+ * @see IntegrationEventOutboxRepository Repository that stores the outbox records.
+ * @see IntegrationEvent                 Events stored by this publisher.
  */
 final class OutboxIntegrationEventPublisher implements IntegrationEventPublisher
 {
     public function __construct(
-        private readonly OutboxRepository $repository
+        private readonly IntegrationEventOutboxRepository $repository
     ) {
     }
 

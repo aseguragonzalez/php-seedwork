@@ -7,12 +7,12 @@ namespace Tests\Infrastructure;
 use PHPUnit\Framework\TestCase;
 use SeedWork\Application\Command;
 use SeedWork\Application\CommandBus;
-use SeedWork\Application\CommandHandler;
+use SeedWork\Application\DomainEventBus;
 use SeedWork\Application\DomainEventHandler;
 use SeedWork\Application\Result;
 use SeedWork\Application\ResultError;
 use SeedWork\Infrastructure\DeferredDomainEventBus;
-use SeedWork\Infrastructure\DomainEventFlushCommandBus;
+use SeedWork\Infrastructure\DomainEventCoordinatorCommandBus;
 use Examples\BankAccount\Application\DepositMoney\DepositMoneyCommand;
 use Examples\BankAccount\Domain\Entities\BankAccountId;
 use Examples\BankAccount\Domain\Entities\TransactionId;
@@ -20,9 +20,9 @@ use Examples\BankAccount\Domain\Events\MoneyDeposited;
 use Examples\BankAccount\Domain\ValueObjects\Currency;
 use Examples\BankAccount\Domain\ValueObjects\Money;
 
-final class DomainEventFlushCommandBusTest extends TestCase
+final class DomainEventCoordinatorCommandBusTest extends TestCase
 {
-    public function testDispatchFlushesEventBusWhenResultIsOk(): void
+    public function testDispatchCallsEventBusDispatchWhenResultIsOk(): void
     {
         $event = $this->createMoneyDepositedEvent();
         $eventHandler = $this->createMock(DomainEventHandler::class);
@@ -34,13 +34,13 @@ final class DomainEventFlushCommandBusTest extends TestCase
 
         $innerBus = $this->createInnerBusReturning(Result::ok());
 
-        $decorator = new DomainEventFlushCommandBus($innerBus, $eventBus);
+        $decorator = new DomainEventCoordinatorCommandBus($innerBus, $eventBus);
         $result = $decorator->dispatch($this->createDepositMoneyCommand());
 
         $this->assertTrue($result->isOk());
     }
 
-    public function testDispatchClearsEventBusWhenResultIsFailed(): void
+    public function testDispatchCallsEventBusDiscardWhenResultIsFailed(): void
     {
         $event = $this->createMoneyDepositedEvent();
         $eventHandler = $this->createMock(DomainEventHandler::class);
@@ -52,16 +52,16 @@ final class DomainEventFlushCommandBusTest extends TestCase
 
         $innerBus = $this->createInnerBusReturning(Result::failed([new ResultError('err', 'fail')]));
 
-        $decorator = new DomainEventFlushCommandBus($innerBus, $eventBus);
+        $decorator = new DomainEventCoordinatorCommandBus($innerBus, $eventBus);
         $result = $decorator->dispatch($this->createDepositMoneyCommand());
 
         $this->assertTrue($result->isFail());
 
-        // Verify buffer was cleared: a subsequent flush should not call handlers
-        $eventBus->flush();
+        // Verify buffer was discarded: a subsequent dispatch should not call handlers
+        $eventBus->dispatch();
     }
 
-    public function testDispatchPropagatesExceptionWithoutFlushingOrClearing(): void
+    public function testDispatchPropagatesExceptionWithoutDispatchingOrDiscarding(): void
     {
         $event = $this->createMoneyDepositedEvent();
         $eventHandler = $this->createMock(DomainEventHandler::class);
@@ -76,11 +76,22 @@ final class DomainEventFlushCommandBusTest extends TestCase
             ->method('dispatch')
             ->willThrowException(new \RuntimeException('infrastructure failure'));
 
-        $decorator = new DomainEventFlushCommandBus($innerBus, $eventBus);
+        $decorator = new DomainEventCoordinatorCommandBus($innerBus, $eventBus);
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('infrastructure failure');
 
+        $decorator->dispatch($this->createDepositMoneyCommand());
+    }
+
+    public function testAcceptsDomainEventBusInterface(): void
+    {
+        $eventBus = $this->createMock(DomainEventBus::class);
+        $eventBus->expects($this->once())->method('dispatch');
+
+        $innerBus = $this->createInnerBusReturning(Result::ok());
+
+        $decorator = new DomainEventCoordinatorCommandBus($innerBus, $eventBus);
         $decorator->dispatch($this->createDepositMoneyCommand());
     }
 

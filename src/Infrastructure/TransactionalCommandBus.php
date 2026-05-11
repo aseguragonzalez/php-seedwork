@@ -19,7 +19,7 @@ use SeedWork\Domain\UnitOfWork;
  * - Throwable                        → rollback and rethrow.
  *
  * Recommended stacking (outer → inner):
- *   ValidationCommandBus > TransactionalCommandBus > DomainEventFlushCommandBus > RegistryCommandBus
+ *   ValidationCommandBus > TransactionalCommandBus > DomainEventCoordinatorCommandBus > RegistryCommandBus
  *
  * @see CommandBus Application port.
  * @see UnitOfWork Transaction boundary contract.

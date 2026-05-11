@@ -18,9 +18,9 @@ final class InMemoryIntegrationEventPublisherTest extends TestCase
 
         $publisher->publish([$event1, $event2]);
 
-        $this->assertCount(2, $publisher->getPublished());
-        $this->assertSame($event1, $publisher->getPublished()[0]);
-        $this->assertSame($event2, $publisher->getPublished()[1]);
+        $this->assertCount(2, $publisher->published());
+        $this->assertSame($event1, $publisher->published()[0]);
+        $this->assertSame($event2, $publisher->published()[1]);
     }
 
     public function testPublishAccumulatesAcrossMultipleCalls(): void
@@ -29,23 +29,23 @@ final class InMemoryIntegrationEventPublisherTest extends TestCase
         $publisher->publish([new FakeIntegrationEvent('evt-1')]);
         $publisher->publish([new FakeIntegrationEvent('evt-2')]);
 
-        $this->assertCount(2, $publisher->getPublished());
+        $this->assertCount(2, $publisher->published());
     }
 
-    public function testClearResetsPublishedList(): void
+    public function testResetClearsPublishedList(): void
     {
         $publisher = new InMemoryIntegrationEventPublisher();
         $publisher->publish([new FakeIntegrationEvent('evt-1')]);
 
-        $publisher->clear();
+        $publisher->reset();
 
-        $this->assertEmpty($publisher->getPublished());
+        $this->assertEmpty($publisher->published());
     }
 
-    public function testGetPublishedReturnsEmptyArrayInitially(): void
+    public function testPublishedReturnsEmptyArrayInitially(): void
     {
         $publisher = new InMemoryIntegrationEventPublisher();
 
-        $this->assertSame([], $publisher->getPublished());
+        $this->assertSame([], $publisher->published());
     }
 }

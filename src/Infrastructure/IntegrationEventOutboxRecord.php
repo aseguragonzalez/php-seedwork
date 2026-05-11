@@ -2,24 +2,26 @@
 
 declare(strict_types=1);
 
-namespace SeedWork\Application;
+namespace SeedWork\Infrastructure;
+
+use SeedWork\Application\IntegrationEvent;
 
 /**
- * Immutable snapshot of an outbox entry.
+ * Immutable snapshot of an integration event outbox entry.
  *
  * The outbox pattern ensures reliable delivery of {@see IntegrationEvent}s by
  * persisting them in a local store before publishing to an external broker.
  * Each record tracks delivery status and retry attempts.
  *
- * @see OutboxRepository Repository that manages OutboxRecord lifecycle.
- * @see OutboxStatus      Lifecycle status values.
+ * @see IntegrationEventOutboxRepository Repository that manages the lifecycle.
+ * @see IntegrationEventOutboxStatus      Lifecycle status values.
  */
-final readonly class OutboxRecord
+final readonly class IntegrationEventOutboxRecord
 {
     /**
      * @param string $id              Outbox record ID (distinct from the event ID).
      * @param IntegrationEvent $event The integration event to be published.
-     * @param OutboxStatus $status    Current lifecycle status.
+     * @param IntegrationEventOutboxStatus $status Current lifecycle status.
      * @param int $attempts           Number of publish attempts so far.
      * @param \DateTimeImmutable $createdAt When this record was created (UTC).
      * @param string|null $lastError  Last error message if the record failed.
@@ -28,7 +30,7 @@ final readonly class OutboxRecord
     public function __construct(
         public string $id,
         public IntegrationEvent $event,
-        public OutboxStatus $status,
+        public IntegrationEventOutboxStatus $status,
         public int $attempts,
         public \DateTimeImmutable $createdAt,
         public ?string $lastError = null,

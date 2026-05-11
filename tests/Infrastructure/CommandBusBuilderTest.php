@@ -6,10 +6,11 @@ namespace Tests\Infrastructure;
 
 use PHPUnit\Framework\TestCase;
 use SeedWork\Application\CommandBus;
+use SeedWork\Application\DomainEventBus;
 use SeedWork\Domain\UnitOfWork;
 use SeedWork\Infrastructure\CommandBusBuilder;
 use SeedWork\Infrastructure\DeferredDomainEventBus;
-use SeedWork\Infrastructure\DomainEventFlushCommandBus;
+use SeedWork\Infrastructure\DomainEventCoordinatorCommandBus;
 use SeedWork\Infrastructure\RegistryCommandBus;
 use SeedWork\Infrastructure\TransactionalCommandBus;
 use SeedWork\Infrastructure\ValidationCommandBus;
@@ -51,14 +52,24 @@ final class CommandBusBuilderTest extends TestCase
         self::assertInstanceOf(ValidationCommandBus::class, $result);
     }
 
-    public function testWithDomainEventFlushingWrapsCurrentBus(): void
+    public function testWithDomainEventCoordinationWrapsCurrentBus(): void
     {
         $innerBus = $this->createStub(CommandBus::class);
         $deferredEventBus = new DeferredDomainEventBus();
 
-        $result = CommandBusBuilder::from($innerBus)->withDomainEventFlushing($deferredEventBus)->build();
+        $result = CommandBusBuilder::from($innerBus)->withDomainEventCoordination($deferredEventBus)->build();
 
-        self::assertInstanceOf(DomainEventFlushCommandBus::class, $result);
+        self::assertInstanceOf(DomainEventCoordinatorCommandBus::class, $result);
+    }
+
+    public function testWithDomainEventCoordinationAcceptsDomainEventBusInterface(): void
+    {
+        $innerBus = $this->createStub(CommandBus::class);
+        $eventBus = $this->createStub(DomainEventBus::class);
+
+        $result = CommandBusBuilder::from($innerBus)->withDomainEventCoordination($eventBus)->build();
+
+        self::assertInstanceOf(DomainEventCoordinatorCommandBus::class, $result);
     }
 
     public function testFullChainOutermostLayerIsValidation(): void
@@ -68,7 +79,7 @@ final class CommandBusBuilderTest extends TestCase
         $deferredEventBus = new DeferredDomainEventBus();
 
         $result = CommandBusBuilder::from($innerBus)
-            ->withDomainEventFlushing($deferredEventBus)
+            ->withDomainEventCoordination($deferredEventBus)
             ->withTransactional($unitOfWork)
             ->withValidation()
             ->build();
