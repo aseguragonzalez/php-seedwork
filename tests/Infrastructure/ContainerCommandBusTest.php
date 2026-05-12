@@ -76,6 +76,26 @@ final class ContainerCommandBusTest extends TestCase
         $bus->dispatch($command);
     }
 
+    public function testDispatchReturnFailedResultWhenHandlerThrowsDomainException(): void
+    {
+        $command = $this->createDepositMoneyCommand();
+        $handler = $this->createMock(CommandHandler::class);
+        $handler->expects($this->once())
+            ->method('handle')
+            ->willThrowException(new \SeedWork\Domain\Exceptions\ValueException('Insufficient funds', 422));
+        $container = new FakeContainer(['depositHandler' => $handler]);
+        $bus = new ContainerCommandBus($container);
+        $bus->register(DepositMoneyCommand::class, 'depositHandler');
+
+        $result = $bus->dispatch($command);
+
+        $this->assertTrue($result->isFail());
+        $errors = $result->errors();
+        $this->assertCount(1, $errors);
+        $this->assertSame('422', $errors[0]->code);
+        $this->assertSame('Insufficient funds', $errors[0]->message);
+    }
+
     private function createDepositMoneyCommand(): DepositMoneyCommand
     {
         return new DepositMoneyCommand(

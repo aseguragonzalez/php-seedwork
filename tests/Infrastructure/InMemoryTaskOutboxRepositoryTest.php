@@ -134,4 +134,28 @@ final class InMemoryTaskOutboxRepositoryTest extends TestCase
         $this->assertCount(0, $repo->all());
         $this->assertCount(0, $repo->findPending());
     }
+
+    public function testMarkAsDeliveredIsNoopForUnknownId(): void
+    {
+        $repo = new InMemoryTaskOutboxRepository();
+        $repo->save($this->createTask('task-1'));
+
+        $repo->markAsDelivered('non-existent-id');
+
+        $pending = $repo->findPending();
+        $this->assertCount(1, $pending);
+        $this->assertSame(IntegrationEventOutboxStatus::Pending, $pending[0]->status);
+    }
+
+    public function testMarkAsFailedIsNoopForUnknownId(): void
+    {
+        $repo = new InMemoryTaskOutboxRepository();
+        $repo->save($this->createTask('task-1'));
+
+        $repo->markAsFailed('non-existent-id', 'some error');
+
+        $pending = $repo->findPending();
+        $this->assertCount(1, $pending);
+        $this->assertSame(IntegrationEventOutboxStatus::Pending, $pending[0]->status);
+    }
 }

@@ -136,4 +136,28 @@ final class InMemoryIntegrationEventOutboxRepositoryTest extends TestCase
         $this->assertCount(0, $repo->all());
         $this->assertCount(0, $repo->findPending());
     }
+
+    public function testMarkAsPublishedIsNoopForUnknownId(): void
+    {
+        $repo = new InMemoryIntegrationEventOutboxRepository();
+        $repo->save($this->createTestEvent('evt-1'));
+
+        $repo->markAsPublished('non-existent-id');
+
+        $pending = $repo->findPending();
+        $this->assertCount(1, $pending);
+        $this->assertSame(IntegrationEventOutboxStatus::Pending, $pending[0]->status);
+    }
+
+    public function testMarkAsFailedIsNoopForUnknownId(): void
+    {
+        $repo = new InMemoryIntegrationEventOutboxRepository();
+        $repo->save($this->createTestEvent('evt-1'));
+
+        $repo->markAsFailed('non-existent-id', 'some error');
+
+        $pending = $repo->findPending();
+        $this->assertCount(1, $pending);
+        $this->assertSame(IntegrationEventOutboxStatus::Pending, $pending[0]->status);
+    }
 }
