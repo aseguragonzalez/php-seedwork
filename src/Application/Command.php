@@ -14,8 +14,8 @@ namespace SeedWork\Application;
  * and reconstruct rich domain objects when handling the command.
  *
  * Subclasses must implement {@see validate()} to enforce field-level rules.
- * The {@see \SeedWork\Infrastructure\ValidationCommandBus} calls validate()
- * and converts {@see ValidationErrors} into {@see Result::failed()}.
+ * A validation decorator on the bus calls validate() before dispatching and
+ * converts {@see ValidationErrors} into {@see Result::failed()}.
  *
  * @see CommandHandler Handlers that execute the use case for this command.
  * @see CommandBus Application port that dispatches commands to the right handler.

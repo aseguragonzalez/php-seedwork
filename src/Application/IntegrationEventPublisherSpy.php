@@ -9,8 +9,6 @@ namespace SeedWork\Application;
  *
  * Adds introspection (published()) and reset() so tests can assert on published
  * events and start each scenario with a clean slate.
- *
- * @see InMemoryIntegrationEventPublisher Concrete spy implementation in Infrastructure.
  */
 interface IntegrationEventPublisherSpy extends IntegrationEventPublisher
 {

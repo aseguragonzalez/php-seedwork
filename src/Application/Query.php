@@ -14,8 +14,7 @@ namespace SeedWork\Application;
  * when all involved adapters know how to handle them.
  *
  * Subclasses must implement {@see validate()} to enforce field-level rules.
- * The {@see \SeedWork\Infrastructure\ValidationQueryBus} calls validate()
- * before dispatching.
+ * A validation decorator on the bus calls validate() before dispatching.
  *
  * @see QueryHandler Handlers that return a result for this query.
  * @see QueryBus Application port that dispatches queries to the right handler.

@@ -7,8 +7,8 @@ namespace SeedWork\Application;
 /**
  * Application port for scheduling background tasks for async execution.
  *
- * Implementations may persist the task to an outbox ({@see \SeedWork\Infrastructure\OutboxTaskScheduler}),
- * enqueue it directly, or buffer it for testing ({@see \SeedWork\Infrastructure\InMemoryTaskScheduler}).
+ * Implementations may persist tasks via an outbox for reliable delivery,
+ * enqueue them directly, or buffer them in-memory for testing.
  *
  * @see BackgroundTask Tasks scheduled through this port.
  * @see TaskHandler    Handler that executes a specific task type.
