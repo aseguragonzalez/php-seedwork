@@ -133,7 +133,7 @@ All components live under the `SeedWork\` namespace (Domain, Application, Infras
 ### IntegrationEvent (`SeedWork\Application\IntegrationEvent`)
 
 - **Role:** Contract for events published to external systems (eventual consistency via outbox).
-- **Properties:** `id`, `type`, `version`, `correlationId`, `causationId?`, `metadata?`, `createdAt`.
+- **Properties:** `id`, `type`, `version`, `aggregateId`, `occurredAt`, `payload`, `correlationId`, `causationId?`, `metadata?`.
 
 ### IntegrationEventPublisher (`SeedWork\Application\IntegrationEventPublisher`)
 
