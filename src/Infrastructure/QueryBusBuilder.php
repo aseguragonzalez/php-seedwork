@@ -7,85 +7,70 @@ namespace SeedWork\Infrastructure;
 use SeedWork\Application\QueryBus;
 
 /**
- * Fluent builder for composing a QueryBus pipeline from a base bus and
- * optional decorator layers.
+ * Fluent builder for composing a QueryBus pipeline from a RegistryQueryBus base
+ * and optional decorator layers.
  *
- * The default base bus is {@see RegistryQueryBus}. Start with
- * {@see QueryBusBuilder::new()} (zero-arg) or {@see QueryBusBuilder::from()}
- * with a custom base, then chain decorators.
+ * Steps are accumulated and applied in reverse order during {@see build()}, so the
+ * first step added becomes the outermost decorator (the first to receive a query).
  *
  * Example:
  * <code>
- * $builder = QueryBusBuilder::new()->withValidation();
- * $builder->registry()->register(MyQuery::class, new MyQueryHandler());
- * $bus = $builder->build();
+ * $registry = new RegistryQueryBus();
+ * $registry->register(MyQuery::class, new MyQueryHandler());
+ *
+ * $bus = (new QueryBusBuilder($registry))
+ *     ->withValidation()
+ *     ->build();
  * </code>
  *
- * @see RegistryQueryBus   Default base bus.
+ * @see RegistryQueryBus   Base bus; passed via constructor.
  * @see ValidationQueryBus Validation decorator.
  */
 final class QueryBusBuilder
 {
-    private ?RegistryQueryBus $registryBus;
-    private QueryBus $queryBus;
+    /** @var list<\Closure(QueryBus): QueryBus> */
+    private array $steps = [];
 
-    private function __construct(?RegistryQueryBus $registryBus, QueryBus $queryBus)
+    public function __construct(private readonly RegistryQueryBus $registry)
     {
-        $this->registryBus = $registryBus;
-        $this->queryBus = $queryBus;
     }
 
-    /**
-     * Creates a builder with a {@see RegistryQueryBus} as the base bus.
-     */
-    public static function new(): self
-    {
-        $registry = new RegistryQueryBus();
-        return new self($registry, $registry);
-    }
-
-    /**
-     * Creates a builder with the given query bus as the base.
-     *
-     * If the provided bus is a {@see RegistryQueryBus}, it is also used as
-     * the registry accessible via {@see registry()}. Otherwise {@see registry()}
-     * will throw — use {@see QueryBusBuilder::new()} when you need handler registration.
-     */
-    public static function from(QueryBus $queryBus): self
-    {
-        $registry = $queryBus instanceof RegistryQueryBus ? $queryBus : null;
-        return new self($registry, $queryBus);
-    }
-
-    /**
-     * Returns the inner {@see RegistryQueryBus} for handler registration.
-     *
-     * Always returns the same registry instance regardless of how many decorators
-     * have been added, when built with {@see new()} or {@see from(RegistryQueryBus)}.
-     *
-     * @throws \BadMethodCallException When built via {@see from()} with a non-RegistryQueryBus base.
-     */
     public function registry(): RegistryQueryBus
     {
-        if ($this->registryBus === null) {
-            throw new \BadMethodCallException(
-                'registry() requires new() — from() was called with a non-RegistryQueryBus base.'
-            );
-        }
-        return $this->registryBus;
+        return $this->registry;
     }
 
     /**
-     * Wraps the current bus in a {@see ValidationQueryBus}.
+     * Adds a {@see ValidationQueryBus} step to the pipeline.
      */
     public function withValidation(): self
     {
-        $this->queryBus = new ValidationQueryBus($this->queryBus);
+        $this->steps[] = fn (QueryBus $inner): QueryBus => new ValidationQueryBus($inner);
         return $this;
     }
 
+    /**
+     * Adds a custom middleware step to the pipeline.
+     *
+     * @param \Closure(QueryBus): QueryBus $middleware
+     */
+    public function use(\Closure $middleware): self
+    {
+        $this->steps[] = $middleware;
+        return $this;
+    }
+
+    /**
+     * Builds the composed QueryBus pipeline.
+     *
+     * Steps are applied in reverse order: the first step added wraps the outermost layer.
+     */
     public function build(): QueryBus
     {
-        return $this->queryBus;
+        $bus = $this->registry;
+        foreach (array_reverse($this->steps) as $step) {
+            $bus = $step($bus);
+        }
+        return $bus;
     }
 }

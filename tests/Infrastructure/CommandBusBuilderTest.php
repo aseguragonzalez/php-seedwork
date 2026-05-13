@@ -7,6 +7,7 @@ namespace Tests\Infrastructure;
 use PHPUnit\Framework\TestCase;
 use SeedWork\Application\CommandBus;
 use SeedWork\Application\DomainEventBus;
+use SeedWork\Application\Result;
 use SeedWork\Domain\UnitOfWork;
 use SeedWork\Infrastructure\CommandBusBuilder;
 use SeedWork\Infrastructure\DeferredDomainEventBus;
@@ -17,92 +18,117 @@ use SeedWork\Infrastructure\ValidationCommandBus;
 
 final class CommandBusBuilderTest extends TestCase
 {
-    public function testBuildReturnsBaseCommandBusWhenNoDecoratorsAdded(): void
+    public function testBuildWithNoStepsReturnsRegistryDirectly(): void
     {
-        $innerBus = $this->createStub(CommandBus::class);
+        $registry = new RegistryCommandBus();
 
-        $result = CommandBusBuilder::from($innerBus)->build();
+        $result = (new CommandBusBuilder($registry))->build();
 
-        self::assertSame($innerBus, $result);
+        self::assertSame($registry, $result);
     }
 
-    public function testNewCreatesRegistryCommandBusAsDefault(): void
+    public function testRegistryReturnsInjectedInstance(): void
     {
-        $result = CommandBusBuilder::new()->build();
+        $registry = new RegistryCommandBus();
 
-        self::assertInstanceOf(RegistryCommandBus::class, $result);
+        $builder = new CommandBusBuilder($registry);
+
+        self::assertSame($registry, $builder->registry());
     }
 
-    public function testWithTransactionalWrapsCurrentBus(): void
+    public function testRegistryRemainsTheSameAfterAddingSteps(): void
     {
-        $innerBus = $this->createStub(CommandBus::class);
-        $unitOfWork = $this->createStub(UnitOfWork::class);
-
-        $result = CommandBusBuilder::from($innerBus)->withTransactional($unitOfWork)->build();
-
-        self::assertInstanceOf(TransactionalCommandBus::class, $result);
-    }
-
-    public function testWithValidationWrapsCurrentBus(): void
-    {
-        $innerBus = $this->createStub(CommandBus::class);
-
-        $result = CommandBusBuilder::from($innerBus)->withValidation()->build();
-
-        self::assertInstanceOf(ValidationCommandBus::class, $result);
-    }
-
-    public function testWithDomainEventCoordinationWrapsCurrentBus(): void
-    {
-        $innerBus = $this->createStub(CommandBus::class);
-        $deferredEventBus = new DeferredDomainEventBus();
-
-        $result = CommandBusBuilder::from($innerBus)->withDomainEventCoordination($deferredEventBus)->build();
-
-        self::assertInstanceOf(DomainEventCoordinatorCommandBus::class, $result);
-    }
-
-    public function testWithDomainEventCoordinationAcceptsDomainEventBusInterface(): void
-    {
-        $innerBus = $this->createStub(CommandBus::class);
-        $eventBus = $this->createStub(DomainEventBus::class);
-
-        $result = CommandBusBuilder::from($innerBus)->withDomainEventCoordination($eventBus)->build();
-
-        self::assertInstanceOf(DomainEventCoordinatorCommandBus::class, $result);
-    }
-
-    public function testFullChainOutermostLayerIsValidation(): void
-    {
-        $innerBus = $this->createStub(CommandBus::class);
+        $registry = new RegistryCommandBus();
+        $builder = new CommandBusBuilder($registry);
         $unitOfWork = $this->createStub(UnitOfWork::class);
         $deferredEventBus = new DeferredDomainEventBus();
-
-        $result = CommandBusBuilder::from($innerBus)
-            ->withDomainEventCoordination($deferredEventBus)
-            ->withTransactional($unitOfWork)
-            ->withValidation()
-            ->build();
-
-        self::assertInstanceOf(ValidationCommandBus::class, $result);
-    }
-
-    public function testRegistryReturnsSameInstanceBeforeAndAfterDecoration(): void
-    {
-        $builder = CommandBusBuilder::new();
-        $unitOfWork = $this->createStub(UnitOfWork::class);
-        $deferredEventBus = new DeferredDomainEventBus();
-
-        $registryBefore = $builder->registry();
 
         $builder
             ->withDomainEventCoordination($deferredEventBus)
             ->withTransactional($unitOfWork)
             ->withValidation();
 
-        $registryAfter = $builder->registry();
+        self::assertSame($registry, $builder->registry());
+    }
 
-        self::assertInstanceOf(RegistryCommandBus::class, $registryBefore);
-        self::assertSame($registryBefore, $registryAfter);
+    public function testWithTransactionalProducesTransactionalCommandBus(): void
+    {
+        $unitOfWork = $this->createStub(UnitOfWork::class);
+
+        $result = (new CommandBusBuilder(new RegistryCommandBus()))
+            ->withTransactional($unitOfWork)
+            ->build();
+
+        self::assertInstanceOf(TransactionalCommandBus::class, $result);
+    }
+
+    public function testWithValidationProducesValidationCommandBus(): void
+    {
+        $result = (new CommandBusBuilder(new RegistryCommandBus()))
+            ->withValidation()
+            ->build();
+
+        self::assertInstanceOf(ValidationCommandBus::class, $result);
+    }
+
+    public function testWithDomainEventCoordinationProducesDomainEventCoordinatorCommandBus(): void
+    {
+        $result = (new CommandBusBuilder(new RegistryCommandBus()))
+            ->withDomainEventCoordination(new DeferredDomainEventBus())
+            ->build();
+
+        self::assertInstanceOf(DomainEventCoordinatorCommandBus::class, $result);
+    }
+
+    public function testWithDomainEventCoordinationAcceptsDomainEventBusInterface(): void
+    {
+        $eventBus = $this->createStub(DomainEventBus::class);
+
+        $result = (new CommandBusBuilder(new RegistryCommandBus()))
+            ->withDomainEventCoordination($eventBus)
+            ->build();
+
+        self::assertInstanceOf(DomainEventCoordinatorCommandBus::class, $result);
+    }
+
+    public function testFirstStepAddedBecomesOutermostDecorator(): void
+    {
+        $unitOfWork = $this->createStub(UnitOfWork::class);
+        $deferredEventBus = new DeferredDomainEventBus();
+
+        $result = (new CommandBusBuilder(new RegistryCommandBus()))
+            ->withValidation()
+            ->withTransactional($unitOfWork)
+            ->withDomainEventCoordination($deferredEventBus)
+            ->build();
+
+        self::assertInstanceOf(ValidationCommandBus::class, $result);
+    }
+
+    public function testUseAppliesCustomMiddleware(): void
+    {
+        $customBus = $this->createMock(CommandBus::class);
+        $customBus->method('dispatch')->willReturn(Result::ok());
+
+        $result = (new CommandBusBuilder(new RegistryCommandBus()))
+            ->use(fn (CommandBus $inner): CommandBus => $customBus)
+            ->build();
+
+        self::assertSame($customBus, $result);
+    }
+
+    public function testUseCanBeChainedWithNamedDecorators(): void
+    {
+        $unitOfWork = $this->createStub(UnitOfWork::class);
+        $customWrapper = $this->createMock(CommandBus::class);
+        $customWrapper->method('dispatch')->willReturn(Result::ok());
+
+        $result = (new CommandBusBuilder(new RegistryCommandBus()))
+            ->withValidation()
+            ->withTransactional($unitOfWork)
+            ->use(fn (CommandBus $inner): CommandBus => $customWrapper)
+            ->build();
+
+        self::assertInstanceOf(ValidationCommandBus::class, $result);
     }
 }
