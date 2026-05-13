@@ -69,7 +69,7 @@ final class QueryBusBuilder
     {
         if ($this->registryBus === null) {
             throw new \BadMethodCallException(
-                'registry() is not available when using a custom non-registry base bus via from(). Use QueryBusBuilder::new() instead.'
+                'registry() requires new() — from() was called with a non-RegistryQueryBus base.'
             );
         }
         return $this->registryBus;

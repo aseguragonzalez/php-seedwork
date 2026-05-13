@@ -80,7 +80,7 @@ final class CommandBusBuilder
     {
         if ($this->registryBus === null) {
             throw new \BadMethodCallException(
-                'registry() is not available when using a custom non-registry base bus via from(). Use CommandBusBuilder::new() instead.'
+                'registry() requires new() — from() was called with a non-RegistryCommandBus base.'
             );
         }
         return $this->registryBus;
