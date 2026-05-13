@@ -8,6 +8,7 @@ use SeedWork\Application\Command;
 use SeedWork\Application\CommandBus;
 use SeedWork\Application\Result;
 use SeedWork\Application\ResultError;
+use SeedWork\Application\ValidationError;
 use SeedWork\Application\ValidationErrors;
 
 /**
@@ -45,12 +46,12 @@ final class ValidationCommandBus implements CommandBus
         try {
             $command->validate();
         } catch (ValidationErrors $e) {
-            return Result::failed(
-                array_map(
-                    fn ($err) => new ResultError($err->field, $err->message),
-                    $e->errors
-                )
-            );
+            $errors = array_values(array_map(
+                fn (ValidationError $err) => new ResultError($err->field, $err->message),
+                $e->errors
+            ));
+            assert($errors !== []);
+            return Result::failed($errors);
         }
         return $this->inner->dispatch($command);
     }

@@ -17,7 +17,7 @@ namespace SeedWork\Application;
  */
 final class Result
 {
-    /** @param non-empty-array<ResultError> $errors */
+    /** @param array<ResultError> $errors */
     private function __construct(
         private readonly bool $success,
         private readonly array $errors = []
