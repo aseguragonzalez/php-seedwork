@@ -1,97 +1,63 @@
 # Component Reference
 
-All components live under the `SeedWork\` namespace (Domain, Application,
-Infrastructure).
+All components live under the `SeedWork\` namespace (Domain, Application, Infrastructure).
 
 ## Domain layer
 
 ### AggregateRoot (`SeedWork\Domain\AggregateRoot`)
 
-- **Role:** Root of an aggregate; single entry point for changes; records domain
-  events.
-- **Usage:** Extend with your aggregate (e.g. `BankAccount`). Constructor:
-  `EntityId $id`, optional `array $domainEvents`. Implement `validate()`. State
-  changes return a new instance and append events; do not mutate. Provide a static
-  factory method to create a new instance (e.g. `create()` and `build()`). The
-  `validate()` method should be implemented to enforce the aggregate invariants.
-- **Key methods:** `equals(AggregateRoot $other): bool`, `collectEvents(): array`
-  (returns copies of recorded events).
+- **Role:** Root of an aggregate; single entry point for changes; records domain events.
+- **Usage:** Extend with your aggregate. Implement `validate()`. State changes return a new instance and append events. Provide static factory methods (`create()`, `build()`).
+- **Key methods:** `equals(AggregateRoot $other): bool`, `collectEvents(): array`.
 
 ### Entity (`SeedWork\Domain\Entity`)
 
 - **Role:** Base for DDD entities. Identity over attributes; equality by ID.
-- **Usage:** Extend per entity type. Constructor receives `EntityId $id`; call
-  `parent::__construct($id)` and implement `validate()`. Provide a static
-  factory method to create a new instance (e.g. `create()` and `build()`). The
-  `validate()` method should be implemented to enforce the entity invariants.
-- **Key methods:** `equals(Entity $other): bool` (by id), `validate(): void`
-  (override).
+- **Usage:** Extend per entity type; implement `validate()`.
+- **Key methods:** `equals(Entity $other): bool`, `validate(): void`.
 
 ### EntityId (`SeedWork\Domain\EntityId`)
 
-- **Role:** Base for entity identifiers. One subclass per entity (e.g.
-  `BankAccountId`).
-- **Usage:** Protected constructor with `string $value`; implement `validate()`
-  (e.g. UUID format). Expose `fromString(string)` or `create()` for callers.
+- **Role:** Base for entity identifiers. One subclass per entity (e.g. `BankAccountId`).
+- **Usage:** Protected constructor with `string $value`; implement `validate()`; expose static factory.
 - **Key methods:** `equals(EntityId $other): bool`, `__toString(): string`.
 
 ### ValueObject (`SeedWork\Domain\ValueObject`)
 
 - **Role:** Immutable object defined by attributes; equality by value.
-- **Usage:** Extend; keep readonly and immutable. Implement
-  `equals(ValueObject $other): bool` and `validate(): void`. Call
-  `parent::__construct()` from subclass constructor. The `validate()` method
-  should be implemented to enforce the value object invariants.
-- **Key methods:** `equals()`, `validate()`.
+- **Usage:** Extend; keep readonly and immutable. Implement `equals()` and `validate()`.
 
 ### DomainEvent (`SeedWork\Domain\DomainEvent`)
 
-- **Role:** Immutable record of something that happened (past tense). Carries
-  type, version, payload, and `EventId`.
-- **Usage:** Subclass with `EventId $id`, `string $type`, `string $version`,
-  `array $payload`, `\DateTimeImmutable $createdAt`. Prefer static factory
-  (e.g. `create()`) and serializable payload.
+- **Role:** Immutable record of something that happened (past tense, e.g. `MoneyDeposited`). Carries identity and timestamp; event-specific facts are readonly properties of the subclass.
+- **Usage:** Extend; add your own readonly properties for domain-specific data. Use static factory (e.g. `create()`).
 - **Key methods:** `equals(DomainEvent $other): bool` (by EventId).
 
 ### EventId (`SeedWork\Domain\EventId`)
 
 - **Role:** Unique identifier for a domain event (e.g. for idempotency).
-- **Usage:** One subclass per event family; same pattern as EntityId (protected
-  constructor, `validate()`, static factory).
+- **Usage:** One subclass per event family; same pattern as EntityId.
 
 ### Repository (`SeedWork\Domain\Repository`)
 
-- **Role:** Collection-like interface for an aggregate root: get by id, save,
-  delete.
-- **Usage:** Interface in domain; extend with `@template T of AggregateRoot` and
-  type-hint `T` in methods. Implementation in infrastructure.
-- **Methods:** `save(AggregateRoot $aggregateRoot): void`,
-  `findBy(EntityId $id): ?AggregateRoot`, `deleteBy(EntityId $id): void`.
+- **Role:** Collection-like interface for an aggregate root: get by id, save, delete.
+- **Methods:** `save(AggregateRoot $aggregateRoot): void`, `findBy(EntityId $id): ?AggregateRoot`, `deleteBy(EntityId $id): void`.
 
 ### UnitOfWork (`SeedWork\Domain\UnitOfWork`)
 
 - **Role:** Transaction boundary: begin, commit, rollback.
-- **Usage:** Implement in infrastructure (e.g. DB transaction). Used by
-  `TransactionalCommandBus`.
 - **Methods:** `createSession(): void`, `commit(): void`, `rollback(): void`.
 
 ### AggregateObtainer (`SeedWork\Domain\AggregateObtainer`)
 
-- **Role:** Load aggregate by id or throw. Avoids repeated "find + null check" in
-  handlers.
-- **Usage:** Extend per aggregate; inject `Repository<T>` and resource name.
-  Handlers use `obtain(EntityId $id): AggregateRoot` and get `NotFoundResource`
-  when missing.
+- **Role:** Load aggregate by id or throw `NotFoundResource`.
 - **Key method:** `obtain(EntityId $id): AggregateRoot`.
 
 ### Exceptions
 
-- **DomainException** (`SeedWork\Domain\Exceptions\DomainException`): Base for
-  domain errors.
-- **ValueException** (`SeedWork\Domain\Exceptions\ValueException`): Invalid value
-  object state.
-- **NotFoundResource** (`SeedWork\Domain\Exceptions\NotFoundResource`):
-  Aggregate/entity not found (message includes resource name and optional id).
+- **DomainException** (`SeedWork\Domain\Exceptions\DomainException`): Base for domain errors.
+- **ValueException** (`SeedWork\Domain\Exceptions\ValueException`): Invalid value object state.
+- **NotFoundResource** (`SeedWork\Domain\Exceptions\NotFoundResource`): Aggregate/entity not found.
 
 ---
 
@@ -100,151 +66,211 @@ Infrastructure).
 ### Command (`SeedWork\Application\Command`)
 
 - **Role:** Immutable DTO for a write use case. One class per use case.
-- **Usage:** Extend; use primitive or simple DTO attributes for port
-  compatibility (or domain IDs/value objects if you accept the trade-off). Call
-  `parent::__construct()`.
+- **Usage:** Extend; implement `validate(): void` to enforce preconditions.
 
 ### CommandBus (`SeedWork\Application\CommandBus`)
 
 - **Role:** Port to dispatch commands; one handler per command type.
-- **Methods:** `dispatch(Command $command): void`.
+- **Methods:** `dispatch(Command $command): Result`.
 
 ### CommandHandler (`SeedWork\Application\CommandHandler`)
 
 - **Role:** Use case for a write. One handler per command.
-- **Usage:** Implement `handle(Command $command): void`. Depend on repositories,
-  obtainers, etc; keep orchestration only.
+- **Usage:** Implement `handle(Command $command): void`. Orchestration only; no return value.
+
+### Result (`SeedWork\Application\Result`)
+
+- **Role:** Outcome of a command dispatch. Either ok or failed with one or more errors.
+- **Factory methods:** `Result::ok(): Result`, `Result::failed(non-empty-array<ResultError>): Result`.
+- **Methods:** `isOk(): bool`, `isFail(): bool`, `errors(): array<ResultError>`.
+
+### ResultError (`SeedWork\Application\ResultError`)
+
+- **Role:** A single error detail within a failed result.
+- **Properties:** `string $code`, `string $message`.
 
 ### Query (`SeedWork\Application\Query`)
 
 - **Role:** Immutable DTO for a read use case. No side effects.
-- **Usage:** Same as Command: primitives/simple DTOs preferred at the port
-  boundary.
+- **Usage:** Extend; implement `validate(): void`.
 
 ### QueryBus (`SeedWork\Application\QueryBus`)
 
 - **Role:** Port to dispatch queries and return a result.
-- **Methods:** `ask(Query $query): QueryResult`.
+- **Methods:** `ask(Query $query): Maybe`.
 
 ### QueryHandler (`SeedWork\Application\QueryHandler`)
 
-- **Role:** Use case for a read. Returns a single result DTO.
-- **Usage:** Implement `handle(Query $query): QueryResult`. Read-only; return
-  `QueryResult` subclasses, not domain entities.
+- **Role:** Use case for a read. Returns `Maybe` wrapping the result DTO.
+- **Usage:** Implement `handle(Query $query): Maybe`. Read-only.
 
-### QueryResult (`SeedWork\Application\QueryResult`)
+### Maybe (`SeedWork\Application\Maybe`)
 
-- **Role:** Immutable DTO returned by query handlers. Serializable.
-- **Usage:** Extend with public readonly properties; primitives or simple
-  structures.
+- **Role:** Represents an optional query result. Either a value (`just`) or nothing.
+- **Factory methods:** `Maybe::just(mixed $value): Maybe` (null not allowed), `Maybe::nothing(): Maybe`.
+- **Methods:** `hasValue(): bool`, `value(): mixed` (throws if nothing).
+
+### DomainEventBusPublisher (`SeedWork\Application\DomainEventBusPublisher`)
+
+- **Role:** Port to publish domain events from a repository decorator.
+- **Methods:** `publish(array $events): void`.
+
+### DomainEventBusSubscriber (`SeedWork\Application\DomainEventBusSubscriber`)
+
+- **Role:** Port to register handlers in the composition root.
+- **Methods:** `subscribe(string $eventType, DomainEventHandler $handler): void`.
 
 ### DomainEventBus (`SeedWork\Application\DomainEventBus`)
 
-- **Role:** Port to publish and subscribe to domain events.
-- **Methods:** `publish(array $events): void`,
-  `subscribe(string $eventType, string $domainEventHandler): void`. Event type =
-  event FQCN.
+- **Role:** Full domain event bus contract: extends publisher and subscriber; adds lifecycle control.
+- **Methods:** (inherits `publish()` and `subscribe()`) + `dispatch(): void`, `discard(): void`.
 
 ### DomainEventHandler (`SeedWork\Application\DomainEventHandler`)
 
-- **Role:** React to one event type. Registered via
-  `subscribe($eventType, $handlerFqcn)`.
-- **Usage:** Implement `handle(DomainEvent $event): void`. One concern per
-  handler; idempotent if bus is async.
+- **Role:** React to one event type. Registered via `subscribe($eventType, $handler)`.
+- **Usage:** Implement `handle(DomainEvent $event): void`. One concern per handler; idempotent.
 
-### Using the application ports from an entry point
+### IntegrationEvent (`SeedWork\Application\IntegrationEvent`)
 
-Entry points (HTTP controllers, API handlers, CLI commands) should stay thin:
-no domain or infrastructure logic; only map the incoming request to a Command
-or Query, call the bus, then map the result to the response.
+- **Role:** Contract for events published to external systems (eventual consistency via outbox).
+- **Properties:** `id`, `type`, `version`, `correlationId`, `causationId?`, `metadata?`, `createdAt`.
 
-**Write path (command):** Build a Command from the request (e.g. IDs, amounts
-from request body or route), inject `CommandBus`, dispatch, then return
-success/redirect/ID as needed. Let the handler and transaction deal with
-persistence and events.
+### IntegrationEventPublisher (`SeedWork\Application\IntegrationEventPublisher`)
 
-**Read path (query):** Build a Query from the request (e.g. resource id from
-route), inject `QueryBus`, call `ask($query)`, then map the returned
-`QueryResult` (or your subclass) to JSON, view data, or response DTO. The query
-handler loads the aggregate via the domain `Repository` and maps it to the
-`QueryResult`. See the BankAccount fixture (`GetBankAccountStatusQueryHandler`)
-for a full example.
+- **Role:** Port to publish integration events. Implemented in Infrastructure (outbox or in-memory spy).
+- **Methods:** `publish(IntegrationEvent $event): void`.
 
-Example (framework-agnostic; names align with the BankAccount fixture):
+### IntegrationEventHandler (`SeedWork\Application\IntegrationEventHandler`)
 
-```php
-final readonly class BankAccountController
-{
-    public function __construct(
-        private CommandBus $commandBus,
-        private QueryBus $queryBus
-    ) {}
+- **Role:** Handler for incoming integration events (entry-point in the subscriber service).
+- **Usage:** Implement `handle(IntegrationEvent $event): void`. One handler per event type.
 
-    public function deposit(string $accountId, string $amount, string $currency): void
-    {
-        $command = new DepositMoneyCommand($accountId, (int) $amount, $currency);
-        $this->commandBus->dispatch($command);
-        // Framework integration code would handle the HTTP response (e.g., 204, redirect, or resource ID).
-    }
+### BackgroundTask (`SeedWork\Application\BackgroundTask`)
 
-    public function getStatus(string $accountId): BankAccountStatusResult
-    {
-        $query = new GetBankAccountStatusQuery($accountId);
-        /** @var BankAccountStatusResult $result */
-        return $this->queryBus->ask($query);
-    }
-}
-```
+- **Role:** DTO representing a background task to be scheduled for async execution.
+- **Properties:** `id`, `type`, `payload`, `correlationId`, `causationId?`, `metadata?`.
 
-The controller depends only on the application ports (`CommandBus`, `QueryBus`)
-and the Command/Query/Result DTOs (commands and queries use primitives only);
-it does not depend on repositories, the domain event bus, unit of work, or other
-infrastructure implementations.
+### TaskScheduler (`SeedWork\Application\TaskScheduler`)
+
+- **Role:** Port to schedule background tasks. Implemented in Infrastructure (outbox or in-memory spy).
+- **Methods:** `schedule(BackgroundTask $task): void`.
+
+### TaskHandler (`SeedWork\Application\TaskHandler`)
+
+- **Role:** Handler for a specific background task type.
+- **Usage:** Implement `handle(BackgroundTask $task): void`. Registered by type in `InMemoryTaskScheduler`.
+
+### ValidationError / ValidationErrors (`SeedWork\Application\ValidationError`, `SeedWork\Application\ValidationErrors`)
+
+- **Role:** Structured validation errors thrown by `validate()` in Command/Query.
 
 ---
 
 ## Infrastructure layer
 
-### ContainerCommandBus (`SeedWork\Infrastructure\ContainerCommandBus`)
+### RegistryCommandBus (`SeedWork\Infrastructure\RegistryCommandBus`)
 
-- **Role:** PSR-11 implementation of `CommandBus`. Resolves handler by
-  `$command::class`.
-- **Usage:** Construct with `ContainerInterface` and optional
-  `commandFqcn => handlerServiceId` map; call `register($commandFqcn,
-  $handlerId)`; then `dispatch($command)`.
+- **Role:** In-process implementation of `CommandBus`. Resolves handler by `$command::class`.
+- **Usage:** `register($commandFqcn, $handler)`, then `dispatch($command)`.
 
-### ContainerQueryBus (`SeedWork\Infrastructure\ContainerQueryBus`)
+### RegistryQueryBus (`SeedWork\Infrastructure\RegistryQueryBus`)
 
-- **Role:** PSR-11 implementation of `QueryBus`. Resolves handler by
-  `$query::class`.
-- **Usage:** Same pattern as ContainerCommandBus: `register($queryFqcn,
-  $handlerId)`, `ask($query)`.
+- **Role:** In-process implementation of `QueryBus`. Resolves handler by `$query::class`.
+- **Usage:** `register($queryFqcn, $handler)`, then `ask($query)`.
+
+### CommandBusBuilder (`SeedWork\Infrastructure\CommandBusBuilder`)
+
+- **Role:** Fluent builder for composing a `CommandBus` decorator pipeline.
+- **Usage:** `new CommandBusBuilder($registry)`, then chain `withValidation()`, `withTransactional($uow)`, `withDomainEventCoordination($eventBus)`, `use($closure)`, then `build()`. The first step added becomes the outermost decorator.
+- **Methods:** `registry(): RegistryCommandBus`, `build(): CommandBus`.
+
+### QueryBusBuilder (`SeedWork\Infrastructure\QueryBusBuilder`)
+
+- **Role:** Fluent builder for composing a `QueryBus` decorator pipeline.
+- **Usage:** `new QueryBusBuilder($registry)`, then chain `withValidation()`, `use($closure)`, then `build()`.
+- **Methods:** `registry(): RegistryQueryBus`, `build(): QueryBus`.
+
+### ValidationCommandBus / ValidationQueryBus
+
+- **Role:** Decorator that calls `validate()` on the Command/Query before forwarding. Throws `ValidationErrors` on failure.
 
 ### TransactionalCommandBus (`SeedWork\Infrastructure\TransactionalCommandBus`)
 
-- **Role:** Decorator that runs each command inside a unit of work (createSession
-  → dispatch → commit or rollback).
-- **Usage:** Wrap your command bus and inject `UnitOfWork`. Put it outside
-  `DomainEventFlushCommandBus` so the transaction wraps the command and event
-  flush.
+- **Role:** Decorator that wraps each command in a `UnitOfWork` (createSession → dispatch → commit or rollback).
+- **Note:** Commits even on `Result::failed()` — domain rejection is not an infrastructure error.
+
+### DomainEventCoordinatorCommandBus (`SeedWork\Infrastructure\DomainEventCoordinatorCommandBus`)
+
+- **Role:** Decorator that coordinates the `DomainEventBus` lifecycle after each command.
+  - `Result::ok()` → `eventBus->dispatch()` (run buffered handlers).
+  - `Result::failed()` → `eventBus->discard()` (drop events).
+  - Exception → `eventBus->discard()` then rethrow (prevent stale events leaking).
+- **Usage:** Add via `CommandBusBuilder::withDomainEventCoordination($eventBus)`.
 
 ### DeferredDomainEventBus (`SeedWork\Infrastructure\DeferredDomainEventBus`)
 
-- **Role:** Buffers events on `publish()`; dispatches to subscribed handlers only
-  on `flush()`.
-- **Usage:** Same container and handlers as used by command handlers. Subscribe
-  with `subscribe($eventFqcn, $handlerServiceId)`. Call `flush()` after the
-  command (e.g. via `DomainEventFlushCommandBus`). Recommended for monolithic
-  applications when you need transactionality and isolation between bounded
-  contexts and are not using a message broker (e.g. typical API or MVC
-  request/response). See [Best practices](best-practices.md) for when to use
-  the deferred bus.
+- **Role:** Buffers domain events on `publish()`; dispatches them synchronously to subscribed handlers on `dispatch()`. Buffer is keyed by `event.id` (idempotent per-transaction).
+- **Usage:** Subscribe handlers with `subscribe($eventFqcn, $handler)`. Pair with `DomainEventCoordinatorCommandBus` for automatic lifecycle management.
 
-### DomainEventFlushCommandBus (`SeedWork\Infrastructure\DomainEventFlushCommandBus`)
+### DomainEventPublishingRepository (`SeedWork\Infrastructure\DomainEventPublishingRepository`)
 
-- **Role:** After each successful command dispatch, calls
-  `DeferredDomainEventBus::flush()`.
-- **Usage:** Wrap the inner CommandBus and inject the same
-  `DeferredDomainEventBus` used by handlers. Stack order:
-  `TransactionalCommandBus(DomainEventFlushCommandBus(ContainerCommandBus),
-  UnitOfWork)`.
+- **Role:** Repository decorator that publishes `aggregate->domainEvents` via `DomainEventBusPublisher` after each `save()`.
+- **Usage:** Wrap your repository; inject `DomainEventBusPublisher`. Keeps handlers unaware of event publication.
+
+### InMemoryRepository (`SeedWork\Infrastructure\InMemoryRepository`)
+
+- **Role:** Base for in-memory repository test doubles. Non-final; extend to add query methods or pre-seed data.
+- **Usage:** Extend per aggregate type.
+
+### IntegrationEventOutboxRecord / IntegrationEventOutboxRepository
+
+- **Role:** Infrastructure outbox for integration events. `save()` is idempotent (keyed by `event.id`).
+- **Status enum:** `IntegrationEventOutboxStatus` — `Pending`, `Published`, `Failed`.
+- **Spy:** `IntegrationEventOutboxRepositorySpy` with `all()` and `reset()`.
+
+### OutboxIntegrationEventPublisher (`SeedWork\Infrastructure\OutboxIntegrationEventPublisher`)
+
+- **Role:** Implements `IntegrationEventPublisher` via the outbox (persists to `IntegrationEventOutboxRepository`).
+
+### InMemoryIntegrationEventPublisher (`SeedWork\Infrastructure\InMemoryIntegrationEventPublisher`)
+
+- **Role:** Spy implementation of `IntegrationEventPublisher` for tests. Captures events; does not execute them (integration events are for other bounded contexts).
+- **Spy methods:** `published(): array`, `reset()`.
+
+### TaskOutboxRecord / TaskOutboxRepository
+
+- **Role:** Infrastructure outbox for background tasks. `save()` is idempotent (keyed by `task.id`).
+- **Status enum:** `TaskOutboxStatus` — `Pending`, `Delivered`, `Failed`.
+- **Spy:** `TaskOutboxRepositorySpy` with `all()` and `reset()`.
+
+### OutboxTaskScheduler (`SeedWork\Infrastructure\OutboxTaskScheduler`)
+
+- **Role:** Implements `TaskScheduler` via the outbox (persists to `TaskOutboxRepository`).
+
+### InMemoryTaskScheduler (`SeedWork\Infrastructure\InMemoryTaskScheduler`)
+
+- **Role:** Spy + dispatcher implementation of `TaskScheduler` for tests. Buffers tasks; executes them synchronously via `executeScheduled()`.
+- **Usage:** `register($type, $handler)` at setup; call `executeScheduled()` in functional tests to simulate the worker. `reset()` clears the scheduled list (handler registrations are preserved).
+- **Spy methods:** `scheduled(): array`, `reset()`.
+
+---
+
+## Composition example
+
+```php
+// Composition root (e.g. a service container or bootstrap file)
+$registry = new RegistryCommandBus();
+$registry->register(DepositMoneyCommand::class, new DepositMoneyCommandHandler($accountRepository));
+
+$commandBus = (new CommandBusBuilder($registry))
+    ->withValidation()
+    ->withTransactional($unitOfWork)
+    ->withDomainEventCoordination($deferredEventBus)
+    ->build();
+
+// Entry point (controller, CLI, etc.)
+$result = $commandBus->dispatch(new DepositMoneyCommand($accountId, 100, 'USD'));
+if ($result->isFail()) {
+    // handle domain rejection
+}
+```

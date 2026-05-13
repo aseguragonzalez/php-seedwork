@@ -26,6 +26,9 @@ final class InMemoryIntegrationEventOutboxRepository implements IntegrationEvent
 
     public function save(IntegrationEvent $event): void
     {
+        if (array_key_exists($event->id, $this->records)) {
+            return;
+        }
         $record = new IntegrationEventOutboxRecord(
             id: $event->id,
             event: $event,

@@ -60,7 +60,7 @@ final class DomainEventCoordinatorCommandBusTest extends TestCase
         $eventBus->dispatch();
     }
 
-    public function testDispatchPropagatesExceptionWithoutDispatchingOrDiscarding(): void
+    public function testDispatchDiscardsEventBusAndRethrowsOnException(): void
     {
         $event = $this->createMoneyDepositedEvent();
         $eventHandler = $this->createMock(DomainEventHandler::class);
@@ -81,6 +81,31 @@ final class DomainEventCoordinatorCommandBusTest extends TestCase
         $this->expectExceptionMessage('infrastructure failure');
 
         $decorator->dispatch($this->createDepositMoneyCommand());
+    }
+
+    public function testExceptionDiscardsBufferSoSubsequentDispatchIsClean(): void
+    {
+        $event = $this->createMoneyDepositedEvent();
+        $eventHandler = $this->createMock(DomainEventHandler::class);
+        $eventHandler->expects($this->never())->method('handle');
+
+        $eventBus = new DeferredDomainEventBus();
+        $eventBus->subscribe(MoneyDeposited::class, $eventHandler);
+        $eventBus->publish([$event]);
+
+        $innerBus = $this->createMock(CommandBus::class);
+        $innerBus->method('dispatch')
+            ->willThrowException(new \RuntimeException('infra error'));
+
+        $decorator = new DomainEventCoordinatorCommandBus($innerBus, $eventBus);
+
+        try {
+            $decorator->dispatch($this->createDepositMoneyCommand());
+        } catch (\RuntimeException) {
+        }
+
+        // Buffer was discarded — a second dispatch should be a no-op (no handler calls)
+        $eventBus->dispatch();
     }
 
     public function testAcceptsDomainEventBusInterface(): void

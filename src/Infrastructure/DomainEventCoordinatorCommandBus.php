@@ -14,7 +14,8 @@ use SeedWork\Application\Result;
  *
  * - Result::ok()     → dispatch() — run buffered domain events through handlers.
  * - Result::failed() → discard()  — drop events; domain rejected the operation.
- * - Throwable        → propagates; dispatch/discard is not called.
+ * - Throwable        → discard() then rethrow — prevents stale events leaking into
+ *                      a subsequent successful command when the bus is reused.
  *
  * Accepts the {@see DomainEventBus} interface (not the concrete class) so any
  * implementation can be injected (e.g. {@see DeferredDomainEventBus} in tests).
@@ -32,14 +33,19 @@ final class DomainEventCoordinatorCommandBus implements CommandBus
 
     /**
      * Dispatches the command to the inner bus. On ok, calls eventBus->dispatch();
-     * on fail, calls eventBus->discard(). Exceptions propagate unchanged.
+     * on fail or exception, calls eventBus->discard(). Exceptions propagate after discard.
      *
      * @param Command $command The command to dispatch.
      * @return Result The result from the inner bus.
      */
     public function dispatch(Command $command): Result
     {
-        $result = $this->inner->dispatch($command);
+        try {
+            $result = $this->inner->dispatch($command);
+        } catch (\Throwable $e) {
+            $this->eventBus->discard();
+            throw $e;
+        }
         if ($result->isOk()) {
             $this->eventBus->dispatch();
         } else {

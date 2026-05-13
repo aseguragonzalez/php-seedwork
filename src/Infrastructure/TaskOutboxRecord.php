@@ -19,7 +19,7 @@ use SeedWork\Application\BackgroundTask;
 final readonly class TaskOutboxRecord
 {
     /**
-     * @param string $id              Outbox record ID (distinct from the task ID).
+     * @param string $id              The background task's ID; used as the outbox record key.
      * @param BackgroundTask $task    The background task to be executed.
      * @param TaskOutboxStatus $status Current lifecycle status.
      * @param int $attempts           Number of delivery attempts so far.

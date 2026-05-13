@@ -8,10 +8,11 @@ namespace SeedWork\Domain;
  * Base type for Domain-Driven Design Domain Events.
  *
  * A Domain Event is a record of something that happened in the domain, expressed
- * in past tense (e.g. MoneyDeposited, OrderPlaced). It is immutable and carries
- * a payload that describes the change. Events are raised by aggregates and
- * collected for publication so other parts of the system (projections, other
- * bounded contexts) can react without coupling to the aggregate's internals.
+ * in past tense (e.g. MoneyDeposited, OrderPlaced). It is immutable; subclasses
+ * expose event-specific facts as their own readonly properties. Events are raised
+ * by aggregates and collected for publication so other parts of the system
+ * (projections, other bounded contexts) can react without coupling to the
+ * aggregate's internals.
  *
  * Use equals() for deduplication (same EventId = same event).
  *

@@ -26,6 +26,9 @@ final class InMemoryTaskOutboxRepository implements TaskOutboxRepositorySpy
 
     public function save(BackgroundTask $task): void
     {
+        if (array_key_exists($task->id, $this->records)) {
+            return;
+        }
         $record = new TaskOutboxRecord(
             id: $task->id,
             task: $task,

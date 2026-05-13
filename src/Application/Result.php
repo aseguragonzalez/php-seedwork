@@ -17,7 +17,7 @@ namespace SeedWork\Application;
  */
 final class Result
 {
-    /** @param array<ResultError> $errors */
+    /** @param non-empty-array<ResultError> $errors */
     private function __construct(
         private readonly bool $success,
         private readonly array $errors = []
@@ -29,9 +29,14 @@ final class Result
         return new self(true);
     }
 
-    /** @param array<ResultError> $errors */
+    /**
+     * @param non-empty-array<ResultError> $errors
+     */
     public static function failed(array $errors): self
     {
+        if ($errors === []) {
+            throw new \InvalidArgumentException('A failed result must contain at least one error.');
+        }
         return new self(false, $errors);
     }
 

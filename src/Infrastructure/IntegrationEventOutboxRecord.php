@@ -19,7 +19,7 @@ use SeedWork\Application\IntegrationEvent;
 final readonly class IntegrationEventOutboxRecord
 {
     /**
-     * @param string $id              Outbox record ID (distinct from the event ID).
+     * @param string $id              The integration event's ID; used as the outbox record key.
      * @param IntegrationEvent $event The integration event to be published.
      * @param IntegrationEventOutboxStatus $status Current lifecycle status.
      * @param int $attempts           Number of publish attempts so far.
