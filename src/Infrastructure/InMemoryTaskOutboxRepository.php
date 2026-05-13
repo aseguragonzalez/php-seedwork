@@ -26,17 +26,12 @@ final class InMemoryTaskOutboxRepository implements TaskOutboxRepositorySpy
         return array_values($this->records);
     }
 
-    /**
-     * Persists a new outbox record with Pending status.
-     *
-     * @param BackgroundTask $task The task to store.
-     */
     public function save(BackgroundTask $task): void
     {
         $record = new TaskOutboxRecord(
             id: $this->generateId(),
             task: $task,
-            status: IntegrationEventOutboxStatus::Pending,
+            status: TaskOutboxStatus::Pending,
             attempts: 0,
             createdAt: new \DateTimeImmutable('now', new \DateTimeZone('UTC'))
         );
@@ -50,7 +45,7 @@ final class InMemoryTaskOutboxRepository implements TaskOutboxRepositorySpy
     {
         $pending = array_filter(
             $this->records,
-            fn (TaskOutboxRecord $r) => $r->status === IntegrationEventOutboxStatus::Pending
+            fn (TaskOutboxRecord $r) => $r->status === TaskOutboxStatus::Pending
         );
         return array_slice(array_values($pending), 0, $limit);
     }
@@ -64,7 +59,7 @@ final class InMemoryTaskOutboxRepository implements TaskOutboxRepositorySpy
         $this->records[$id] = new TaskOutboxRecord(
             id: $record->id,
             task: $record->task,
-            status: IntegrationEventOutboxStatus::Published,
+            status: TaskOutboxStatus::Delivered,
             attempts: $record->attempts,
             createdAt: $record->createdAt,
             deliveredAt: new \DateTimeImmutable('now', new \DateTimeZone('UTC'))
@@ -80,7 +75,7 @@ final class InMemoryTaskOutboxRepository implements TaskOutboxRepositorySpy
         $this->records[$id] = new TaskOutboxRecord(
             id: $record->id,
             task: $record->task,
-            status: IntegrationEventOutboxStatus::Failed,
+            status: TaskOutboxStatus::Failed,
             attempts: $record->attempts + 1,
             createdAt: $record->createdAt,
             lastError: $error

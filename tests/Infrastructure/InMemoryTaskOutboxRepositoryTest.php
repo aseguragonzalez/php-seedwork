@@ -7,7 +7,7 @@ namespace Tests\Infrastructure;
 use PHPUnit\Framework\TestCase;
 use SeedWork\Application\BackgroundTask;
 use SeedWork\Infrastructure\InMemoryTaskOutboxRepository;
-use SeedWork\Infrastructure\IntegrationEventOutboxStatus;
+use SeedWork\Infrastructure\TaskOutboxStatus;
 
 final class InMemoryTaskOutboxRepositoryTest extends TestCase
 {
@@ -35,7 +35,7 @@ final class InMemoryTaskOutboxRepositoryTest extends TestCase
         $pending = $repo->findPending();
 
         $this->assertCount(1, $pending);
-        $this->assertSame(IntegrationEventOutboxStatus::Pending, $pending[0]->status);
+        $this->assertSame(TaskOutboxStatus::Pending, $pending[0]->status);
         $this->assertSame($task, $pending[0]->task);
     }
 
@@ -76,7 +76,7 @@ final class InMemoryTaskOutboxRepositoryTest extends TestCase
 
         $this->assertCount(0, $repo->findPending());
         $all = $repo->all();
-        $this->assertSame(IntegrationEventOutboxStatus::Published, $all[0]->status);
+        $this->assertSame(TaskOutboxStatus::Delivered, $all[0]->status);
         $this->assertNotNull($all[0]->deliveredAt);
     }
 
@@ -91,7 +91,7 @@ final class InMemoryTaskOutboxRepositoryTest extends TestCase
 
         $this->assertCount(0, $repo->findPending());
         $all = $repo->all();
-        $this->assertSame(IntegrationEventOutboxStatus::Failed, $all[0]->status);
+        $this->assertSame(TaskOutboxStatus::Failed, $all[0]->status);
         $this->assertSame('worker down', $all[0]->lastError);
     }
 
@@ -144,7 +144,7 @@ final class InMemoryTaskOutboxRepositoryTest extends TestCase
 
         $pending = $repo->findPending();
         $this->assertCount(1, $pending);
-        $this->assertSame(IntegrationEventOutboxStatus::Pending, $pending[0]->status);
+        $this->assertSame(TaskOutboxStatus::Pending, $pending[0]->status);
     }
 
     public function testMarkAsFailedIsNoopForUnknownId(): void
@@ -156,6 +156,6 @@ final class InMemoryTaskOutboxRepositoryTest extends TestCase
 
         $pending = $repo->findPending();
         $this->assertCount(1, $pending);
-        $this->assertSame(IntegrationEventOutboxStatus::Pending, $pending[0]->status);
+        $this->assertSame(TaskOutboxStatus::Pending, $pending[0]->status);
     }
 }

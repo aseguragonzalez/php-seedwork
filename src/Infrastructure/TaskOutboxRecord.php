@@ -14,14 +14,14 @@ use SeedWork\Application\BackgroundTask;
  * Each record tracks delivery status and retry attempts.
  *
  * @see TaskOutboxRepository Repository that manages the lifecycle.
- * @see IntegrationEventOutboxStatus Reused status enum (Pending / Published→Delivered / Failed).
+ * @see TaskOutboxStatus     Status transitions for outbox records.
  */
 final readonly class TaskOutboxRecord
 {
     /**
      * @param string $id              Outbox record ID (distinct from the task ID).
      * @param BackgroundTask $task    The background task to be executed.
-     * @param IntegrationEventOutboxStatus $status Current lifecycle status.
+     * @param TaskOutboxStatus $status Current lifecycle status.
      * @param int $attempts           Number of delivery attempts so far.
      * @param \DateTimeImmutable $createdAt When this record was created (UTC).
      * @param string|null $lastError  Last error message if delivery failed.
@@ -30,7 +30,7 @@ final readonly class TaskOutboxRecord
     public function __construct(
         public string $id,
         public BackgroundTask $task,
-        public IntegrationEventOutboxStatus $status,
+        public TaskOutboxStatus $status,
         public int $attempts,
         public \DateTimeImmutable $createdAt,
         public ?string $lastError = null,

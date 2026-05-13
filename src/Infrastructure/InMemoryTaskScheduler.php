@@ -54,6 +54,5 @@ final class InMemoryTaskScheduler implements TaskSchedulerSpy
     public function reset(): void
     {
         $this->scheduled = [];
-        $this->handlers = [];
     }
 }

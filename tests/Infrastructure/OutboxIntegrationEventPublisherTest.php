@@ -15,13 +15,13 @@ final class OutboxIntegrationEventPublisherTest extends TestCase
     {
         $event1 = new FakeIntegrationEvent('evt-001');
         $event2 = new FakeIntegrationEvent('evt-002');
+        $callCount = 0;
         $repository = $this->createMock(IntegrationEventOutboxRepository::class);
         $repository->expects($this->exactly(2))
             ->method('save')
-            ->willReturnCallback(function ($event) use ($event1, $event2): void {
-                static $calls = 0;
-                $calls++;
-                if ($calls === 1) {
+            ->willReturnCallback(function ($event) use ($event1, $event2, &$callCount): void {
+                $callCount++;
+                if ($callCount === 1) {
                     $this->assertSame($event1, $event);
                 } else {
                     $this->assertSame($event2, $event);

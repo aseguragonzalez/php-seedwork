@@ -12,9 +12,9 @@ use SeedWork\Application\BackgroundTask;
  * Implementations save tasks, fetch pending ones for delivery,
  * and update their status after delivery attempts.
  *
- * @see TaskOutboxRecord         The outbox entry managed by this repository.
- * @see IntegrationEventOutboxStatus Status transitions for outbox records.
- * @see BackgroundTask           The task stored in each outbox record.
+ * @see TaskOutboxRecord    The outbox entry managed by this repository.
+ * @see TaskOutboxStatus    Status transitions for outbox records.
+ * @see BackgroundTask      The task stored in each outbox record.
  */
 interface TaskOutboxRepository
 {

@@ -8,8 +8,6 @@ use PHPUnit\Framework\TestCase;
 use SeedWork\Application\CommandBus;
 use SeedWork\Application\Result;
 use SeedWork\Application\ResultError;
-use SeedWork\Application\ValidationError;
-use SeedWork\Application\ValidationErrors;
 use SeedWork\Infrastructure\ValidationCommandBus;
 use Examples\BankAccount\Application\DepositMoney\DepositMoneyCommand;
 use Examples\BankAccount\Domain\Entities\BankAccountId;

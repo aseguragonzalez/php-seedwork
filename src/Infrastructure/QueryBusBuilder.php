@@ -16,10 +16,9 @@ use SeedWork\Application\QueryBus;
  *
  * Example:
  * <code>
- * $bus = QueryBusBuilder::new()
- *     ->withValidation()
- *     ->build();
- * $bus->registry()->register(MyQuery::class, new MyQueryHandler());
+ * $builder = QueryBusBuilder::new()->withValidation();
+ * $builder->registry()->register(MyQuery::class, new MyQueryHandler());
+ * $bus = $builder->build();
  * </code>
  *
  * @see RegistryQueryBus   Default base bus.
@@ -27,13 +26,13 @@ use SeedWork\Application\QueryBus;
  */
 final class QueryBusBuilder
 {
-    private readonly RegistryQueryBus $registryBus;
+    private ?RegistryQueryBus $registryBus;
     private QueryBus $queryBus;
 
-    public function __construct()
+    private function __construct(?RegistryQueryBus $registryBus, QueryBus $queryBus)
     {
-        $this->registryBus = new RegistryQueryBus();
-        $this->queryBus = $this->registryBus;
+        $this->registryBus = $registryBus;
+        $this->queryBus = $queryBus;
     }
 
     /**
@@ -41,31 +40,38 @@ final class QueryBusBuilder
      */
     public static function new(): self
     {
-        return new self();
+        $registry = new RegistryQueryBus();
+        return new self($registry, $registry);
     }
 
     /**
      * Creates a builder with the given query bus as the base.
-     * Note: {@see registry()} is not available when using a custom base.
      *
-     * @deprecated Use {@see QueryBusBuilder::new()} for the default RegistryQueryBus base.
+     * If the provided bus is a {@see RegistryQueryBus}, it is also used as
+     * the registry accessible via {@see registry()}. Otherwise {@see registry()}
+     * will throw — use {@see QueryBusBuilder::new()} when you need handler registration.
      */
     public static function from(QueryBus $queryBus): self
     {
-        $builder = new self();
-        $builder->queryBus = $queryBus;
-        return $builder;
+        $registry = $queryBus instanceof RegistryQueryBus ? $queryBus : null;
+        return new self($registry, $queryBus);
     }
 
     /**
      * Returns the inner {@see RegistryQueryBus} for handler registration.
      *
-     * When built with {@see new()}, always returns the same registry instance
-     * regardless of how many decorators have been added. When built with
-     * {@see from()}, returns the internal registry (not the custom base).
+     * Always returns the same registry instance regardless of how many decorators
+     * have been added, when built with {@see new()} or {@see from(RegistryQueryBus)}.
+     *
+     * @throws \BadMethodCallException When built via {@see from()} with a non-RegistryQueryBus base.
      */
     public function registry(): RegistryQueryBus
     {
+        if ($this->registryBus === null) {
+            throw new \BadMethodCallException(
+                'registry() is not available when using a custom non-registry base bus via from(). Use QueryBusBuilder::new() instead.'
+            );
+        }
         return $this->registryBus;
     }
 

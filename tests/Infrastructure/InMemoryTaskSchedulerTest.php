@@ -67,7 +67,7 @@ final class InMemoryTaskSchedulerTest extends TestCase
         $scheduler->register('domain.other', $handler);
         $scheduler->schedule($task);
 
-        $scheduler->executeScheduled(); // should not throw
+        $scheduler->executeScheduled();
         $this->addToAssertionCount(1);
     }
 
@@ -99,17 +99,17 @@ final class InMemoryTaskSchedulerTest extends TestCase
         $this->assertSame([], $scheduler->scheduled());
     }
 
-    public function testResetClearsHandlerRegistry(): void
+    public function testResetPreservesHandlerRegistration(): void
     {
         $task = $this->createTask('task-1', 'domain.action');
         $handler = $this->createMock(TaskHandler::class);
-        $handler->expects($this->never())->method('handle');
+        $handler->expects($this->once())->method('handle')->with($task);
 
         $scheduler = new InMemoryTaskScheduler();
         $scheduler->register('domain.action', $handler);
         $scheduler->reset();
         $scheduler->schedule($task);
 
-        $scheduler->executeScheduled(); // handler was cleared — should not call
+        $scheduler->executeScheduled();
     }
 }

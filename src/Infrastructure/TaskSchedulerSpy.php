@@ -41,7 +41,7 @@ interface TaskSchedulerSpy extends TaskScheduler
     public function executeScheduled(): void;
 
     /**
-     * Clears the scheduled task list and handler registry. Use in test tearDown / setUp.
+     * Clears the scheduled task list. Handler registrations are preserved.
      */
     public function reset(): void;
 }

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Infrastructure;
 
 use PHPUnit\Framework\TestCase;
-use SeedWork\Application\Command;
 use SeedWork\Application\CommandBus;
 use SeedWork\Application\DomainEventBus;
 use SeedWork\Application\DomainEventHandler;

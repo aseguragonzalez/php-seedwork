@@ -25,7 +25,7 @@ abstract readonly class IntegrationEvent
      * @param array<string, mixed> $payload  Serializable primitive facts.
      * @param string $correlationId   Correlation ID for distributed tracing (required).
      * @param string|null $causationId ID of the command or event that caused this one.
-     * @param array<string, mixed>|null $metadata Optional trace/tenant metadata.
+     * @param array<string, string>|null $metadata Optional trace/tenant metadata.
      */
     public function __construct(
         public string $id,

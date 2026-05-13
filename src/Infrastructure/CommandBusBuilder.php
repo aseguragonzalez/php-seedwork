@@ -22,12 +22,12 @@ use SeedWork\Domain\UnitOfWork;
  *
  * Example:
  * <code>
- * $bus = CommandBusBuilder::new()
+ * $builder = CommandBusBuilder::new()
  *     ->withDomainEventCoordination($deferredEventBus)
  *     ->withTransactional($unitOfWork)
- *     ->withValidation()
- *     ->build();
- * $bus->registry()->register(MyCommand::class, new MyCommandHandler());
+ *     ->withValidation();
+ * $builder->registry()->register(MyCommand::class, new MyCommandHandler());
+ * $bus = $builder->build();
  * </code>
  *
  * @see RegistryCommandBus                  Default base bus.
@@ -37,13 +37,13 @@ use SeedWork\Domain\UnitOfWork;
  */
 final class CommandBusBuilder
 {
-    private readonly RegistryCommandBus $registryBus;
+    private ?RegistryCommandBus $registryBus;
     private CommandBus $commandBus;
 
-    public function __construct()
+    private function __construct(?RegistryCommandBus $registryBus, CommandBus $commandBus)
     {
-        $this->registryBus = new RegistryCommandBus();
-        $this->commandBus = $this->registryBus;
+        $this->registryBus = $registryBus;
+        $this->commandBus = $commandBus;
     }
 
     /**
@@ -51,31 +51,38 @@ final class CommandBusBuilder
      */
     public static function new(): self
     {
-        return new self();
+        $registry = new RegistryCommandBus();
+        return new self($registry, $registry);
     }
 
     /**
      * Creates a builder with the given command bus as the base.
-     * Note: {@see registry()} is not available when using a custom base.
      *
-     * @deprecated Use {@see CommandBusBuilder::new()} for the default RegistryCommandBus base.
+     * If the provided bus is a {@see RegistryCommandBus}, it is also used as
+     * the registry accessible via {@see registry()}. Otherwise {@see registry()}
+     * will throw — use {@see CommandBusBuilder::new()} when you need handler registration.
      */
     public static function from(CommandBus $commandBus): self
     {
-        $builder = new self();
-        $builder->commandBus = $commandBus;
-        return $builder;
+        $registry = $commandBus instanceof RegistryCommandBus ? $commandBus : null;
+        return new self($registry, $commandBus);
     }
 
     /**
      * Returns the inner {@see RegistryCommandBus} for handler registration.
      *
-     * When built with {@see new()}, always returns the same registry instance
-     * regardless of how many decorators have been added. When built with
-     * {@see from()}, returns the internal registry (not the custom base).
+     * Always returns the same registry instance regardless of how many decorators
+     * have been added, when built with {@see new()} or {@see from(RegistryCommandBus)}.
+     *
+     * @throws \BadMethodCallException When built via {@see from()} with a non-RegistryCommandBus base.
      */
     public function registry(): RegistryCommandBus
     {
+        if ($this->registryBus === null) {
+            throw new \BadMethodCallException(
+                'registry() is not available when using a custom non-registry base bus via from(). Use CommandBusBuilder::new() instead.'
+            );
+        }
         return $this->registryBus;
     }
 
