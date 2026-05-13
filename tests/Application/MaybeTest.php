@@ -24,12 +24,12 @@ final class MaybeTest extends TestCase
         $this->assertFalse($maybe->hasValue());
     }
 
-    public function testNothingValueIsNull(): void
+    public function testNothingValueThrows(): void
     {
         $maybe = Maybe::nothing();
 
-        /** @phpstan-ignore-next-line */
-        $this->assertNull($maybe->value());
+        $this->expectException(\LogicException::class);
+        $maybe->value();
     }
 
     public function testJustWithObject(): void

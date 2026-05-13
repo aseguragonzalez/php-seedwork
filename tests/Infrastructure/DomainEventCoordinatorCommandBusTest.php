@@ -108,6 +108,23 @@ final class DomainEventCoordinatorCommandBusTest extends TestCase
         $eventBus->dispatch();
     }
 
+    public function testEventBusDispatchExceptionDiscardsAndRethrows(): void
+    {
+        $event = $this->createMoneyDepositedEvent();
+        $eventBus = $this->createMock(DomainEventBus::class);
+        $eventBus->expects($this->once())->method('dispatch')
+            ->willThrowException(new \RuntimeException('handler failure'));
+        $eventBus->expects($this->once())->method('discard');
+
+        $innerBus = $this->createInnerBusReturning(Result::ok());
+        $decorator = new DomainEventCoordinatorCommandBus($innerBus, $eventBus);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('handler failure');
+
+        $decorator->dispatch($this->createDepositMoneyCommand());
+    }
+
     public function testAcceptsDomainEventBusInterface(): void
     {
         $eventBus = $this->createMock(DomainEventBus::class);

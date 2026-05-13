@@ -46,12 +46,14 @@ final class ValidationCommandBus implements CommandBus
         try {
             $command->validate();
         } catch (ValidationErrors $e) {
-            return Result::failed(
-                array_map(
-                    fn (ValidationError $err) => new ResultError($err->field, $err->message),
-                    $e->errors
-                )
+            $errors = array_map(
+                fn (ValidationError $err) => new ResultError($err->field, $err->message),
+                $e->errors
             );
+            if ($errors === []) {
+                $errors = [new ResultError('validation', 'Validation failed')];
+            }
+            return Result::failed($errors);
         }
         return $this->inner->dispatch($command);
     }

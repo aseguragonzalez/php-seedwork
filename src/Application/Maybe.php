@@ -51,9 +51,15 @@ final class Maybe
         return $this->hasValue;
     }
 
-    /** @return T|null */
+    /**
+     * @return T
+     * @throws \LogicException When called on a nothing value; check {@see hasValue()} first.
+     */
     public function value(): mixed
     {
+        if (!$this->hasValue) {
+            throw new \LogicException('Cannot call value() on Maybe::nothing(). Check hasValue() first.');
+        }
         return $this->value;
     }
 }
