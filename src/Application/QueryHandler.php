@@ -7,10 +7,9 @@ namespace SeedWork\Application;
 /**
  * Application use case for a read. Returns a {@see Maybe} container.
  *
- * The template is declared covariant (`@template-covariant`) so that
- * `QueryHandler<GetBankAccountStatusQuery>` is assignable to `QueryHandler<Query>`
- * in registration registries. The `@phpstan-ignore generics.variance` on `handle()`
- * suppresses the expected covariance warning for the parameter position.
+ * The template is declared covariant so that a typed handler such as
+ * QueryHandler<GetBankAccountStatusQuery> is assignable to QueryHandler<Query>
+ * when registered in a query bus registry.
  *
  * @template-covariant T of Query
  * @see Query The query type this handler accepts.
