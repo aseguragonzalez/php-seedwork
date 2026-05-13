@@ -26,6 +26,7 @@ final class InMemoryIntegrationEventOutboxRepositoryTest extends TestCase
 
         $this->assertCount(1, $pending);
         $this->assertSame(IntegrationEventOutboxStatus::Pending, $pending[0]->status);
+        $this->assertSame($event->id, $pending[0]->id);
         $this->assertSame($event, $pending[0]->event);
     }
 

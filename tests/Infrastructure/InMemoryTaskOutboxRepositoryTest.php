@@ -36,6 +36,7 @@ final class InMemoryTaskOutboxRepositoryTest extends TestCase
 
         $this->assertCount(1, $pending);
         $this->assertSame(TaskOutboxStatus::Pending, $pending[0]->status);
+        $this->assertSame($task->id, $pending[0]->id);
         $this->assertSame($task, $pending[0]->task);
     }
 

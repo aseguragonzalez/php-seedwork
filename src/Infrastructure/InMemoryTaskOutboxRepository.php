@@ -9,8 +9,6 @@ use SeedWork\Application\BackgroundTask;
 /**
  * In-memory implementation of {@see TaskOutboxRepositorySpy} for use in tests.
  *
- * Generates UUIDs with a simple random implementation to avoid external dependencies.
- *
  * @see TaskOutboxRepositorySpy Test-focused extension implemented here.
  */
 final class InMemoryTaskOutboxRepository implements TaskOutboxRepositorySpy
@@ -29,7 +27,7 @@ final class InMemoryTaskOutboxRepository implements TaskOutboxRepositorySpy
     public function save(BackgroundTask $task): void
     {
         $record = new TaskOutboxRecord(
-            id: $this->generateId(),
+            id: $task->id,
             task: $task,
             status: TaskOutboxStatus::Pending,
             attempts: 0,
@@ -85,20 +83,5 @@ final class InMemoryTaskOutboxRepository implements TaskOutboxRepositorySpy
     public function reset(): void
     {
         $this->records = [];
-    }
-
-    private function generateId(): string
-    {
-        return sprintf(
-            '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0x0fff) | 0x4000,
-            mt_rand(0, 0x3fff) | 0x8000,
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff)
-        );
     }
 }

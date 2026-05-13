@@ -9,8 +9,6 @@ use SeedWork\Application\IntegrationEvent;
 /**
  * In-memory implementation of {@see IntegrationEventOutboxRepositorySpy} for use in tests.
  *
- * Generates UUIDs with a simple random implementation to avoid external dependencies.
- *
  * @see IntegrationEventOutboxRepositorySpy Test-focused extension implemented here.
  */
 final class InMemoryIntegrationEventOutboxRepository implements IntegrationEventOutboxRepositorySpy
@@ -26,15 +24,10 @@ final class InMemoryIntegrationEventOutboxRepository implements IntegrationEvent
         return array_values($this->records);
     }
 
-    /**
-     * Persists a new outbox record with Pending status.
-     *
-     * @param IntegrationEvent $event The event to store.
-     */
     public function save(IntegrationEvent $event): void
     {
         $record = new IntegrationEventOutboxRecord(
-            id: $this->generateId(),
+            id: $event->id,
             event: $event,
             status: IntegrationEventOutboxStatus::Pending,
             attempts: 0,
@@ -90,20 +83,5 @@ final class InMemoryIntegrationEventOutboxRepository implements IntegrationEvent
     public function reset(): void
     {
         $this->records = [];
-    }
-
-    private function generateId(): string
-    {
-        return sprintf(
-            '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0x0fff) | 0x4000,
-            mt_rand(0, 0x3fff) | 0x8000,
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff)
-        );
     }
 }
