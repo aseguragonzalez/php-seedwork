@@ -30,6 +30,31 @@ final class InMemoryIntegrationEventOutboxRepositoryTest extends TestCase
         $this->assertSame($event, $pending[0]->event);
     }
 
+    public function testSaveIsIdempotentForSameEventId(): void
+    {
+        $repo = new InMemoryIntegrationEventOutboxRepository();
+        $event = $this->createTestEvent('evt-001');
+
+        $repo->save($event);
+        $repo->save($event);
+
+        $this->assertCount(1, $repo->all());
+    }
+
+    public function testSaveDoesNotOverwritePublishedRecord(): void
+    {
+        $repo = new InMemoryIntegrationEventOutboxRepository();
+        $event = $this->createTestEvent('evt-001');
+        $repo->save($event);
+        $repo->markAsPublished('evt-001');
+
+        $repo->save($event);
+
+        $all = $repo->all();
+        $this->assertCount(1, $all);
+        $this->assertSame(IntegrationEventOutboxStatus::Published, $all[0]->status);
+    }
+
     public function testFindPendingReturnsOnlyPendingRecords(): void
     {
         $repo = new InMemoryIntegrationEventOutboxRepository();

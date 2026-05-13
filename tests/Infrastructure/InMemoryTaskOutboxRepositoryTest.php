@@ -40,6 +40,31 @@ final class InMemoryTaskOutboxRepositoryTest extends TestCase
         $this->assertSame($task, $pending[0]->task);
     }
 
+    public function testSaveIsIdempotentForSameTaskId(): void
+    {
+        $repo = new InMemoryTaskOutboxRepository();
+        $task = $this->createTask('task-001');
+
+        $repo->save($task);
+        $repo->save($task);
+
+        $this->assertCount(1, $repo->all());
+    }
+
+    public function testSaveDoesNotOverwriteDeliveredRecord(): void
+    {
+        $repo = new InMemoryTaskOutboxRepository();
+        $task = $this->createTask('task-001');
+        $repo->save($task);
+        $repo->markAsDelivered('task-001');
+
+        $repo->save($task);
+
+        $all = $repo->all();
+        $this->assertCount(1, $all);
+        $this->assertSame(TaskOutboxStatus::Delivered, $all[0]->status);
+    }
+
     public function testFindPendingReturnsOnlyPendingRecords(): void
     {
         $repo = new InMemoryTaskOutboxRepository();
