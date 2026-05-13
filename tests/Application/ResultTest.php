@@ -52,7 +52,6 @@ final class ResultTest extends TestCase
     public function testFailedWithEmptyArrayThrows(): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        // @phpstan-ignore argument.type
         Result::failed([]);
     }
 }
