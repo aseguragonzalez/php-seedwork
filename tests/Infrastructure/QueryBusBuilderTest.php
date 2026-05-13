@@ -53,7 +53,7 @@ final class QueryBusBuilderTest extends TestCase
     public function testFirstStepAddedBecomesOutermostDecorator(): void
     {
         $inner = $this->createMock(QueryBus::class);
-        ->method('ask')->willReturn(Maybe::nothing());
+        $inner->method('ask')->willReturn(Maybe::nothing());
 
         $result = (new QueryBusBuilder(new RegistryQueryBus()))
             ->withValidation()
@@ -66,7 +66,7 @@ final class QueryBusBuilderTest extends TestCase
     public function testUseAppliesCustomMiddleware(): void
     {
         $customBus = $this->createMock(QueryBus::class);
-        ->method('ask')->willReturn(Maybe::nothing());
+        $customBus->method('ask')->willReturn(Maybe::nothing());
 
         $result = (new QueryBusBuilder(new RegistryQueryBus()))
             ->use(fn (QueryBus $inner): QueryBus => $customBus)
