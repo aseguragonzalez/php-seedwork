@@ -60,6 +60,8 @@ final class Maybe
         if (!$this->hasValue) {
             throw new \LogicException('Cannot call value() on Maybe::nothing(). Check hasValue() first.');
         }
-        return $this->value;
+        /** @var T $v */
+        $v = $this->value;
+        return $v;
     }
 }
