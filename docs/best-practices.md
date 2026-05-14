@@ -34,7 +34,7 @@ This guide explains how to use the SeedWork package effectively in your project.
 - **Stack buses in the right order.** Use:
   `ValidationCommandBus` → `TransactionalCommandBus` → `DomainEventCoordinatorCommandBus` → `RegistryCommandBus`.
   The transaction wraps both the command execution and domain event dispatch, so
-  events are only dispatched after a successful commit. Exceptions trigger
+  events are dispatched within the transaction, so a rollback also prevents event dispatch. Exceptions trigger
   rollback and no dispatch. Build the stack with `CommandBusBuilder`.
 
 ## Domain events
@@ -80,7 +80,7 @@ This guide explains how to use the SeedWork package effectively in your project.
   command outcome to the HTTP/response. Do not put domain logic or
   infrastructure (repositories, event bus, etc.) in the controller; depend
   only on the bus interfaces.
-- **See the [component reference](component-reference.md#using-the-application-ports-from-an-entry-point)**
+- **See the [component reference](component-reference.md#composition-example)**
   for a concrete controller example using CommandBus and QueryBus.
 
 ## Dependency direction

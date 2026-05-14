@@ -7,6 +7,7 @@ namespace Examples\BankAccount\Tests;
 use PHPUnit\Framework\TestCase;
 use SeedWork\Infrastructure\CommandBusBuilder;
 use SeedWork\Infrastructure\DeferredDomainEventBus;
+use SeedWork\Infrastructure\DomainEventPublishingRepository;
 use SeedWork\Infrastructure\RegistryCommandBus;
 use Examples\BankAccount\Application\DepositMoney\DepositMoneyCommand;
 use Examples\BankAccount\Application\DepositMoney\DepositMoneyCommandHandler;
@@ -22,6 +23,7 @@ final class DepositMoneyHandlerTest extends TestCase
     {
         $repository = new InMemoryBankAccountRepository();
         $domainEventBus = new DeferredDomainEventBus();
+        $publishingRepo = new DomainEventPublishingRepository($repository, $domainEventBus);
 
         $account = BankAccount::create(initialBalance: new AccountBalance(100, Currency::USD));
         $repository->save($account);
@@ -31,7 +33,7 @@ final class DepositMoneyHandlerTest extends TestCase
         $registry = new RegistryCommandBus();
         $registry->register(
             DepositMoneyCommand::class,
-            new DepositMoneyCommandHandler($obtainer, $repository, $domainEventBus)
+            new DepositMoneyCommandHandler($obtainer, $publishingRepo)
         );
         $bus = (new CommandBusBuilder($registry))
             ->withValidation()

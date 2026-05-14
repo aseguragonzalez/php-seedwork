@@ -32,6 +32,10 @@ final class Result
     /** @param non-empty-array<ResultError> $errors One or more errors describing the failure. */
     public static function failed(array $errors): self
     {
+        if (count($errors) === 0) {
+            throw new \InvalidArgumentException('Result::failed() requires at least one error.');
+        }
+
         return new self(false, $errors);
     }
 

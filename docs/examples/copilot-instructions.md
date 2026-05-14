@@ -105,7 +105,7 @@ namespace Domain\Orders\Entities;
 use Domain\Orders\Events\OrderCreated;
 use Domain\Orders\ValueObjects\OrderDetails;
 use Domain\Orders\ValueObjects\OrderEntityId;
-use Seedwork\Domain\AggregateRoot;
+use SeedWork\Domain\AggregateRoot;
 
 final readonly class Order extends AggregateRoot
 {
@@ -171,8 +171,8 @@ declare(strict_types=1);
 
 namespace Domain\Shared;
 
-use Seedwork\Domain\ValueObject;
-use Seedwork\Domain\Exceptions\ValueException;
+use SeedWork\Domain\ValueObject;
+use SeedWork\Domain\Exceptions\ValueException;
 
 final readonly class Email extends ValueObject
 {
@@ -252,7 +252,7 @@ declare(strict_types=1);
 namespace Domain\Orders\Repositories;
 
 use Domain\Orders\Entities\Order;
-use Seedwork\Domain\Repository;
+use SeedWork\Domain\Repository;
 
 /**
  * @extends Repository<Order>
@@ -275,7 +275,7 @@ declare(strict_types=1);
 
 namespace Application\Orders\PlaceOrder;
 
-use Seedwork\Application\CommandHandler;
+use SeedWork\Application\CommandHandler;
 
 /**
  * @extends CommandHandler<PlaceOrderCommand>

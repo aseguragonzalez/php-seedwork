@@ -65,11 +65,11 @@ final class CompositionRoot
         $commandRegistry->register(OpenAccountCommand::class, new OpenAccountCommandHandler($publishingRepository));
         $commandRegistry->register(
             DepositMoneyCommand::class,
-            new DepositMoneyCommandHandler($obtainer, $publishingRepository, $this->domainEventBus)
+            new DepositMoneyCommandHandler($obtainer, $publishingRepository)
         );
         $commandRegistry->register(
             WithdrawMoneyCommand::class,
-            new WithdrawMoneyCommandHandler($obtainer, $publishingRepository, $this->domainEventBus)
+            new WithdrawMoneyCommandHandler($obtainer, $publishingRepository)
         );
 
         $this->commandBus = (new CommandBusBuilder($commandRegistry))

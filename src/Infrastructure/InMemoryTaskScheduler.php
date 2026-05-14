@@ -43,7 +43,9 @@ final class InMemoryTaskScheduler implements TaskSchedulerSpy
 
     public function executeScheduled(): void
     {
-        foreach ($this->scheduled as $task) {
+        $tasks = $this->scheduled;
+        $this->scheduled = [];
+        foreach ($tasks as $task) {
             $handler = $this->handlers[$task->type] ?? null;
             if ($handler !== null) {
                 $handler->handle($task);
