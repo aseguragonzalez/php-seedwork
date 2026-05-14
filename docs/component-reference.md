@@ -138,7 +138,7 @@ All components live under the `SeedWork\` namespace (Domain, Application, Infras
 ### IntegrationEventPublisher (`SeedWork\Application\IntegrationEventPublisher`)
 
 - **Role:** Port to publish integration events. Implemented in Infrastructure (outbox or in-memory spy).
-- **Methods:** `publish(IntegrationEvent $event): void`.
+- **Methods:** `publish(array $events): void`.
 
 ### IntegrationEventHandler (`SeedWork\Application\IntegrationEventHandler`)
 
