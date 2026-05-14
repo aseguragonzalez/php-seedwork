@@ -30,7 +30,7 @@ final class Result
     }
 
     /**
-     * @param array<ResultError> $errors One or more errors describing the failure.
+     * @param non-empty-array<ResultError> $errors One or more errors describing the failure.
      * @throws \InvalidArgumentException if $errors is empty.
      */
     public static function failed(array $errors): self

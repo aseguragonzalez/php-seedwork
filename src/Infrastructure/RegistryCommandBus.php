@@ -34,7 +34,7 @@ final class RegistryCommandBus implements CommandBus
     public function dispatch(Command $command): Result
     {
         $handler = $this->handlers[$command::class]
-            ?? throw new \RuntimeException('No handler for ' . $command::class);
+            ?? throw new \LogicException('No handler for ' . $command::class);
         try {
             $handler->handle($command);
             return Result::ok();

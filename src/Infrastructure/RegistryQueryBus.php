@@ -36,7 +36,7 @@ final class RegistryQueryBus implements QueryBus
     public function ask(Query $query): Maybe
     {
         $handler = $this->handlers[$query::class]
-            ?? throw new \RuntimeException('No handler for ' . $query::class);
+            ?? throw new \LogicException('No handler for ' . $query::class);
         return $handler->handle($query);
     }
 }

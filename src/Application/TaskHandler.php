@@ -7,7 +7,7 @@ namespace SeedWork\Application;
 /**
  * Contract for executing a single type of background task.
  *
- * Handlers are registered on a scheduler or task bus and invoked when a task of
+ * Handlers are registered on a task scheduler and invoked when a task of
  * matching type is ready for execution. Implement handle() idempotently when
  * tasks may be retried.
  *

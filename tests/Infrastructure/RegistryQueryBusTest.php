@@ -33,12 +33,12 @@ final class RegistryQueryBusTest extends TestCase
         $this->assertSame($expectedMaybe, $result);
     }
 
-    public function testAskThrowsRuntimeExceptionWhenNoHandlerRegistered(): void
+    public function testAskThrowsLogicExceptionWhenNoHandlerRegistered(): void
     {
         $query = $this->createQuery();
         $bus = new RegistryQueryBus();
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('No handler for');
 
         $bus->ask($query);

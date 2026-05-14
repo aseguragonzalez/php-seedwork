@@ -46,12 +46,12 @@ final class RegistryCommandBusTest extends TestCase
         $this->assertStringContainsString('Insufficient', $result->errors()[0]->message);
     }
 
-    public function testDispatchThrowsRuntimeExceptionWhenNoHandlerRegistered(): void
+    public function testDispatchThrowsLogicExceptionWhenNoHandlerRegistered(): void
     {
         $command = $this->createDepositMoneyCommand();
         $bus = new RegistryCommandBus();
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('No handler for');
 
         $bus->dispatch($command);
