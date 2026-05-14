@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
-namespace SeedWork\Application;
+namespace SeedWork\Infrastructure;
+
+use SeedWork\Application\IntegrationEventPublisher;
+use SeedWork\Application\IntegrationEvent;
 
 /**
  * Spy extension of {@see IntegrationEventPublisher} for use in tests.

@@ -32,10 +32,10 @@ This guide explains how to use the SeedWork package effectively in your project.
   with a consistent `NotFoundResource` message. Avoid repeating `findBy` + null
   check and custom exception handling in every handler.
 - **Stack buses in the right order.** Use:
-  `TransactionalCommandBus(DomainEventFlushCommandBus(ContainerCommandBus),
-  UnitOfWork)`. The transaction wraps both the command and the event flush, so
+  `ValidationCommandBus` → `TransactionalCommandBus` → `DomainEventCoordinatorCommandBus` → `RegistryCommandBus`.
+  The transaction wraps both the command execution and domain event dispatch, so
   events are only dispatched after a successful commit. Exceptions trigger
-  rollback and no flush.
+  rollback and no dispatch. Build the stack with `CommandBusBuilder`.
 
 ## Domain events
 
@@ -44,10 +44,10 @@ This guide explains how to use the SeedWork package effectively in your project.
   withdrawal, deposit). Use a static factory on the event (e.g.
   `MoneyDeposited::create(...)`) and pass through existing events when building
   the new aggregate instance.
-- **Use a deferred event bus and flush after the command.** Buffer events during
-  command handling and call `flush()` only after the command succeeds.
+- **Use a deferred event bus and dispatch after the command.** Buffer events during
+  command handling and call `dispatch()` only after the command succeeds.
   This avoids publishing events for rolled-back work and keeps
-  ordering predictable.
+  ordering predictable. `DomainEventCoordinatorCommandBus` handles this automatically.
 - **When to use the deferred event bus.** The deferred event bus is well-suited
   for **monolithic** systems where you want: **isolation between bounded
   contexts** (events are processed after the transaction, within the same
@@ -59,7 +59,7 @@ This guide explains how to use the SeedWork package effectively in your project.
   with multiple external systems (e.g. a single database for the write, no
   outbound messaging in the same request). For cross-service or async
   integration, a message broker and a different bus implementation are more
-  appropriate. Keep using the stacking order: Transactional → Flush → Container.
+  appropriate. Keep using the stacking order: Validation → Transactional → DomainEventCoordinator → Registry.
 - **Design event handlers for a single concern.** One handler per event type and
   concern (e.g. update read model, send notification). If the bus can redeliver
   (e.g. async), make handlers idempotent (e.g. by event id) where possible.
@@ -112,7 +112,7 @@ This guide explains how to use the SeedWork package effectively in your project.
 | Area | Practice |
 | --- | --- |
 | Aggregates | Small, reference others by id, enforce invariants, return new instance + events |
-| Commands | Thin handlers; obtain → domain → save → publish events; stack Transaction → Flush → Container |
+| Commands | Thin handlers; obtain → domain → save → publish events; stack Validation → Transaction → DomainEventCoordinator → Registry |
 | Events | Record on meaningful change; deferred flush after command; one concern per handler; idempotent when async |
 | Queries | Return DTOs; read-only handlers |
 | Dependencies | Domain pure; application uses ports; infrastructure implements and points inward |
