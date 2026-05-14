@@ -13,6 +13,9 @@ namespace SeedWork\Application;
  * adapter-agnostic; simple, serializable domain value objects may be used
  * when all involved adapters know how to handle them.
  *
+ * Subclasses must implement {@see validate()} to enforce field-level rules.
+ * A validation decorator on the bus calls validate() before dispatching.
+ *
  * @see QueryHandler Handlers that return a result for this query.
  * @see QueryBus Application port that dispatches queries to the right handler.
  */
@@ -25,4 +28,12 @@ abstract readonly class Query
     protected function __construct()
     {
     }
+
+    /**
+     * Validates the query's field-level rules.
+     * Throw {@see ValidationErrors} when one or more validations fail.
+     *
+     * @throws ValidationErrors When one or more field-level validations fail.
+     */
+    abstract public function validate(): void;
 }

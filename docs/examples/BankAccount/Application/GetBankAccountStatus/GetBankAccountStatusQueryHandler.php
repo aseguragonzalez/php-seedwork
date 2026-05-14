@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Examples\BankAccount\Application\GetBankAccountStatus;
 
+use SeedWork\Application\Maybe;
 use SeedWork\Application\Query;
-use SeedWork\Application\QueryResult;
-use SeedWork\Domain\Exceptions\NotFoundResource;
 use Examples\BankAccount\Domain\Entities\BankAccount;
 use Examples\BankAccount\Domain\Entities\BankAccountId;
 use Examples\BankAccount\Domain\Repositories\BankAccountRepository;
@@ -23,16 +22,16 @@ final readonly class GetBankAccountStatusQueryHandler implements GetBankAccountS
 
     /**
      * @param GetBankAccountStatusQuery $query
-     * @return BankAccountStatusResult
+     * @return Maybe<BankAccountStatusResult>
      */
-    public function handle(Query $query): QueryResult
+    public function handle(Query $query): Maybe
     {
         $accountId = BankAccountId::fromString($query->accountId);
         /** @var BankAccount|null $account */
         $account = $this->repository->findBy($accountId);
 
         if ($account === null) {
-            throw new NotFoundResource('BankAccount', $accountId);
+            return Maybe::nothing();
         }
 
         $transactions = array_map(
@@ -46,10 +45,10 @@ final readonly class GetBankAccountStatusQueryHandler implements GetBankAccountS
             $account->getTransactions()
         );
 
-        return new BankAccountStatusResult(
+        return Maybe::just(new BankAccountStatusResult(
             $account->id,
             $account->getBalance(),
             $transactions,
-        );
+        ));
     }
 }

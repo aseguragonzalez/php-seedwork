@@ -13,6 +13,10 @@ namespace SeedWork\Application;
  * such as IDs or money). Avoid passing full domain entities; handlers can load
  * and reconstruct rich domain objects when handling the command.
  *
+ * Subclasses must implement {@see validate()} to enforce field-level rules.
+ * A validation decorator on the bus calls validate() before dispatching and
+ * converts {@see ValidationErrors} into {@see Result::failed()}.
+ *
  * @see CommandHandler Handlers that execute the use case for this command.
  * @see CommandBus Application port that dispatches commands to the right handler.
  */
@@ -25,4 +29,12 @@ abstract readonly class Command
     protected function __construct()
     {
     }
+
+    /**
+     * Validates the command's field-level rules.
+     * Throw {@see ValidationErrors} when one or more validations fail.
+     *
+     * @throws ValidationErrors When one or more field-level validations fail.
+     */
+    abstract public function validate(): void;
 }

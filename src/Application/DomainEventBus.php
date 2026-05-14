@@ -7,37 +7,26 @@ namespace SeedWork\Application;
 use SeedWork\Domain\DomainEvent;
 
 /**
- * Application port for publishing and subscribing to Domain Events.
+ * Application port for the domain event bus: publish, subscribe, dispatch and discard.
  *
- * Decouples the application layer from how events are delivered: an in-process
- * implementation may dispatch synchronously to registered handlers; an
- * infrastructure implementation may push to a message queue for async
- * processing or other bounded contexts. Command handlers typically collect
- * events from an aggregate (e.g. after persist) and call publish() once per
- * transaction or unit of work.
+ * Combines {@see DomainEventBusPublisher} (buffer events) and
+ * {@see DomainEventBusSubscriber} (register handlers) with lifecycle operations:
+ *
+ * - dispatch() — run all buffered events through their handlers, then clear the buffer.
+ * - discard()  — clear the buffer without dispatching (use on command failure).
  *
  * @see DomainEvent Events published through this bus.
- * @see DomainEventHandler Handlers registered via subscribe(); handle() is invoked on publish().
- * @see https://martinfowler.com/eaaDev/DomainEvent.html Martin Fowler, P of EAA – Domain Event.
+ * @see DomainEventHandler Handlers registered via subscribe(); handle() is invoked on dispatch.
  */
-interface DomainEventBus
+interface DomainEventBus extends DomainEventBusPublisher, DomainEventBusSubscriber
 {
     /**
-     * Publishes the given domain events. Implementations dispatch to all
-     * handlers subscribed to each event's type (or push to a broker). Order
-     * of dispatch and transactional boundaries are implementation-defined.
-     *
-     * @param array<DomainEvent> $events Events to publish (e.g. collected from an aggregate).
+     * Dispatches all buffered events to their registered handlers, then clears the buffer.
      */
-    public function publish(array $events): void;
+    public function dispatch(): void;
 
     /**
-     * Registers a handler for events of the given type. When such an event
-     * is published, the handler is invoked. Allows adding new reactions
-     * (projections, side effects) without changing publishers (Open/Closed).
-     *
-     * @param string $eventType FQCN of the domain event (e.g. MoneyDeposited::class).
-     * @param string $domainEventHandler FQCN of the domain event handler (e.g. MoneyDepositedEventHandler::class).
+     * Clears the buffer without dispatching. Use when the command was rejected.
      */
-    public function subscribe(string $eventType, string $domainEventHandler): void;
+    public function discard(): void;
 }

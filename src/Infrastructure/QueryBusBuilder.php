@@ -5,44 +5,72 @@ declare(strict_types=1);
 namespace SeedWork\Infrastructure;
 
 use SeedWork\Application\QueryBus;
-use SeedWork\Application\QueryValidator;
 
 /**
- * Fluent builder for composing a QueryBus pipeline from a base bus and
- * optional decorator layers.
+ * Fluent builder for composing a QueryBus pipeline from a RegistryQueryBus base
+ * and optional decorator layers.
+ *
+ * Steps are accumulated and applied in reverse order during {@see build()}, so the
+ * first step added becomes the outermost decorator (the first to receive a query).
  *
  * Example:
  * <code>
- * $bus = QueryBusBuilder::from($containerBus)
- *     ->withValidation($validator)
+ * $registry = new RegistryQueryBus();
+ * $registry->register(MyQuery::class, new MyQueryHandler());
+ *
+ * $bus = (new QueryBusBuilder($registry))
+ *     ->withValidation()
  *     ->build();
  * </code>
  *
- * @see ContainerQueryBus  Default base bus.
+ * @see RegistryQueryBus   Base bus; passed via constructor.
  * @see ValidationQueryBus Validation decorator.
  */
 final class QueryBusBuilder
 {
-    private function __construct(private QueryBus $queryBus)
+    /** @var list<\Closure(QueryBus): QueryBus> */
+    private array $steps = [];
+
+    public function __construct(private readonly RegistryQueryBus $registry)
     {
     }
 
-    public static function from(QueryBus $queryBus): self
+    public function registry(): RegistryQueryBus
     {
-        return new self($queryBus);
+        return $this->registry;
     }
 
     /**
-     * Wraps the current bus in a {@see ValidationQueryBus}.
+     * Adds a {@see ValidationQueryBus} step to the pipeline.
      */
-    public function withValidation(QueryValidator $validator): self
+    public function withValidation(): self
     {
-        $this->queryBus = new ValidationQueryBus($this->queryBus, $validator);
+        $this->steps[] = fn (QueryBus $inner): QueryBus => new ValidationQueryBus($inner);
         return $this;
     }
 
+    /**
+     * Adds a custom middleware step to the pipeline.
+     *
+     * @param \Closure(QueryBus): QueryBus $middleware
+     */
+    public function use(\Closure $middleware): self
+    {
+        $this->steps[] = $middleware;
+        return $this;
+    }
+
+    /**
+     * Builds the composed QueryBus pipeline.
+     *
+     * Steps are applied in reverse order: the first step added wraps the outermost layer.
+     */
     public function build(): QueryBus
     {
-        return $this->queryBus;
+        $bus = $this->registry;
+        foreach (array_reverse($this->steps) as $step) {
+            $bus = $step($bus);
+        }
+        return $bus;
     }
 }

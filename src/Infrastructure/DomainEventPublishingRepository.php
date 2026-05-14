@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace SeedWork\Infrastructure;
 
-use SeedWork\Application\DomainEventBus;
+use SeedWork\Application\DomainEventBusPublisher;
 use SeedWork\Domain\AggregateRoot;
 use SeedWork\Domain\EntityId;
 use SeedWork\Domain\Repository;
@@ -13,10 +13,13 @@ use SeedWork\Domain\Repository;
  * Repository decorator that publishes domain events after saving an aggregate.
  *
  * Collects events via {@see AggregateRoot::collectEvents()} and forwards them
- * to the {@see DomainEventBus} after the inner repository persists the aggregate.
- * Events are only published on success; if save() throws, publish() is not called.
+ * to the {@see DomainEventBusPublisher} after the inner repository persists the
+ * aggregate. Events are only published on success; if save() throws, publish()
+ * is not called.
  *
- * Use this decorator so command handlers do not need to publish events manually.
+ * Depends on {@see DomainEventBusPublisher} (not the full {@see DomainEventBus})
+ * to respect the Interface Segregation Principle — a repository only needs to
+ * publish, not subscribe or dispatch.
  *
  * Example:
  * <code>
@@ -29,8 +32,8 @@ use SeedWork\Domain\Repository;
  * @template T of AggregateRoot
  * @implements Repository<T>
  *
- * @see Repository     Domain port this decorates.
- * @see DomainEventBus Application port for publishing events.
+ * @see Repository              Domain port this decorates.
+ * @see DomainEventBusPublisher Application port for publishing events.
  */
 final class DomainEventPublishingRepository implements Repository
 {
@@ -39,7 +42,7 @@ final class DomainEventPublishingRepository implements Repository
      */
     public function __construct(
         private readonly Repository $repository,
-        private readonly DomainEventBus $domainEventBus,
+        private readonly DomainEventBusPublisher $eventBus,
     ) {
     }
 
@@ -51,7 +54,7 @@ final class DomainEventPublishingRepository implements Repository
     public function save(AggregateRoot $aggregateRoot): void
     {
         $this->repository->save($aggregateRoot);
-        $this->domainEventBus->publish($aggregateRoot->collectEvents());
+        $this->eventBus->publish($aggregateRoot->collectEvents());
     }
 
     /**

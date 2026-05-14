@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Infrastructure;
 
 use PHPUnit\Framework\TestCase;
-use SeedWork\Application\DomainEventBus;
+use SeedWork\Application\DomainEventBusPublisher;
 use SeedWork\Domain\AggregateRoot;
 use SeedWork\Domain\DomainEvent;
 use SeedWork\Domain\EntityId;
@@ -22,7 +22,7 @@ final class DomainEventPublishingRepositoryTest extends TestCase
         $repository = $this->createMock(Repository::class);
         $repository->expects($this->once())->method('save')->with($aggregate);
 
-        $eventBus = $this->createMock(DomainEventBus::class);
+        $eventBus = $this->createMock(DomainEventBusPublisher::class);
         $eventBus->expects($this->once())->method('publish')->with([]);
 
         $publishingRepo = new DomainEventPublishingRepository($repository, $eventBus);
@@ -39,7 +39,7 @@ final class DomainEventPublishingRepositoryTest extends TestCase
 
         $repository = $this->createStub(Repository::class);
 
-        $eventBus = $this->createMock(DomainEventBus::class);
+        $eventBus = $this->createMock(DomainEventBusPublisher::class);
         $eventBus->expects($this->once())->method('publish')->with($events);
 
         $publishingRepo = new DomainEventPublishingRepository($repository, $eventBus);
@@ -54,7 +54,7 @@ final class DomainEventPublishingRepositoryTest extends TestCase
         $repository = $this->createStub(Repository::class);
         $repository->method('save')->willThrowException(new \RuntimeException('DB error'));
 
-        $eventBus = $this->createMock(DomainEventBus::class);
+        $eventBus = $this->createMock(DomainEventBusPublisher::class);
         $eventBus->expects($this->never())->method('publish');
 
         $publishingRepo = new DomainEventPublishingRepository($repository, $eventBus);
@@ -72,7 +72,7 @@ final class DomainEventPublishingRepositoryTest extends TestCase
         $repository = $this->createMock(Repository::class);
         $repository->expects($this->once())->method('findBy')->with($id)->willReturn($aggregate);
 
-        $eventBus = $this->createStub(DomainEventBus::class);
+        $eventBus = $this->createStub(DomainEventBusPublisher::class);
 
         $publishingRepo = new DomainEventPublishingRepository($repository, $eventBus);
         $result = $publishingRepo->findBy($id);
@@ -87,7 +87,7 @@ final class DomainEventPublishingRepositoryTest extends TestCase
         $repository = $this->createMock(Repository::class);
         $repository->expects($this->once())->method('deleteBy')->with($id);
 
-        $eventBus = $this->createStub(DomainEventBus::class);
+        $eventBus = $this->createStub(DomainEventBusPublisher::class);
 
         $publishingRepo = new DomainEventPublishingRepository($repository, $eventBus);
         $publishingRepo->deleteBy($id);

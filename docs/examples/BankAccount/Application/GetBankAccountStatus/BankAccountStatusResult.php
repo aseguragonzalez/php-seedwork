@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Examples\BankAccount\Application\GetBankAccountStatus;
 
-use SeedWork\Application\QueryResult;
 use Examples\BankAccount\Domain\Entities\BankAccountId;
 use Examples\BankAccount\Domain\ValueObjects\AccountBalance;
 
 /**
  * @param array<TransactionDto> $transactions
  */
-final readonly class BankAccountStatusResult extends QueryResult
+final readonly class BankAccountStatusResult
 {
     /**
      * @param BankAccountId $accountId
@@ -23,6 +22,5 @@ final readonly class BankAccountStatusResult extends QueryResult
         public AccountBalance $balance,
         public array $transactions
     ) {
-        parent::__construct();
     }
 }

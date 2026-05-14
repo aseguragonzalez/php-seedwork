@@ -18,18 +18,7 @@ final readonly class MoneyWithdrawn extends DomainEvent
         BankAccountEventId $id,
         \DateTimeImmutable $createdAt
     ) {
-        parent::__construct(
-            $id,
-            'bank_account.money_withdrawn',
-            '1.0',
-            [
-                'account_id' => $accountId->value,
-                'amount' => $amount->amount,
-                'currency' => $amount->currency->value,
-                'transaction_id' => $transactionId->value,
-            ],
-            $createdAt
-        );
+        parent::__construct($id, $createdAt);
     }
 
     public static function create(

@@ -7,35 +7,22 @@ namespace Examples\BankAccount\Domain\Events;
 use SeedWork\Domain\DomainEvent;
 use Examples\BankAccount\Domain\Entities\BankAccountId;
 use Examples\BankAccount\Domain\Entities\TransactionId;
-use Examples\BankAccount\Domain\ValueObjects\Money;
 
 final readonly class MoneyTransferredOut extends DomainEvent
 {
     public function __construct(
         public BankAccountId $fromAccountId,
         public BankAccountId $toAccountId,
-        public Money $amount,
+        public \Examples\BankAccount\Domain\ValueObjects\Money $amount,
         public TransactionId $transactionId,
         BankAccountEventId $id,
         \DateTimeImmutable $createdAt
     ) {
-        parent::__construct(
-            $id,
-            'bank_account.money_transferred_out',
-            '1.0',
-            [
-                'from_account_id' => $fromAccountId->value,
-                'to_account_id' => $toAccountId->value,
-                'amount' => $amount->amount,
-                'currency' => $amount->currency->value,
-                'transaction_id' => $transactionId->value,
-            ],
-            $createdAt
-        );
+        parent::__construct($id, $createdAt);
     }
 
     public static function create(
-        Money $amount,
+        \Examples\BankAccount\Domain\ValueObjects\Money $amount,
         BankAccountId $fromAccountId,
         BankAccountId $toAccountId,
         TransactionId $transactionId,
