@@ -7,15 +7,12 @@ namespace SeedWork\Infrastructure;
 use SeedWork\Application\Command;
 use SeedWork\Application\CommandBus;
 use SeedWork\Application\Result;
-use SeedWork\Application\ResultError;
-use SeedWork\Application\ValidationError;
-use SeedWork\Application\ValidationErrors;
 
 /**
  * CommandBus decorator that validates the command before delegating dispatch.
  *
- * Calls {@see Command::validate()} on the command; if {@see ValidationErrors}
- * is thrown, converts it to {@see Result::failed()} without reaching the inner bus.
+ * Calls {@see Command::validate()} on the command; if validation fails,
+ * the exception propagates to the caller without reaching the inner bus.
  * Stack this as the outermost decorator so invalid commands are rejected before
  * any transaction or event-flush layer.
  *
@@ -34,27 +31,11 @@ final class ValidationCommandBus implements CommandBus
     }
 
     /**
-     * Validates the command, then delegates to the inner bus.
-     * Returns {@see Result::failed()} if validation fails; otherwise returns
-     * the result from the inner bus.
-     *
-     * @param Command $command The command to dispatch.
-     * @return Result The result of the dispatch.
+     * @throws \SeedWork\Application\ValidationErrors
      */
     public function dispatch(Command $command): Result
     {
-        try {
-            $command->validate();
-        } catch (ValidationErrors $e) {
-            $errors = array_map(
-                fn (ValidationError $err) => new ResultError($err->field, $err->message),
-                $e->errors
-            );
-            if ($errors === []) {
-                $errors = [new ResultError('validation', 'Validation failed')];
-            }
-            return Result::failed($errors);
-        }
+        $command->validate();
         return $this->inner->dispatch($command);
     }
 }
