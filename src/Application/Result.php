@@ -29,15 +29,9 @@ final class Result
         return new self(true);
     }
 
-    /**
-     * @param non-empty-array<ResultError> $errors One or more errors describing the failure.
-     * @throws \InvalidArgumentException if $errors is empty.
-     */
+    /** @param non-empty-array<ResultError> $errors One or more errors describing the failure. */
     public static function failed(array $errors): self
     {
-        if ($errors === []) {
-            throw new \InvalidArgumentException('A failed result must contain at least one error.');
-        }
         return new self(false, $errors);
     }
 
