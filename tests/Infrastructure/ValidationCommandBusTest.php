@@ -58,7 +58,7 @@ final class ValidationCommandBusTest extends TestCase
 
     public function testDispatchWithEmptyValidationErrorsReturnsFallbackError(): void
     {
-        $command = new readonly class extends Command {
+        $command = new readonly class () extends Command {
             public function __construct()
             {
                 parent::__construct();
