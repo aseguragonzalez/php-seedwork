@@ -21,7 +21,7 @@ final readonly class TestEntity extends Entity
 
     protected function validate(): void
     {
-        if ($this->createdAt > new \DateTimeImmutable('now')) {
+        if ($this->createdAt > new \DateTimeImmutable('now', new \DateTimeZone('UTC'))) {
             throw new TestDomainException('TestEntity createdAt cannot be in the future.');
         }
     }
