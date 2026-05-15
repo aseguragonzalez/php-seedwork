@@ -17,14 +17,9 @@ final class InMemoryIntegrationEventPublisher implements IntegrationEventPublish
     /** @var list<IntegrationEvent> */
     private array $published = [];
 
-    /**
-     * @param array<IntegrationEvent> $events
-     */
-    public function publish(array $events): void
+    public function publish(IntegrationEvent $event): void
     {
-        foreach ($events as $event) {
-            $this->published[] = $event;
-        }
+        $this->published[] = $event;
     }
 
     /**
