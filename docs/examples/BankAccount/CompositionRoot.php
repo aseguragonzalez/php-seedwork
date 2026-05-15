@@ -8,7 +8,7 @@ use SeedWork\Application\CommandBus;
 use SeedWork\Application\QueryBus;
 use SeedWork\Infrastructure\CommandBusBuilder;
 use SeedWork\Infrastructure\DeferredDomainEventBus;
-use SeedWork\Infrastructure\DomainEventPublishingRepository;
+use Examples\BankAccount\Infrastructure\Repositories\PublishingBankAccountRepository;
 use SeedWork\Infrastructure\InMemoryIntegrationEventPublisher;
 use SeedWork\Infrastructure\QueryBusBuilder;
 use SeedWork\Infrastructure\RegistryCommandBus;
@@ -31,7 +31,7 @@ use Examples\BankAccount\Infrastructure\Repositories\InMemoryBankAccountReposito
  *
  * Demonstrates how to wire a CommandBus and QueryBus pipeline using post-Decision 7 and 8
  * conventions: RegistryCommandBus (no PSR-11), DeferredDomainEventBus with direct handler
- * instances, DomainEventPublishingRepository, and CommandBusBuilder::withDomainEventCoordination().
+ * instances, PublishingBankAccountRepository, and CommandBusBuilder::withDomainEventCoordination().
  *
  * A single shared repository instance is wired into both buses so that commands and
  * queries operate on the same in-memory state.
@@ -54,7 +54,7 @@ final class CompositionRoot
             new AccountOpenedDomainEventHandler($publisher)
         );
 
-        $publishingRepository = new DomainEventPublishingRepository(
+        $publishingRepository = new PublishingBankAccountRepository(
             $this->repository,
             $this->domainEventBus
         );

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Examples\BankAccount\Application\DepositMoney;
 
 use SeedWork\Application\Command;
-use SeedWork\Domain\Repository;
 use Examples\BankAccount\Domain\BankAccountObtainer;
+use Examples\BankAccount\Domain\Repositories\BankAccountRepository;
 use Examples\BankAccount\Domain\Entities\BankAccountId;
 use Examples\BankAccount\Domain\ValueObjects\Currency;
 use Examples\BankAccount\Domain\ValueObjects\Money;
@@ -18,7 +18,7 @@ final readonly class DepositMoneyCommandHandler implements DepositMoney
 {
     public function __construct(
         private BankAccountObtainer $obtainer,
-        private Repository $repository,
+        private BankAccountRepository $repository,
     ) {
     }
 
