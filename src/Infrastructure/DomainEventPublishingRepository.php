@@ -59,13 +59,13 @@ class DomainEventPublishingRepository implements Repository
     /**
      * @return T|null
      */
-    public function findBy(mixed $id): ?AggregateRoot
+    public function findById(mixed $id): ?AggregateRoot
     {
-        return $this->repository->findBy($id);
+        return $this->repository->findById($id);
     }
 
-    public function deleteBy(mixed $id): void
+    public function deleteById(mixed $id): void
     {
-        $this->repository->deleteBy($id);
+        $this->repository->deleteById($id);
     }
 }

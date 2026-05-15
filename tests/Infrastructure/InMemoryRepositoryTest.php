@@ -15,7 +15,7 @@ final class InMemoryRepositoryTest extends TestCase
     {
         $repo = new TestRepository();
 
-        $result = $repo->findBy(TestId::create());
+        $result = $repo->findById(TestId::create());
 
         $this->assertNull($result);
     }
@@ -26,7 +26,7 @@ final class InMemoryRepositoryTest extends TestCase
         $aggregate = TestAggregate::create();
 
         $repo->save($aggregate);
-        $result = $repo->findBy($aggregate->id);
+        $result = $repo->findById($aggregate->id);
 
         $this->assertNotNull($result);
         $this->assertEquals($aggregate->id, $result->id);
@@ -38,9 +38,9 @@ final class InMemoryRepositoryTest extends TestCase
         $aggregate = TestAggregate::create();
         $repo->save($aggregate);
 
-        $repo->deleteBy($aggregate->id);
+        $repo->deleteById($aggregate->id);
 
-        $this->assertNull($repo->findBy($aggregate->id));
+        $this->assertNull($repo->findById($aggregate->id));
     }
 
     public function testSaveOverwritesExistingAggregate(): void
@@ -52,7 +52,7 @@ final class InMemoryRepositoryTest extends TestCase
         // Save the same ID again (simulating an update)
         $repo->save($aggregate);
 
-        $result = $repo->findBy($aggregate->id);
+        $result = $repo->findById($aggregate->id);
         $this->assertNotNull($result);
     }
 }

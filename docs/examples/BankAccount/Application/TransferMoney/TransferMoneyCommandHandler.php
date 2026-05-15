@@ -27,9 +27,9 @@ final readonly class TransferMoneyCommandHandler implements TransferMoney
         $toAccountId = BankAccountId::fromString($command->toAccountId);
         $amount = new Money($command->amount, Currency::from($command->currency));
 
-        $fromAccount = $this->repository->findBy($fromAccountId)
+        $fromAccount = $this->repository->findById($fromAccountId)
             ?? throw new BankAccountException("BankAccount '{$fromAccountId->value}' not found");
-        $toAccount = $this->repository->findBy($toAccountId)
+        $toAccount = $this->repository->findById($toAccountId)
             ?? throw new BankAccountException("BankAccount '{$toAccountId->value}' not found");
 
         $this->repository->save($fromAccount->transferOut($amount, $toAccountId));

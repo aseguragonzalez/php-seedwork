@@ -117,7 +117,7 @@ them as the default for new code and when refactoring.
   - One command class per write use case extending `SeedWork\Application\Command`
   - One handler implementing `CommandHandler`
   - Use primitives or simple DTOs in commands when possible
-  - In the handler: load aggregate (`findBy` or throw), call domain methods, save, then `publish(aggregate->collectEvents())`
+  - In the handler: load aggregate (`findById` or throw), call domain methods, save, then `publish(aggregate->collectEvents())`
   - Keep handlers thin (orchestration only)
 - **Don't:**
   - Put business logic in the handler

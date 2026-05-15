@@ -32,7 +32,7 @@ All components live under the `SeedWork\` namespace (Domain, Application, Infras
 ### Repository (`SeedWork\Domain\Repository`)
 
 - **Role:** Collection-like interface for an aggregate root: get by id, save, delete.
-- **Methods:** `save(AggregateRoot $aggregateRoot): void`, `findBy(mixed $id): ?AggregateRoot`, `deleteBy(mixed $id): void`.
+- **Methods:** `save(AggregateRoot $aggregateRoot): void`, `findById(mixed $id): ?AggregateRoot`, `deleteById(mixed $id): void`.
 
 ### UnitOfWork (`SeedWork\Domain\UnitOfWork`)
 

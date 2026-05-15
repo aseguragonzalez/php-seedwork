@@ -28,7 +28,7 @@ final class InMemoryBankAccountRepository implements BankAccountRepository
      * @param mixed $id
      * @return BankAccount|null
      */
-    public function findBy(mixed $id): ?AggregateRoot
+    public function findById(mixed $id): ?AggregateRoot
     {
         $key = (string) $id;
 
@@ -38,7 +38,7 @@ final class InMemoryBankAccountRepository implements BankAccountRepository
     /**
      * @param mixed $id
      */
-    public function deleteBy(mixed $id): void
+    public function deleteById(mixed $id): void
     {
         unset($this->accounts[(string) $id]);
     }

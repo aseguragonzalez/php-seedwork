@@ -35,7 +35,7 @@ class InMemoryRepository implements Repository
      * @param mixed $id
      * @return T|null
      */
-    public function findBy(mixed $id): ?AggregateRoot
+    public function findById(mixed $id): ?AggregateRoot
     {
         /** @var T|null */
         return $this->store[(string) $id] ?? null;
@@ -44,7 +44,7 @@ class InMemoryRepository implements Repository
     /**
      * @param mixed $id
      */
-    public function deleteBy(mixed $id): void
+    public function deleteById(mixed $id): void
     {
         unset($this->store[(string) $id]);
     }

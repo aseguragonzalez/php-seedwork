@@ -35,12 +35,12 @@ interface Repository
      * @param mixed $id The id of the aggregate to load.
      * @return T|null The aggregate, or null if not found.
      */
-    public function findBy(mixed $id): ?AggregateRoot;
+    public function findById(mixed $id): ?AggregateRoot;
 
     /**
      * Removes the aggregate for the given id.
      *
      * @param mixed $id The id of the aggregate to delete.
      */
-    public function deleteBy(mixed $id): void;
+    public function deleteById(mixed $id): void;
 }

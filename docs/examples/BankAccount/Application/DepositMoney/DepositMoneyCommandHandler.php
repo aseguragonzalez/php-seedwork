@@ -27,7 +27,7 @@ final readonly class DepositMoneyCommandHandler implements DepositMoney
         $accountId = BankAccountId::fromString($command->accountId);
         $amount = new Money($command->amount, Currency::from($command->currency));
 
-        $account = $this->repository->findBy($accountId)
+        $account = $this->repository->findById($accountId)
             ?? throw new BankAccountException("BankAccount '{$accountId->value}' not found");
 
         $this->repository->save($account->deposit($amount));

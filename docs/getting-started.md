@@ -142,8 +142,8 @@ interface BankAccountRepository extends Repository {}
 
 The `Repository<T>` interface declares:
 - `save(AggregateRoot $aggregateRoot): void`
-- `findBy(mixed $id): ?AggregateRoot`
-- `deleteBy(mixed $id): void`
+- `findById(mixed $id): ?AggregateRoot`
+- `deleteById(mixed $id): void`
 
 ---
 

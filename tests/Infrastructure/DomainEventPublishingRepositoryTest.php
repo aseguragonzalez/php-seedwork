@@ -69,12 +69,12 @@ final class DomainEventPublishingRepositoryTest extends TestCase
         $aggregate = $this->createStub(AggregateRoot::class);
 
         $repository = $this->createMock(Repository::class);
-        $repository->expects($this->once())->method('findBy')->with($id)->willReturn($aggregate);
+        $repository->expects($this->once())->method('findById')->with($id)->willReturn($aggregate);
 
         $eventBus = $this->createStub(DomainEventBusPublisher::class);
 
         $publishingRepo = new DomainEventPublishingRepository($repository, $eventBus);
-        $result = $publishingRepo->findBy($id);
+        $result = $publishingRepo->findById($id);
 
         self::assertSame($aggregate, $result);
     }
@@ -84,11 +84,11 @@ final class DomainEventPublishingRepositoryTest extends TestCase
         $id = 'test-id-456';
 
         $repository = $this->createMock(Repository::class);
-        $repository->expects($this->once())->method('deleteBy')->with($id);
+        $repository->expects($this->once())->method('deleteById')->with($id);
 
         $eventBus = $this->createStub(DomainEventBusPublisher::class);
 
         $publishingRepo = new DomainEventPublishingRepository($repository, $eventBus);
-        $publishingRepo->deleteBy($id);
+        $publishingRepo->deleteById($id);
     }
 }
