@@ -19,8 +19,7 @@ them as the default for new code and when refactoring.
 | Keep domain free of framework and infrastructure | Import framework or DB types in domain |
 | One use case = one command/query + one handler | Put multiple use cases in one handler |
 | Return new aggregate instances from behavior methods | Mutate aggregate state in place and then emit events |
-| Use AggregateObtainer in handlers for "load or throw" | Repeat findById + null check in every handler |
-| Use domain exceptions (DomainException, ValueException, NotFoundResource) | Throw generic \Exception or framework exceptions in domain |
+| Use domain exceptions extending DomainException | Throw generic \Exception or framework exceptions in domain |
 | Name events in past tense (MoneyDeposited, OrderPlaced) | Name events as commands (DepositMoney, PlaceOrder) |
 | Keep aggregates small and focused | Reference full aggregates from other aggregates |
 | Prefer primitives/simple DTOs at command/query boundary | Leak complex domain types through ports when avoidable |
@@ -102,7 +101,7 @@ them as the default for new code and when refactoring.
 ### Exceptions
 
 - **Do:**
-  - Use `SeedWork\Domain\Exceptions\DomainException` (and subclasses `ValueException`, `NotFoundResource`) for domain failures
+  - Extend `SeedWork\Domain\Exceptions\DomainException` to define concrete exceptions in your bounded context
   - Use clear, domain-oriented messages
 - **Don't:**
   - Throw generic `\Exception` or framework-specific exceptions in domain code
@@ -118,7 +117,7 @@ them as the default for new code and when refactoring.
   - One command class per write use case extending `SeedWork\Application\Command`
   - One handler implementing `CommandHandler`
   - Use primitives or simple DTOs in commands when possible
-  - In the handler: obtain aggregate (e.g. via AggregateObtainer), call domain methods, save, then `publish(aggregate->collectEvents())`
+  - In the handler: load aggregate (`findBy` or throw), call domain methods, save, then `publish(aggregate->collectEvents())`
   - Keep handlers thin (orchestration only)
 - **Don't:**
   - Put business logic in the handler

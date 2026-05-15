@@ -17,7 +17,7 @@ Requires **PHP 8.4** or later.
 Value objects are immutable and equal by value, not identity. Extend `ValueObject`, add `readonly` properties, and implement `equals()` and `validate()`.
 
 ```php
-use SeedWork\Domain\Exceptions\ValueException;
+use SeedWork\Domain\Exceptions\DomainException;
 use SeedWork\Domain\ValueObject;
 
 final readonly class Money extends ValueObject
@@ -39,7 +39,7 @@ final readonly class Money extends ValueObject
     protected function validate(): void
     {
         if ($this->amount <= 0) {
-            throw new ValueException('Amount must be greater than 0');
+            throw new DomainException('Amount must be greater than 0');
         }
     }
 }
@@ -197,10 +197,8 @@ final readonly class DepositMoneyCommandHandler implements CommandHandler
     {
         /** @var DepositMoneyCommand $command */
         $accountId = BankAccountId::fromString($command->accountId);
-        $account = $this->repository->findById($accountId);
-        if ($account === null) {
-            throw new \SeedWork\Domain\Exceptions\NotFoundResource('BankAccount', $accountId);
-        }
+        $account = $this->repository->findById($accountId)
+            ?? throw new BankAccountNotFoundException("BankAccount '{$accountId}' not found");
 
         $updated = $account->deposit($command->amount);
         $this->repository->save($updated);

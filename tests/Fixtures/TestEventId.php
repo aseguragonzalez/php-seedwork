@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Fixtures;
 
 use SeedWork\Domain\EventId;
-use SeedWork\Domain\Exceptions\ValueException;
+use Tests\Fixtures\TestDomainException;
 
 final readonly class TestEventId extends EventId
 {
@@ -27,7 +27,7 @@ final readonly class TestEventId extends EventId
     protected function validate(): void
     {
         if (empty($this->value)) {
-            throw new ValueException('TestEventId cannot be empty.');
+            throw new TestDomainException('TestEventId cannot be empty.');
         }
     }
 }

@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace SeedWork\Domain\Exceptions;
+namespace Examples\BankAccount\Domain\Exceptions;
 
-final class ValueException extends DomainException
+use SeedWork\Domain\Exceptions\DomainException;
+
+class BankAccountException extends DomainException
 {
     public function __construct(string $message, int $code = 0)
     {

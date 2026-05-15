@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Examples\BankAccount\Domain\Entities;
 
 use SeedWork\Domain\EntityId;
-use SeedWork\Domain\Exceptions\ValueException;
+use Examples\BankAccount\Domain\Exceptions\BankAccountException;
 
 final readonly class TransactionId extends EntityId
 {
@@ -27,7 +27,7 @@ final readonly class TransactionId extends EntityId
     protected function validate(): void
     {
         if (!preg_match('/^txn-[a-z0-9.-]+$/', $this->value)) {
-            throw new ValueException('Transaction id must start with "txn-"');
+            throw new BankAccountException('Transaction id must start with "txn-"');
         }
     }
 }

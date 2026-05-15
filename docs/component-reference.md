@@ -48,16 +48,9 @@ All components live under the `SeedWork\` namespace (Domain, Application, Infras
 - **Role:** Transaction boundary: begin, commit, rollback.
 - **Methods:** `createSession(): void`, `commit(): void`, `rollback(): void`.
 
-### AggregateObtainer (`SeedWork\Domain\AggregateObtainer`)
-
-- **Role:** Load aggregate by id or throw `NotFoundResource`.
-- **Key method:** `obtain(EntityId $id): AggregateRoot`.
-
 ### Exceptions
 
-- **DomainException** (`SeedWork\Domain\Exceptions\DomainException`): Base for domain errors.
-- **ValueException** (`SeedWork\Domain\Exceptions\ValueException`): Invalid value object state.
-- **NotFoundResource** (`SeedWork\Domain\Exceptions\NotFoundResource`): Aggregate/entity not found.
+- **DomainException** (`SeedWork\Domain\Exceptions\DomainException`): Base for domain errors. Extend to define concrete exceptions in your bounded context.
 
 ---
 
@@ -283,11 +276,9 @@ $domainBus->subscribe(AccountOpened::class, new AccountOpenedDomainEventHandler(
 // Typed decorator: satisfies BankAccountRepository while adding event publishing
 $publishingRepository = new PublishingBankAccountRepository($repository, $domainBus);
 
-$obtainer = new BankAccountObtainer($repository);
-
 $registry = new RegistryCommandBus();
 $registry->register(OpenAccountCommand::class,  new OpenAccountCommandHandler($publishingRepository));
-$registry->register(DepositMoneyCommand::class, new DepositMoneyCommandHandler($obtainer, $publishingRepository));
+$registry->register(DepositMoneyCommand::class, new DepositMoneyCommandHandler($publishingRepository));
 
 $commandBus = (new CommandBusBuilder($registry))
     ->withValidation()

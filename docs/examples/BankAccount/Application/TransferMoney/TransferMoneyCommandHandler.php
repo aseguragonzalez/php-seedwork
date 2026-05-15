@@ -5,19 +5,15 @@ declare(strict_types=1);
 namespace Examples\BankAccount\Application\TransferMoney;
 
 use SeedWork\Application\Command;
-use Examples\BankAccount\Domain\BankAccountObtainer;
+use Examples\BankAccount\Domain\Exceptions\BankAccountException;
 use Examples\BankAccount\Domain\Repositories\BankAccountRepository;
 use Examples\BankAccount\Domain\Entities\BankAccountId;
 use Examples\BankAccount\Domain\ValueObjects\Currency;
 use Examples\BankAccount\Domain\ValueObjects\Money;
 
-/**
- * Handler for the TransferMoney command.
- */
 final readonly class TransferMoneyCommandHandler implements TransferMoney
 {
     public function __construct(
-        private BankAccountObtainer $obtainer,
         private BankAccountRepository $repository,
     ) {
     }
@@ -31,14 +27,12 @@ final readonly class TransferMoneyCommandHandler implements TransferMoney
         $toAccountId = BankAccountId::fromString($command->toAccountId);
         $amount = new Money($command->amount, Currency::from($command->currency));
 
-        $fromAccount = $this->obtainer
-            ->obtain($fromAccountId)
-            ->transferOut($amount, $toAccountId);
-        $toAccount = $this->obtainer
-            ->obtain($toAccountId)
-            ->transferIn($amount, $fromAccountId);
+        $fromAccount = $this->repository->findBy($fromAccountId)
+            ?? throw new BankAccountException("BankAccount '{$fromAccountId->value}' not found");
+        $toAccount = $this->repository->findBy($toAccountId)
+            ?? throw new BankAccountException("BankAccount '{$toAccountId->value}' not found");
 
-        $this->repository->save($fromAccount);
-        $this->repository->save($toAccount);
+        $this->repository->save($fromAccount->transferOut($amount, $toAccountId));
+        $this->repository->save($toAccount->transferIn($amount, $fromAccountId));
     }
 }

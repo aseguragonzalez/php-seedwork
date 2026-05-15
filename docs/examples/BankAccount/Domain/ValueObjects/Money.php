@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Examples\BankAccount\Domain\ValueObjects;
 
-use SeedWork\Domain\Exceptions\ValueException;
+use Examples\BankAccount\Domain\Exceptions\BankAccountException;
 use SeedWork\Domain\ValueObject;
 
 final readonly class Money extends ValueObject
@@ -26,7 +26,7 @@ final readonly class Money extends ValueObject
     protected function validate(): void
     {
         if ($this->amount <= 0) {
-            throw new ValueException('Amount must be greater than 0');
+            throw new BankAccountException('Amount must be greater than 0');
         }
     }
 }

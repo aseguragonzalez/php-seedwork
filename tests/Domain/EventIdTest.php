@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Domain;
 
 use PHPUnit\Framework\TestCase;
-use SeedWork\Domain\Exceptions\ValueException;
+use SeedWork\Domain\Exceptions\DomainException;
 use Tests\Fixtures\TestEventId;
 
 final class EventIdTest extends TestCase
@@ -29,7 +29,7 @@ final class EventIdTest extends TestCase
 
     public function testValidationFailsWhenEmpty(): void
     {
-        $this->expectException(ValueException::class);
+        $this->expectException(DomainException::class);
         $this->expectExceptionMessage('TestEventId cannot be empty.');
 
         TestEventId::fromString('');

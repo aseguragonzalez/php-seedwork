@@ -30,7 +30,7 @@ Never leak Infrastructure or framework types into Domain or Application.
 - `readonly` properties and constructor promotion by default.
 - Interfaces for contracts (Repository, CommandBus); abstract classes for shared behaviour (AggregateRoot, Entity).
 - No `mixed` types without justification. Use PHPStan `@template`/`@extends` for generics.
-- Exceptions: extend `DomainException`, `ValueException`, or `NotFoundResource`. Never bare `\Exception`.
+- Exceptions: extend `DomainException` for domain failures. Never bare `\Exception`.
 - Backward compatibility matters: adding required params, renaming classes, or changing return types are breaking changes.
 
 ## Fixture and examples

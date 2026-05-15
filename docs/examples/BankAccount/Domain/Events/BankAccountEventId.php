@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Examples\BankAccount\Domain\Events;
 
 use SeedWork\Domain\EventId;
-use SeedWork\Domain\Exceptions\ValueException;
+use Examples\BankAccount\Domain\Exceptions\BankAccountException;
 
 final readonly class BankAccountEventId extends EventId
 {
@@ -27,11 +27,11 @@ final readonly class BankAccountEventId extends EventId
     protected function validate(): void
     {
         if (empty($this->value)) {
-            throw new ValueException('Event id cannot be empty');
+            throw new BankAccountException('Event id cannot be empty');
         }
 
         if (!preg_match('/^evt-[a-z0-9.-]+$/', $this->value)) {
-            throw new ValueException('Event id must start with "evt-"');
+            throw new BankAccountException('Event id must start with "evt-"');
         }
     }
 }

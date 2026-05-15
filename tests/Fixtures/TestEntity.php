@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Fixtures;
 
 use SeedWork\Domain\Entity;
-use SeedWork\Domain\Exceptions\ValueException;
+use Tests\Fixtures\TestDomainException;
 
 /**
  * @extends Entity<TestId>
@@ -22,7 +22,7 @@ final readonly class TestEntity extends Entity
     protected function validate(): void
     {
         if ($this->createdAt > new \DateTimeImmutable('now')) {
-            throw new ValueException('TestEntity createdAt cannot be in the future.');
+            throw new TestDomainException('TestEntity createdAt cannot be in the future.');
         }
     }
 

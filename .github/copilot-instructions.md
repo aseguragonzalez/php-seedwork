@@ -12,7 +12,7 @@ depends on this package.
 ## Architecture
 
 - **Domain** (`SeedWork\Domain\*`): Entity, ValueObject, AggregateRoot, DomainEvent, EntityId, EventId,
-  Repository, UnitOfWork, AggregateObtainer, DomainException / ValueException / NotFoundResource.
+  Repository, UnitOfWork, DomainException.
 - **Application** (`SeedWork\Application\*`): Command, CommandBus, CommandHandler, Query, QueryBus,
   QueryHandler, QueryResult, DomainEventBus, DomainEventHandler.
 - **Infrastructure** (`SeedWork\Infrastructure\*`): ContainerCommandBus, ContainerQueryBus,
@@ -56,8 +56,7 @@ Because every component is a public contract consumed by other projects:
 - **Conventions:** PHP 8.4+, `declare(strict_types=1);`, PSR-12, readonly where possible.
 - **Typing:** Strict parameter types, return types, no `mixed` unless truly unavoidable.
   Use union types or generics via PHPStan annotations (`@template`, `@extends`) when appropriate.
-- **Exceptions:** Domain-specific exceptions extending `DomainException`, `ValueException`, or
-  `NotFoundResource`. Never throw bare `\Exception` or `\RuntimeException`.
+- **Exceptions:** Extend `DomainException` to define domain-specific exceptions in your bounded context. Never throw bare `\Exception` or `\RuntimeException`.
 
 ## Examples and fixtures
 

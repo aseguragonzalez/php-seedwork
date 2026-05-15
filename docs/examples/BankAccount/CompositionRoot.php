@@ -22,7 +22,6 @@ use Examples\BankAccount\Application\OpenAccount\OpenAccountCommand;
 use Examples\BankAccount\Application\OpenAccount\OpenAccountCommandHandler;
 use Examples\BankAccount\Application\WithdrawMoney\WithdrawMoneyCommand;
 use Examples\BankAccount\Application\WithdrawMoney\WithdrawMoneyCommandHandler;
-use Examples\BankAccount\Domain\BankAccountObtainer;
 use Examples\BankAccount\Domain\Events\AccountOpened;
 use Examples\BankAccount\Infrastructure\Repositories\InMemoryBankAccountRepository;
 
@@ -59,18 +58,10 @@ final class CompositionRoot
             $this->domainEventBus
         );
 
-        $obtainer = new BankAccountObtainer($this->repository);
-
         $commandRegistry = new RegistryCommandBus();
         $commandRegistry->register(OpenAccountCommand::class, new OpenAccountCommandHandler($publishingRepository));
-        $commandRegistry->register(
-            DepositMoneyCommand::class,
-            new DepositMoneyCommandHandler($obtainer, $publishingRepository)
-        );
-        $commandRegistry->register(
-            WithdrawMoneyCommand::class,
-            new WithdrawMoneyCommandHandler($obtainer, $publishingRepository)
-        );
+        $commandRegistry->register(DepositMoneyCommand::class, new DepositMoneyCommandHandler($publishingRepository));
+        $commandRegistry->register(WithdrawMoneyCommand::class, new WithdrawMoneyCommandHandler($publishingRepository));
 
         $this->commandBus = (new CommandBusBuilder($commandRegistry))
             ->withValidation()
