@@ -129,7 +129,7 @@ final readonly class Email extends ValueObject
 }
 ```
 
-### Domain Event — past tense, serializable payload
+### Domain Event — past tense, event data as readonly properties
 
 ```php
 final readonly class OrderCreated extends DomainEvent
@@ -137,23 +137,17 @@ final readonly class OrderCreated extends DomainEvent
     private function __construct(
         public OrderEntityId $orderId,
         OrderEventId $id,
-        \DateTimeImmutable $createdAt,
+        \DateTimeImmutable $occurredAt,
     ) {
-        parent::__construct(
-            id: $id,
-            type: 'order.created',
-            version: '1.0',
-            payload: ['order_id' => $orderId->value],
-            createdAt: $createdAt,
-        );
+        parent::__construct(id: $id, occurredAt: $occurredAt);
     }
 
-    public static function create(OrderEntityId $orderId, ?OrderEventId $id = null, ?\DateTimeImmutable $createdAt = null): self
+    public static function create(OrderEntityId $orderId, ?OrderEventId $id = null, ?\DateTimeImmutable $occurredAt = null): self
     {
         return new self(
             orderId: $orderId,
             id: $id ?? OrderEventId::create(),
-            createdAt: $createdAt ?? new \DateTimeImmutable('now', new \DateTimeZone('UTC')),
+            occurredAt: $occurredAt ?? new \DateTimeImmutable('now', new \DateTimeZone('UTC')),
         );
     }
 }
@@ -207,9 +201,10 @@ final readonly class PlaceOrderHandler implements PlaceOrder
 
 ## Infrastructure
 
-- Bus stacking order: `TransactionalCommandBus` → `DomainEventFlushCommandBus` → `ContainerCommandBus`.
-- Use `DeferredDomainEventBus` in handlers and in the flush decorator.
-- Subscribe event handlers by event FQCN on the `DomainEventBus`.
+- Bus stacking order: `ValidationCommandBus` → `TransactionalCommandBus` → `DomainEventCoordinatorCommandBus` → `RegistryCommandBus`.
+- Use `DeferredDomainEventBus` as the `DomainEventBus` implementation.
+- Subscribe event handlers by event FQCN via `DomainEventBus::subscribe()`.
+- Use `DomainEventPublishingRepository` to publish domain events after `save()`.
 
 ## Testing
 
@@ -240,7 +235,7 @@ final readonly class PlaceOrderHandler implements PlaceOrder
 - Keep domain free of framework and infrastructure imports
 - One use case per command/query
 - Use primitives in Command/Query DTOs
-- Stack buses: Transaction → Event flush → Container
+- Stack buses: Validation → Transaction → DomainEventCoordinator → Registry
 - Write tests for every component
 - Use `AggregateObtainer` in handlers to fetch existing aggregates
 

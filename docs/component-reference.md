@@ -214,7 +214,7 @@ All components live under the `SeedWork\` namespace (Domain, Application, Infras
 
 ### DomainEventPublishingRepository (`SeedWork\Infrastructure\DomainEventPublishingRepository`)
 
-- **Role:** Repository decorator that publishes `aggregate->domainEvents` via `DomainEventBusPublisher` after each `save()`.
+- **Role:** Repository decorator that publishes `$aggregate->collectEvents()` via `DomainEventBusPublisher` after each `save()`.
 - **Usage:** Wrap your repository; inject `DomainEventBusPublisher`. Keeps handlers unaware of event publication.
 
 ### InMemoryRepository (`SeedWork\Infrastructure\InMemoryRepository`)
@@ -260,7 +260,7 @@ All components live under the `SeedWork\` namespace (Domain, Application, Infras
 ```php
 // Composition root (e.g. a service container or bootstrap file)
 $registry = new RegistryCommandBus();
-$registry->register(DepositMoneyCommand::class, new DepositMoneyCommandHandler($accountRepository));
+$registry->register(DepositMoneyCommand::class, new DepositMoneyCommandHandler($obtainer, $publishingRepository));
 
 $commandBus = (new CommandBusBuilder($registry))
     ->withValidation()

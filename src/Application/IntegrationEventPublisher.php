@@ -11,7 +11,6 @@ namespace SeedWork\Application;
  * reliable delivery, or an in-memory buffer for testing.
  *
  * @see IntegrationEvent Events published through this port.
- * @see IntegrationEventPublisherSpy Spy extension for test introspection.
  */
 interface IntegrationEventPublisher
 {

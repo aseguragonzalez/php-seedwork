@@ -19,12 +19,12 @@ them as the default for new code and when refactoring.
 | Keep domain free of framework and infrastructure | Import framework or DB types in domain |
 | One use case = one command/query + one handler | Put multiple use cases in one handler |
 | Return new aggregate instances from behavior methods | Mutate aggregate state in place and then emit events |
-| Use AggregateObtainer in handlers for "load or throw" | Repeat findBy + null check in every handler |
+| Use AggregateObtainer in handlers for "load or throw" | Repeat findById + null check in every handler |
 | Use domain exceptions (DomainException, ValueException, NotFoundResource) | Throw generic \Exception or framework exceptions in domain |
 | Name events in past tense (MoneyDeposited, OrderPlaced) | Name events as commands (DepositMoney, PlaceOrder) |
 | Keep aggregates small and focused | Reference full aggregates from other aggregates |
 | Prefer primitives/simple DTOs at command/query boundary | Leak complex domain types through ports when avoidable |
-| Stack buses: Transaction → Event flush → Container bus | Flush events outside the transaction or in wrong order |
+| Stack buses: Validation → Transaction → DomainEventCoordinator → Registry | Flush events outside the transaction or in wrong order |
 | One main class per file; file name = class name | Put multiple unrelated classes in one file |
 
 ---
@@ -76,13 +76,15 @@ them as the default for new code and when refactoring.
 
 - **Do:**
   - Name events in past tense
-  - Make them immutable
-  - Include `EventId`, type, version, and a serializable payload
-  - Use UTC for `createdAt`
+  - Make them immutable (`readonly`)
+  - Extend `SeedWork\Domain\DomainEvent` and expose event-specific data as readonly properties on the subclass
+  - Include an `EventId` (via `parent::__construct(id: ..., occurredAt: ...)`)
+  - Use UTC for `occurredAt`
   - Record events when something meaningful happens in the aggregate
-  - Provide a static factory method to create a new instance (e.g. `create()` and `build()`)
+  - Provide a static factory method to create a new instance (e.g. `create()`)
 - **Don't:**
-  - Put non-serializable objects in the payload
+  - Add generic `type`, `version`, or `payload` fields — those are `IntegrationEvent` concerns
+  - Put non-serializable objects in event properties
   - Use event names that sound like commands
   - Forget to pass events through when creating new aggregate instances after a state change
 
@@ -91,7 +93,7 @@ them as the default for new code and when refactoring.
 - **Do:**
   - Define repository interfaces in the domain extending `SeedWork\Domain\Repository` with a single aggregate root type
   - Implement them in infrastructure
-  - Use `findBy`, `save`, `deleteBy` only
+  - Use `findById`, `save`, `deleteById` only
 - **Don't:**
   - Put repository implementations in the domain
   - Add query methods that return DTOs or leak persistence details
@@ -154,15 +156,17 @@ them as the default for new code and when refactoring.
 
 - **Do:**
   - Implement `Repository` and `UnitOfWork` in infrastructure
-  - Use `ContainerCommandBus` and `ContainerQueryBus` with PSR-11
-  - Wrap the command bus with `TransactionalCommandBus` (outside) and
-    `DomainEventFlushCommandBus` (inside) so the transaction wraps the command and event flush
-  - Register handlers with the same `DeferredDomainEventBus` that command handlers use
+  - Use `RegistryCommandBus` and `RegistryQueryBus` (no PSR-11 container required)
+  - Stack buses in order: `ValidationCommandBus` → `TransactionalCommandBus` →
+    `DomainEventCoordinatorCommandBus` → `RegistryCommandBus`, so the transaction
+    wraps both command execution and domain event dispatch
+  - Use `DomainEventPublishingRepository` to publish `aggregate->collectEvents()` after `save()`
+  - Subscribe event handlers directly on `DeferredDomainEventBus` via `subscribe()`
   - Prefer `DeferredDomainEventBus` in monoliths when you need transactionality
     and bounded-context isolation and are not using a message broker (see
     [best-practices](best-practices.md))
 - **Don't:**
-  - Flush the event bus outside the transaction when events must be consistent with the write
+  - Dispatch domain events outside the transaction when events must be consistent with the write
   - Put domain or application use-case logic in infrastructure
   - Depend on the domain on infrastructure
 
@@ -213,7 +217,7 @@ them as the default for new code and when refactoring.
 | **Entity** | Identity via EntityId; override `validate()` | Compare by attributes; mutable setters |
 | **ValueObject** | Immutable; `equals()` by value; `validate()` | Identity; mutability |
 | **AggregateRoot** | Return new instance + events; single entry point | Mutate and emit separately; expose internals |
-| **DomainEvent** | Past tense; EventId; serializable payload; UTC | Command-like names; non-serializable payload |
+| **DomainEvent** | Past tense; EventId; readonly properties; UTC | Command-like names; generic type/version/payload fields |
 | **Repository** | Interface in domain; implementation in infra | Implementation in domain; rich query API in interface |
 | **Command** | One per use case; primitives/simple DTOs | Business logic; multiple intents |
 | **CommandHandler** | Obtain → domain → save → publish events | Business logic; skip event publish |

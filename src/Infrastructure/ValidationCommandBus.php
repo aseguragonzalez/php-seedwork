@@ -14,7 +14,7 @@ use SeedWork\Application\Result;
  * Calls {@see Command::validate()} on the command; if validation fails,
  * the exception propagates to the caller without reaching the inner bus.
  * Stack this as the outermost decorator so invalid commands are rejected before
- * any transaction or event-flush layer.
+ * any transaction or domain-event-coordination layer.
  *
  * Recommended stacking order (outermost to innermost):
  *   ValidationCommandBus > TransactionalCommandBus > DomainEventCoordinatorCommandBus > RegistryCommandBus

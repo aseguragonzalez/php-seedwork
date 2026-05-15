@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace SeedWork\Infrastructure;
 
 use SeedWork\Application\IntegrationEvent;
-use SeedWork\Application\IntegrationEventPublisherSpy;
+use SeedWork\Infrastructure\IntegrationEventPublisherSpy;
 
 /**
  * In-memory implementation of {@see IntegrationEventPublisherSpy} for use in tests.

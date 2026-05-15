@@ -105,7 +105,7 @@ namespace Domain\Orders\Entities;
 use Domain\Orders\Events\OrderCreated;
 use Domain\Orders\ValueObjects\OrderDetails;
 use Domain\Orders\ValueObjects\OrderEntityId;
-use Seedwork\Domain\AggregateRoot;
+use SeedWork\Domain\AggregateRoot;
 
 final readonly class Order extends AggregateRoot
 {
@@ -171,8 +171,8 @@ declare(strict_types=1);
 
 namespace Domain\Shared;
 
-use Seedwork\Domain\ValueObject;
-use Seedwork\Domain\Exceptions\ValueException;
+use SeedWork\Domain\ValueObject;
+use SeedWork\Domain\Exceptions\ValueException;
 
 final readonly class Email extends ValueObject
 {
@@ -202,8 +202,8 @@ final readonly class Email extends ValueObject
 ### Domain Event
 
 Name events in past tense because they represent something that already
-happened. Payloads must be serializable (primitives, arrays) so events can
-be stored or transmitted.
+happened. Event-specific data are exposed as readonly properties on the
+subclass — there are no generic `type`, `version`, or `payload` fields.
 
 ```php
 <?php
@@ -213,38 +213,28 @@ declare(strict_types=1);
 namespace Domain\Orders\Events;
 
 use Domain\Orders\ValueObjects\OrderEntityId;
-use Seedwork\Domain\DomainEvent;
+use SeedWork\Domain\DomainEvent;
 
 final readonly class OrderCreated extends DomainEvent
 {
     private function __construct(
         public OrderEntityId $orderId,
         OrderEventId $id,
-        \DateTimeImmutable $createdAt
+        \DateTimeImmutable $occurredAt,
     ) {
-      parent::__construct(
-        id: $id,
-        type: 'order.created',
-        version: '1.0',
-        payload: [
-          'order_id' => $orderId->value,
-        ],
-        createdAt: $createdAt,
-      );
+        parent::__construct(id: $id, occurredAt: $occurredAt);
     }
 
     public static function create(
-      OrderEntityId $orderId,
-      ?OrderEventId $id = null,
-      ?\DateTimeImmutable $createdAt = null
+        OrderEntityId $orderId,
+        ?OrderEventId $id = null,
+        ?\DateTimeImmutable $occurredAt = null,
     ): self {
-      $eventId = $id ?? OrderEventId::create();
-      $eventCreatedAt = $createdAt ?? new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
-      return new self(
-        orderId: $orderId,
-        id: $eventId,
-        createdAt: $eventCreatedAt,
-      );
+        return new self(
+            orderId: $orderId,
+            id: $id ?? OrderEventId::create(),
+            occurredAt: $occurredAt ?? new \DateTimeImmutable('now', new \DateTimeZone('UTC')),
+        );
     }
 }
 ```
@@ -262,7 +252,7 @@ declare(strict_types=1);
 namespace Domain\Orders\Repositories;
 
 use Domain\Orders\Entities\Order;
-use Seedwork\Domain\Repository;
+use SeedWork\Domain\Repository;
 
 /**
  * @extends Repository<Order>
@@ -285,7 +275,7 @@ declare(strict_types=1);
 
 namespace Application\Orders\PlaceOrder;
 
-use Seedwork\Application\CommandHandler;
+use SeedWork\Application\CommandHandler;
 
 /**
  * @extends CommandHandler<PlaceOrderCommand>
@@ -371,12 +361,13 @@ final readonly class PlaceOrderHandler implements PlaceOrder
 ## 6 · Infrastructure Layer
 
 - Implement `Repository` and `UnitOfWork` in infrastructure.
-- Bus stacking order: `TransactionalCommandBus` (outer) →
-  `DomainEventFlushCommandBus` (inner) → `ContainerCommandBus`.
-  This ensures the transaction wraps (UnitOfWork) both command execution and event flush,
-  so a failed event handler rolls back the entire operation.
-- Use `DeferredDomainEventBus` in handlers and in the flush decorator.
-- Subscribe event handlers by event FQCN on the `DomainEventBus`.
+- Bus stacking order: `ValidationCommandBus` → `TransactionalCommandBus` →
+  `DomainEventCoordinatorCommandBus` → `RegistryCommandBus`.
+  This ensures the transaction wraps both command execution and domain event dispatch,
+  so a failed handler rolls back the entire operation.
+- Use `DeferredDomainEventBus` as the `DomainEventBus` implementation.
+- Subscribe event handlers by event FQCN via `DomainEventBus::subscribe()`.
+- Use `DomainEventPublishingRepository` to publish domain events after `save()`.
 
 ---
 
@@ -420,7 +411,7 @@ final readonly class PlaceOrderHandler implements PlaceOrder
 - One use case per command/query.
 - Return new aggregate instances + events from behavior methods.
 - Use `AggregateObtainer` in command handlers to fetch existing aggregates.
-- Stack buses: Transaction → Event flush → Container.
+- Stack buses: Validation → Transaction → DomainEventCoordinator → Registry.
 - Use primitives in Command/Query DTOs.
 - Write tests for every component.
 

@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace Examples\BankAccount\Application\WithdrawMoney;
 
 use SeedWork\Application\Command;
-use SeedWork\Application\DomainEventBus;
+use SeedWork\Domain\Repository;
 use Examples\BankAccount\Domain\BankAccountObtainer;
 use Examples\BankAccount\Domain\Entities\BankAccountId;
-use Examples\BankAccount\Domain\Repositories\BankAccountRepository;
 use Examples\BankAccount\Domain\ValueObjects\Currency;
 use Examples\BankAccount\Domain\ValueObjects\Money;
 
@@ -19,8 +18,7 @@ final readonly class WithdrawMoneyCommandHandler implements WithdrawMoney
 {
     public function __construct(
         private BankAccountObtainer $obtainer,
-        private BankAccountRepository $repository,
-        private DomainEventBus $domainEventBus
+        private Repository $repository,
     ) {
     }
 
@@ -35,7 +33,5 @@ final readonly class WithdrawMoneyCommandHandler implements WithdrawMoney
         $account = $this->obtainer->obtain($accountId)->withdraw($amount);
 
         $this->repository->save($account);
-
-        $this->domainEventBus->publish($account->collectEvents());
     }
 }
