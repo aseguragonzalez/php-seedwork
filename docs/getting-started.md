@@ -59,22 +59,22 @@ final readonly class MoneyDeposited extends DomainEvent
         public string $accountId,
         public int $amount,
         string $id,
-        \DateTimeImmutable $createdAt,
+        \DateTimeImmutable $occurredAt,
     ) {
-        parent::__construct($id, $createdAt);
+        parent::__construct($id, $occurredAt);
     }
 
     public static function create(
         string $accountId,
         int $amount,
         ?string $id = null,
-        ?\DateTimeImmutable $createdAt = null,
+        ?\DateTimeImmutable $occurredAt = null,
     ): self {
         return new self(
             $accountId,
             $amount,
             $id ?? 'evt-' . uniqid('', true),
-            $createdAt ?? new \DateTimeImmutable('now', new \DateTimeZone('UTC')),
+            $occurredAt ?? new \DateTimeImmutable('now', new \DateTimeZone('UTC')),
         );
     }
 }
@@ -82,7 +82,7 @@ final readonly class MoneyDeposited extends DomainEvent
 
 Key rules:
 - Name events in past tense (`MoneyDeposited`, not `DepositMoney`).
-- Use UTC for `createdAt`.
+- Use UTC for `occurredAt`.
 - `equals()` is inherited and compares by string `id`.
 
 ---
