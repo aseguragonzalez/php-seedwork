@@ -20,12 +20,23 @@ use SeedWork\Domain\Repository;
  * to respect the Interface Segregation Principle — a repository only needs to
  * publish, not subscribe or dispatch.
  *
- * Example:
+ * Because PHP has no runtime generics, do not instantiate this class directly.
+ * Instead, extend it and implement your domain repository interface so command
+ * handlers can be typed against the domain port:
+ *
  * <code>
- * $repository = new DomainEventPublishingRepository(
- *     new DoctrineBankAccountRepository($entityManager),
- *     $deferredEventBus,
- * );
+ * // Infrastructure layer of your bounded context
+ * final class PublishingBankAccountRepository
+ *     extends DomainEventPublishingRepository
+ *     implements BankAccountRepository
+ * {
+ *     public function __construct(
+ *         BankAccountRepository $repository,
+ *         DomainEventBusPublisher $eventBus,
+ *     ) {
+ *         parent::__construct($repository, $eventBus);
+ *     }
+ * }
  * </code>
  *
  * @template T of AggregateRoot
