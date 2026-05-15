@@ -27,10 +27,12 @@ abstract readonly class DomainEvent
      * Constructs an immutable domain event.
      *
      * @param string $id Unique identity of this event (e.g. UUID); used for equality and deduplication.
+     * @param string $aggregateId Identity of the aggregate that raised this event; used for routing and projections.
      * @param \DateTimeImmutable $occurredAt When the event occurred; use UTC for consistency.
      */
     protected function __construct(
         public string $id,
+        public string $aggregateId,
         public \DateTimeImmutable $occurredAt = new \DateTimeImmutable(
             'now',
             new \DateTimeZone('UTC')

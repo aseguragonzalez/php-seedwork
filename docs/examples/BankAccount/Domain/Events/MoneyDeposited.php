@@ -18,7 +18,7 @@ final readonly class MoneyDeposited extends DomainEvent
         string $id,
         \DateTimeImmutable $occurredAt
     ) {
-        parent::__construct($id, $occurredAt);
+        parent::__construct($id, (string) $accountId, $occurredAt);
     }
 
     public static function create(

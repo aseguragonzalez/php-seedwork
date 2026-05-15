@@ -19,4 +19,11 @@ final class DomainEventTest extends TestCase
         $this->assertFalse($event1->equals($event2));
         $this->assertTrue($event1->equals($event3));
     }
+
+    public function testAggregateIdIsStored(): void
+    {
+        $event = TestEvent::create('payment.processed', aggregateId: 'account-42');
+
+        $this->assertSame('account-42', $event->aggregateId);
+    }
 }
