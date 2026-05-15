@@ -9,8 +9,6 @@ PHP applications.
   infrastructure component.
 - [Coding standards](coding-standards.md) — Conventions aligned with the package
   and DDD/Clean Architecture, with do/don't guidelines.
-- [Best practices](best-practices.md) — How to use the package effectively in your
-  project.
 
 ## Complete code examples
 

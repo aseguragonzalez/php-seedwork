@@ -9,14 +9,13 @@ use SeedWork\Application\CommandBus;
 use SeedWork\Application\Result;
 use SeedWork\Application\ValidationErrors;
 use SeedWork\Infrastructure\ValidationCommandBus;
-use Examples\BankAccount\Application\DepositMoney\DepositMoneyCommand;
-use Examples\BankAccount\Domain\Entities\BankAccountId;
+use Tests\Fixtures\TestCommand;
 
 final class ValidationCommandBusTest extends TestCase
 {
     public function testDispatchDelegatesToInnerBusWhenValidationPasses(): void
     {
-        $command = $this->createValidDepositMoneyCommand();
+        $command = new TestCommand('valid-payload');
         $innerBus = $this->createMock(CommandBus::class);
         $innerBus->expects($this->once())
             ->method('dispatch')
@@ -31,7 +30,7 @@ final class ValidationCommandBusTest extends TestCase
 
     public function testDispatchThrowsAndSkipsInnerBusWhenValidationFails(): void
     {
-        $command = $this->createInvalidDepositMoneyCommand();
+        $command = new TestCommand('');
         $innerBus = $this->createMock(CommandBus::class);
         $innerBus->expects($this->never())->method('dispatch');
 
@@ -39,15 +38,5 @@ final class ValidationCommandBusTest extends TestCase
 
         $this->expectException(ValidationErrors::class);
         $bus->dispatch($command);
-    }
-
-    private function createValidDepositMoneyCommand(): DepositMoneyCommand
-    {
-        return new DepositMoneyCommand(BankAccountId::create()->value, 100, 'USD');
-    }
-
-    private function createInvalidDepositMoneyCommand(): DepositMoneyCommand
-    {
-        return new DepositMoneyCommand(BankAccountId::create()->value, -1, 'USD');
     }
 }

@@ -35,6 +35,9 @@ jobs:
     - name: Tests
       run: make test
 
+    - name: Test examples
+      run: make test-examples
+
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v5
       with:

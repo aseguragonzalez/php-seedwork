@@ -7,21 +7,20 @@ namespace Tests\Infrastructure;
 use PHPUnit\Framework\TestCase;
 use SeedWork\Application\CommandHandler;
 use SeedWork\Infrastructure\RegistryCommandBus;
-use Examples\BankAccount\Application\DepositMoney\DepositMoneyCommand;
-use Examples\BankAccount\Application\WithdrawMoney\WithdrawMoneyCommand;
-use Examples\BankAccount\Domain\Entities\BankAccountId;
-use Examples\BankAccount\Domain\Exceptions\InsufficientFundsException;
+use Tests\Fixtures\AnotherTestCommand;
+use Tests\Fixtures\TestCommand;
+use Tests\Fixtures\TestDomainException;
 
 final class RegistryCommandBusTest extends TestCase
 {
     public function testDispatchInvokesRegisteredHandlerAndReturnsOk(): void
     {
-        $command = $this->createDepositMoneyCommand();
+        $command = new TestCommand('deposit');
         $handler = $this->createMock(CommandHandler::class);
         $handler->expects($this->once())->method('handle')->with($command);
 
         $bus = new RegistryCommandBus();
-        $bus->register(DepositMoneyCommand::class, $handler);
+        $bus->register(TestCommand::class, $handler);
 
         $result = $bus->dispatch($command);
 
@@ -30,14 +29,14 @@ final class RegistryCommandBusTest extends TestCase
 
     public function testDispatchReturnsDomainExceptionAsFailedResult(): void
     {
-        $command = $this->createWithdrawMoneyCommand();
+        $command = new AnotherTestCommand();
         $handler = $this->createMock(CommandHandler::class);
         $handler->expects($this->once())->method('handle')->willThrowException(
-            InsufficientFundsException::forWithdrawal(10, 100)
+            new TestDomainException('Insufficient funds.')
         );
 
         $bus = new RegistryCommandBus();
-        $bus->register(WithdrawMoneyCommand::class, $handler);
+        $bus->register(AnotherTestCommand::class, $handler);
 
         $result = $bus->dispatch($command);
 
@@ -48,7 +47,7 @@ final class RegistryCommandBusTest extends TestCase
 
     public function testDispatchThrowsLogicExceptionWhenNoHandlerRegistered(): void
     {
-        $command = $this->createDepositMoneyCommand();
+        $command = new TestCommand();
         $bus = new RegistryCommandBus();
 
         $this->expectException(\LogicException::class);
@@ -59,28 +58,18 @@ final class RegistryCommandBusTest extends TestCase
 
     public function testDispatchUsesCorrectHandlerForMultipleRegistrations(): void
     {
-        $depositCommand = $this->createDepositMoneyCommand();
-        $withdrawCommand = $this->createWithdrawMoneyCommand();
-        $depositHandler = $this->createMock(CommandHandler::class);
-        $depositHandler->expects($this->once())->method('handle')->with($depositCommand);
-        $withdrawHandler = $this->createMock(CommandHandler::class);
-        $withdrawHandler->expects($this->once())->method('handle')->with($withdrawCommand);
+        $commandA = new TestCommand('op-a');
+        $commandB = new AnotherTestCommand();
+        $handlerA = $this->createMock(CommandHandler::class);
+        $handlerA->expects($this->once())->method('handle')->with($commandA);
+        $handlerB = $this->createMock(CommandHandler::class);
+        $handlerB->expects($this->once())->method('handle')->with($commandB);
 
         $bus = new RegistryCommandBus();
-        $bus->register(DepositMoneyCommand::class, $depositHandler);
-        $bus->register(WithdrawMoneyCommand::class, $withdrawHandler);
+        $bus->register(TestCommand::class, $handlerA);
+        $bus->register(AnotherTestCommand::class, $handlerB);
 
-        $bus->dispatch($depositCommand);
-        $bus->dispatch($withdrawCommand);
-    }
-
-    private function createDepositMoneyCommand(): DepositMoneyCommand
-    {
-        return new DepositMoneyCommand(BankAccountId::create()->value, 100, 'USD');
-    }
-
-    private function createWithdrawMoneyCommand(): WithdrawMoneyCommand
-    {
-        return new WithdrawMoneyCommand(BankAccountId::create()->value, 50, 'USD');
+        $bus->dispatch($commandA);
+        $bus->dispatch($commandB);
     }
 }

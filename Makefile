@@ -1,6 +1,6 @@
-.PHONY: all format format-check lint static-analyse test install clean update-autoload create-package
+.PHONY: all format format-check lint static-analyse test test-examples check-layer-boundaries install clean update-autoload create-package
 
-all: format-check lint static-analyse test
+all: format-check lint static-analyse check-layer-boundaries test
 
 clean:
 	@rm -rf vendor
@@ -27,8 +27,14 @@ static-analyse:
 	@rm -rf /tmp/phpstan/cache
 	@./vendor/bin/phpstan analyse ./src ./tests --level=max --memory-limit=1G
 
+check-layer-boundaries:
+	@! grep -rn "use Examples\\\\" tests/ --include="*.php" || (echo "\nERROR: tests/ must not import from Examples\\"; exit 1)
+
 test:
-	@./vendor/bin/phpunit -c phpunit.xml --coverage-html coverage/
+	@./vendor/bin/phpunit -c phpunit.xml --testsuite default --coverage-html coverage/
+
+test-examples:
+	@./vendor/bin/phpunit -c phpunit.xml --testsuite examples
 
 update-autoload:
 	@composer dump-autoload

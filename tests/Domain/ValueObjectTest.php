@@ -6,16 +6,15 @@ namespace Tests\Domain;
 
 use PHPUnit\Framework\TestCase;
 use SeedWork\Domain\Exceptions\ValueException;
-use Examples\BankAccount\Domain\ValueObjects\Currency;
-use Examples\BankAccount\Domain\ValueObjects\Money;
+use Tests\Fixtures\TestValueObject;
 
 final class ValueObjectTest extends TestCase
 {
     public function testValidationFailureThrowsValueException(): void
     {
         $this->expectException(ValueException::class);
-        $this->expectExceptionMessage('Amount must be greater than 0');
+        $this->expectExceptionMessage('Value cannot be empty.');
 
-        new Money(-1, Currency::USD);
+        new TestValueObject('');
     }
 }

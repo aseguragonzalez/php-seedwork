@@ -5,54 +5,54 @@ declare(strict_types=1);
 namespace Tests\Infrastructure;
 
 use PHPUnit\Framework\TestCase;
-use SeedWork\Infrastructure\InMemoryRepository;
-use Examples\BankAccount\Domain\Entities\BankAccount;
-use Examples\BankAccount\Domain\Entities\BankAccountId;
+use Tests\Fixtures\TestAggregate;
+use Tests\Fixtures\TestId;
+use Tests\Fixtures\TestRepository;
 
 final class InMemoryRepositoryTest extends TestCase
 {
     public function testFindByReturnsNullWhenNotFound(): void
     {
-        $repo = new InMemoryRepository();
+        $repo = new TestRepository();
 
-        $result = $repo->findBy(BankAccountId::create());
+        $result = $repo->findBy(TestId::create());
 
         $this->assertNull($result);
     }
 
     public function testSaveAndFindByHit(): void
     {
-        $repo = new InMemoryRepository();
-        $account = BankAccount::create();
+        $repo = new TestRepository();
+        $aggregate = TestAggregate::create();
 
-        $repo->save($account);
-        $result = $repo->findBy($account->id);
+        $repo->save($aggregate);
+        $result = $repo->findBy($aggregate->id);
 
         $this->assertNotNull($result);
-        $this->assertTrue($result->id->equals($account->id));
+        $this->assertTrue($result->id->equals($aggregate->id));
     }
 
     public function testDeleteByRemovesAggregate(): void
     {
-        $repo = new InMemoryRepository();
-        $account = BankAccount::create();
-        $repo->save($account);
+        $repo = new TestRepository();
+        $aggregate = TestAggregate::create();
+        $repo->save($aggregate);
 
-        $repo->deleteBy($account->id);
+        $repo->deleteBy($aggregate->id);
 
-        $this->assertNull($repo->findBy($account->id));
+        $this->assertNull($repo->findBy($aggregate->id));
     }
 
     public function testSaveOverwritesExistingAggregate(): void
     {
-        $repo = new InMemoryRepository();
-        $account1 = BankAccount::create();
-        $repo->save($account1);
+        $repo = new TestRepository();
+        $aggregate = TestAggregate::create();
+        $repo->save($aggregate);
 
         // Save the same ID again (simulating an update)
-        $repo->save($account1);
+        $repo->save($aggregate);
 
-        $result = $repo->findBy($account1->id);
+        $result = $repo->findBy($aggregate->id);
         $this->assertNotNull($result);
     }
 }

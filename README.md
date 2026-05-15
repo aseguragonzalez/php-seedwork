@@ -62,8 +62,6 @@ After installation, the library is available under the `SeedWork\` namespace.
   classes, and infrastructure components.
 - **[Coding standards](docs/coding-standards.md)** — Conventions and do/don't
   guidelines.
-- **[Best practices](docs/best-practices.md)** — How to use the package in your
-  project.
 - **[docs/examples/BankAccount/](docs/examples/BankAccount/)** — Full
   working example (including query handlers and query repository for
   projections) about how to use the package.

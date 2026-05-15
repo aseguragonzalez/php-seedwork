@@ -61,8 +61,7 @@ When reviewing changes, check in this order:
 
 ## Reference docs
 
-For coding standards, best practices, and full component reference, see `docs/`:
+For coding standards and full component reference, see `docs/`:
 
 - `docs/coding-standards.md` — style rules and conventions
-- `docs/best-practices.md` — do/don't, naming, layer rules, bus stacking
 - `docs/component-reference.md` — every interface and base class

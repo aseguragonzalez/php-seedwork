@@ -49,8 +49,7 @@ Because every component is a public contract consumed by other projects:
 ## How we build code
 
 - **Sources:** [src/](../src/) under `SeedWork\` namespace; one main class per file; file name = class name.
-- **Specs:** [docs/coding-standards.md](../docs/coding-standards.md) and
-  [docs/best-practices.md](../docs/best-practices.md) are the source of truth
+- **Specs:** [docs/coding-standards.md](../docs/coding-standards.md) is the source of truth
   (do/don't, naming, layer rules, bus stacking).
 - **Reference:** [docs/component-reference.md](../docs/component-reference.md) for every interface and
   base class.

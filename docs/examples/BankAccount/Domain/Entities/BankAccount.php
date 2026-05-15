@@ -8,6 +8,7 @@ use SeedWork\Domain\AggregateRoot;
 use SeedWork\Domain\DomainEvent;
 use Examples\BankAccount\Domain\Entities\BankAccountId;
 use Examples\BankAccount\Domain\Entities\Transaction;
+use Examples\BankAccount\Domain\Events\AccountOpened;
 use Examples\BankAccount\Domain\Events\MoneyDeposited;
 use Examples\BankAccount\Domain\Events\MoneyTransferredIn;
 use Examples\BankAccount\Domain\Events\MoneyTransferredOut;
@@ -43,8 +44,9 @@ final readonly class BankAccount extends AggregateRoot
     {
         $id = $id ?? BankAccountId::create();
         $balance = $initialBalance ?? AccountBalance::zero();
+        $event = AccountOpened::create($id, $balance);
 
-        return new self($id, $balance);
+        return new self($id, $balance, domainEvents: [$event]);
     }
 
     /**

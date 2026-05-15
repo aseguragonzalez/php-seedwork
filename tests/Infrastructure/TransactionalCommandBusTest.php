@@ -10,14 +10,13 @@ use SeedWork\Application\Result;
 use SeedWork\Application\ResultError;
 use SeedWork\Domain\UnitOfWork;
 use SeedWork\Infrastructure\TransactionalCommandBus;
-use Examples\BankAccount\Application\DepositMoney\DepositMoneyCommand;
-use Examples\BankAccount\Domain\Entities\BankAccountId;
+use Tests\Fixtures\TestCommand;
 
 final class TransactionalCommandBusTest extends TestCase
 {
     public function testDispatchDelegatesToInnerCommandBusWithSameCommand(): void
     {
-        $command = $this->createDepositMoneyCommand();
+        $command = new TestCommand();
         $innerBus = $this->createMock(CommandBus::class);
         $innerBus->expects($this->once())
             ->method('dispatch')
@@ -46,7 +45,7 @@ final class TransactionalCommandBusTest extends TestCase
         $unitOfWork->expects($this->never())->method('rollback');
 
         $bus = new TransactionalCommandBus($innerBus, $unitOfWork);
-        $bus->dispatch($this->createDepositMoneyCommand());
+        $bus->dispatch(new TestCommand());
     }
 
     public function testCommitIsCalledEvenWhenResultIsFailed(): void
@@ -61,7 +60,7 @@ final class TransactionalCommandBusTest extends TestCase
         $unitOfWork->expects($this->never())->method('rollback');
 
         $bus = new TransactionalCommandBus($innerBus, $unitOfWork);
-        $result = $bus->dispatch($this->createDepositMoneyCommand());
+        $result = $bus->dispatch(new TestCommand());
 
         $this->assertTrue($result->isFail());
     }
@@ -83,15 +82,6 @@ final class TransactionalCommandBusTest extends TestCase
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Command failed');
 
-        $bus->dispatch($this->createDepositMoneyCommand());
-    }
-
-    private function createDepositMoneyCommand(): DepositMoneyCommand
-    {
-        return new DepositMoneyCommand(
-            BankAccountId::create()->value,
-            100,
-            'USD'
-        );
+        $bus->dispatch(new TestCommand());
     }
 }
