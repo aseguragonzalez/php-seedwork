@@ -55,4 +55,35 @@ final class InMemoryRepositoryTest extends TestCase
         $result = $repo->findById($aggregate->id);
         $this->assertNotNull($result);
     }
+
+    public function testAllReturnsAllStoredAggregates(): void
+    {
+        $repo = new TestRepository();
+        $a = TestAggregate::create();
+        $b = TestAggregate::create();
+        $repo->save($a);
+        $repo->save($b);
+
+        $all = $repo->all();
+
+        $this->assertCount(2, $all);
+    }
+
+    public function testAllReturnsEmptyWhenStoreIsEmpty(): void
+    {
+        $repo = new TestRepository();
+
+        $this->assertSame([], $repo->all());
+    }
+
+    public function testResetClearsAllAggregates(): void
+    {
+        $repo = new TestRepository();
+        $repo->save(TestAggregate::create());
+        $repo->save(TestAggregate::create());
+
+        $repo->reset();
+
+        $this->assertSame([], $repo->all());
+    }
 }

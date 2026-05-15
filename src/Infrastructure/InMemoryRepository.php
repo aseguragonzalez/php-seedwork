@@ -14,11 +14,12 @@ use SeedWork\Domain\Repository;
  * (string, int, or object with __toString()) works out of the box.
  *
  * @template T of AggregateRoot
- * @implements Repository<T>
+ * @implements InMemoryRepositorySpy<T>
  *
- * @see Repository Domain port this implements.
+ * @see Repository              Domain port this implements.
+ * @see InMemoryRepositorySpy   Spy interface adding all() and reset().
  */
-class InMemoryRepository implements Repository
+class InMemoryRepository implements InMemoryRepositorySpy
 {
     /** @var array<string, AggregateRoot> */
     protected array $store = [];
@@ -47,5 +48,18 @@ class InMemoryRepository implements Repository
     public function deleteById(mixed $id): void
     {
         unset($this->store[(string) $id]);
+    }
+
+    /**
+     * @return list<T>
+     */
+    public function all(): array
+    {
+        return array_values($this->store);
+    }
+
+    public function reset(): void
+    {
+        $this->store = [];
     }
 }
