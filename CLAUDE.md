@@ -15,10 +15,12 @@ Every class is extended/implemented/composed by downstream projects — design d
 
 ## Architecture
 
-- `src/Domain/` — Entity, ValueObject, AggregateRoot, DomainEvent, Repository, UnitOfWork,
- exceptions. **Zero external dependencies.**
-- `src/Application/` — Command, Query, handlers, buses, QueryResult. **Depends only on Domain.**
-- `src/Infrastructure/` — ContainerCommandBus, TransactionalCommandBus, DeferredDomainEventBus, etc.
+- `src/Domain/` — Entity, ValueObject, AggregateRoot, DomainEvent, Repository, UnitOfWork.
+ **Zero external dependencies.**
+- `src/Application/` — Command/Query/handlers/buses, DomainEventBus, IntegrationEvent/Publisher,
+ BackgroundTask/TaskScheduler, Result/Maybe, ValidationErrors. **Depends only on Domain.**
+- `src/Infrastructure/` — RegistryCommandBus/QueryBus, TransactionalCommandBus,
+ DomainEventCoordinatorCommandBus, DeferredDomainEventBus, outbox patterns, spy interfaces, etc.
  **Only layer that may use PSR or library types.**
 
 Never leak Infrastructure or framework types into Domain or Application.
@@ -30,7 +32,7 @@ Never leak Infrastructure or framework types into Domain or Application.
 - `readonly` properties and constructor promotion by default.
 - Interfaces for contracts (Repository, CommandBus); abstract classes for shared behaviour (AggregateRoot, Entity).
 - No `mixed` types without justification. Use PHPStan `@template`/`@extends` for generics.
-- Exceptions: extend `DomainException` for domain failures. Never bare `\Exception`.
+- Exceptions: extend `\DomainException` (PHP stdlib) for domain failures. Never bare `\Exception`.
 - Backward compatibility matters: adding required params, renaming classes, or changing return types are breaking changes.
 
 ## Fixture and examples

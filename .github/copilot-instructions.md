@@ -11,11 +11,15 @@ depends on this package.
 
 ## Architecture
 
-- **Domain** (`SeedWork\Domain\*`): Entity, ValueObject, AggregateRoot, DomainEvent, Repository, UnitOfWork, DomainException.
-- **Application** (`SeedWork\Application\*`): Command, CommandBus, CommandHandler, Query, QueryBus,
-  QueryHandler, QueryResult, DomainEventBus, DomainEventHandler.
-- **Infrastructure** (`SeedWork\Infrastructure\*`): ContainerCommandBus, ContainerQueryBus,
-  TransactionalCommandBus, DeferredDomainEventBus, DomainEventFlushCommandBus.
+- **Domain** (`SeedWork\Domain\*`): Entity, ValueObject, AggregateRoot, DomainEvent, Repository, UnitOfWork.
+- **Application** (`SeedWork\Application\*`): Command/CommandBus/CommandHandler, Query/QueryBus/QueryHandler,
+  DomainEventBus/DomainEventHandler, IntegrationEvent/IntegrationEventPublisher/IntegrationEventHandler,
+  BackgroundTask/TaskScheduler/TaskHandler, Result/Maybe/ResultError, ValidationErrors/ValidationErrorDetail.
+- **Infrastructure** (`SeedWork\Infrastructure\*`): RegistryCommandBus/QueryBus, CommandBusBuilder/QueryBusBuilder,
+  TransactionalCommandBus, ValidationCommandBus/QueryBus, DomainEventCoordinatorCommandBus,
+  DeferredDomainEventBus, DomainEventPublishingRepository, InMemoryRepository,
+  OutboxIntegrationEventPublisher/InMemoryIntegrationEventPublisher, OutboxTaskScheduler/InMemoryTaskScheduler,
+  IntegrationEventOutboxRepository/TaskOutboxRepository, plus spy interfaces for all of the above.
 
 See [README](../README.md) and [docs/](../docs/) for the full picture.
 
@@ -55,7 +59,7 @@ Because every component is a public contract consumed by other projects:
 - **Conventions:** PHP 8.4+, `declare(strict_types=1);`, PSR-12, readonly where possible.
 - **Typing:** Strict parameter types, return types, no `mixed` unless truly unavoidable.
   Use union types or generics via PHPStan annotations (`@template`, `@extends`) when appropriate.
-- **Exceptions:** Extend `DomainException` to define domain-specific exceptions in your bounded context. Never throw bare `\Exception` or `\RuntimeException`.
+- **Exceptions:** Extend `\DomainException` (PHP stdlib) for domain-specific exceptions. Never throw bare `\Exception` or `\RuntimeException`. The seedwork does not ship its own `DomainException` wrapper.
 
 ## Examples and fixtures
 
