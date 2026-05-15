@@ -16,10 +16,11 @@ use SeedWork\Domain\DomainEvent;
  * same event twice (same id) results in a single
  * dispatch. This prevents double-handling when aggregates share events across calls.
  *
- * @see DomainEventBus Application port.
+ * @see DomainEventBus    Application port.
+ * @see DomainEventBusSpy Spy interface adding pending() and reset().
  * @see DomainEventHandler Handlers registered via subscribe() and invoked at dispatch.
  */
-final class DeferredDomainEventBus implements DomainEventBus
+final class DeferredDomainEventBus implements DomainEventBusSpy
 {
     /** @var array<string, list<DomainEventHandler<DomainEvent>>> */
     private array $handlers = [];
@@ -69,6 +70,19 @@ final class DeferredDomainEventBus implements DomainEventBus
      * Clears the buffer without dispatching. Use when the command was rejected.
      */
     public function discard(): void
+    {
+        $this->pending = [];
+    }
+
+    /**
+     * @return list<DomainEvent>
+     */
+    public function pending(): array
+    {
+        return array_values($this->pending);
+    }
+
+    public function reset(): void
     {
         $this->pending = [];
     }

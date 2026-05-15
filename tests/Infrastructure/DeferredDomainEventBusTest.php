@@ -119,4 +119,39 @@ final class DeferredDomainEventBusTest extends TestCase
         $bus->publish([$event]);
         $bus->dispatch();
     }
+
+    public function testPendingReturnsBufferedEvents(): void
+    {
+        $event1 = TestEvent::create();
+        $event2 = AnotherTestEvent::create();
+        $bus = new DeferredDomainEventBus();
+
+        $bus->publish([$event1, $event2]);
+
+        $this->assertSame([$event1, $event2], $bus->pending());
+    }
+
+    public function testPendingReturnsEmptyAfterDispatch(): void
+    {
+        $bus = new DeferredDomainEventBus();
+        $bus->publish([TestEvent::create()]);
+        $bus->dispatch();
+
+        $this->assertSame([], $bus->pending());
+    }
+
+    public function testResetClearsPendingBuffer(): void
+    {
+        $handler = $this->createMock(DomainEventHandler::class);
+        $handler->expects($this->never())->method('handle');
+
+        $bus = new DeferredDomainEventBus();
+        $bus->subscribe(TestEvent::class, $handler);
+        $bus->publish([TestEvent::create()]);
+
+        $bus->reset();
+
+        $this->assertSame([], $bus->pending());
+        $bus->dispatch();
+    }
 }
