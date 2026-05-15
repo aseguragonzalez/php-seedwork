@@ -44,7 +44,7 @@ final class DepositMoneyHandlerTest extends TestCase
 
         $this->assertTrue($result->isOk());
 
-        $updated = $repository->findById($account->id);
+        $updated = $repository->findBy($account->id);
         $this->assertNotNull($updated);
         $this->assertSame(150, $updated->getBalance()->amount);
     }
