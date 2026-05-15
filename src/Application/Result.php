@@ -29,7 +29,7 @@ final class Result
         return new self(true);
     }
 
-    /** @param non-empty-array<ResultError> $errors One or more errors describing the failure. */
+    /** @param array<ResultError> $errors One or more errors describing the failure. */
     public static function failed(array $errors): self
     {
         if (count($errors) === 0) {
