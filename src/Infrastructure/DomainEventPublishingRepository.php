@@ -35,7 +35,7 @@ use SeedWork\Domain\Repository;
  * @see Repository              Domain port this decorates.
  * @see DomainEventBusPublisher Application port for publishing events.
  */
-final class DomainEventPublishingRepository implements Repository
+class DomainEventPublishingRepository implements Repository
 {
     /**
      * @param Repository<T> $repository
