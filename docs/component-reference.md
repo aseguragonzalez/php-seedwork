@@ -215,7 +215,24 @@ All components live under the `SeedWork\` namespace (Domain, Application, Infras
 ### DomainEventPublishingRepository (`SeedWork\Infrastructure\DomainEventPublishingRepository`)
 
 - **Role:** Repository decorator that publishes `$aggregate->collectEvents()` via `DomainEventBusPublisher` after each `save()`.
-- **Usage:** Wrap your repository; inject `DomainEventBusPublisher`. Keeps handlers unaware of event publication.
+- **Usage:** Do not instantiate directly. Extend it and implement your domain repository interface so command handlers can be typed against the domain port:
+
+```php
+// Infrastructure layer of your bounded context
+final class PublishingBankAccountRepository
+    extends DomainEventPublishingRepository
+    implements BankAccountRepository
+{
+    public function __construct(
+        BankAccountRepository $repository,
+        DomainEventBusPublisher $eventBus,
+    ) {
+        parent::__construct($repository, $eventBus);
+    }
+}
+```
+
+This is necessary because PHP's type system has no runtime generics: `DomainEventPublishingRepository` only implements the base `Repository` interface, so passing it where a domain-specific `BankAccountRepository` is expected would cause a `TypeError`. The typed subclass bridges the gap with three lines of code.
 
 ### InMemoryRepository (`SeedWork\Infrastructure\InMemoryRepository`)
 
@@ -259,13 +276,23 @@ All components live under the `SeedWork\` namespace (Domain, Application, Infras
 
 ```php
 // Composition root (e.g. a service container or bootstrap file)
+$repository    = new InMemoryBankAccountRepository();   // implements BankAccountRepository
+$domainBus     = new DeferredDomainEventBus();
+$domainBus->subscribe(AccountOpened::class, new AccountOpenedDomainEventHandler($integrationPublisher));
+
+// Typed decorator: satisfies BankAccountRepository while adding event publishing
+$publishingRepository = new PublishingBankAccountRepository($repository, $domainBus);
+
+$obtainer = new BankAccountObtainer($repository);
+
 $registry = new RegistryCommandBus();
+$registry->register(OpenAccountCommand::class,  new OpenAccountCommandHandler($publishingRepository));
 $registry->register(DepositMoneyCommand::class, new DepositMoneyCommandHandler($obtainer, $publishingRepository));
 
 $commandBus = (new CommandBusBuilder($registry))
     ->withValidation()
     ->withTransactional($unitOfWork)
-    ->withDomainEventCoordination($deferredEventBus)
+    ->withDomainEventCoordination($domainBus)
     ->build();
 
 // Entry point (controller, CLI, etc.)

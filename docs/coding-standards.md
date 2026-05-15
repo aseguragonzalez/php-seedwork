@@ -163,8 +163,7 @@ them as the default for new code and when refactoring.
   - Use `DomainEventPublishingRepository` to publish `aggregate->collectEvents()` after `save()`
   - Subscribe event handlers directly on `DeferredDomainEventBus` via `subscribe()`
   - Prefer `DeferredDomainEventBus` in monoliths when you need transactionality
-    and bounded-context isolation and are not using a message broker (see
-    [best-practices](best-practices.md))
+    and bounded-context isolation and are not using a message broker
 - **Don't:**
   - Dispatch domain events outside the transaction when events must be consistent with the write
   - Put domain or application use-case logic in infrastructure
