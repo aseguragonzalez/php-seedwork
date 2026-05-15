@@ -21,7 +21,7 @@ use SeedWork\Domain\Repository;
  */
 class InMemoryRepository implements InMemoryRepositorySpy
 {
-    /** @var array<string, AggregateRoot> */
+    /** @var array<string, T> */
     protected array $store = [];
 
     /**
@@ -29,7 +29,7 @@ class InMemoryRepository implements InMemoryRepositorySpy
      */
     public function save(AggregateRoot $aggregateRoot): void
     {
-        $this->store[(string) $aggregateRoot->id] = $aggregateRoot;
+        $this->store[$this->key($aggregateRoot->id)] = $aggregateRoot;
     }
 
     /**
@@ -39,7 +39,7 @@ class InMemoryRepository implements InMemoryRepositorySpy
     public function findById(mixed $id): ?AggregateRoot
     {
         /** @var T|null */
-        return $this->store[(string) $id] ?? null;
+        return $this->store[$this->key($id)] ?? null;
     }
 
     /**
@@ -47,7 +47,7 @@ class InMemoryRepository implements InMemoryRepositorySpy
      */
     public function deleteById(mixed $id): void
     {
-        unset($this->store[(string) $id]);
+        unset($this->store[$this->key($id)]);
     }
 
     /**
@@ -55,7 +55,14 @@ class InMemoryRepository implements InMemoryRepositorySpy
      */
     public function all(): array
     {
+        /** @var list<T> */
         return array_values($this->store);
+    }
+
+    private function key(mixed $id): string
+    {
+        /** @var string|int|\Stringable $id */
+        return (string) $id;
     }
 
     public function reset(): void
