@@ -11,7 +11,7 @@ use SeedWork\Domain\Repository;
 /**
  * Repository decorator that publishes domain events after saving an aggregate.
  *
- * Collects events via {@see AggregateRoot::collectEvents()} and forwards them
+ * Collects events via {@see AggregateRoot::getDomainEvents()} and forwards them
  * to the {@see DomainEventBusPublisher} after the inner repository persists the
  * aggregate. Events are only published on success; if save() throws, publish()
  * is not called.
@@ -53,7 +53,7 @@ class DomainEventPublishingRepository implements Repository
     public function save(AggregateRoot $aggregateRoot): void
     {
         $this->repository->save($aggregateRoot);
-        $this->eventBus->publish($aggregateRoot->collectEvents());
+        $this->eventBus->publish($aggregateRoot->getDomainEvents());
     }
 
     /**

@@ -21,7 +21,7 @@ final class AggregateRootTest extends TestCase
         $this->assertTrue($aggregate1->equals($aggregate3));
     }
 
-    public function testCollectEvents(): void
+    public function testGetDomainEvents(): void
     {
         $event1 = TestEvent::create('first');
         $event2 = AnotherTestEvent::create();
@@ -30,7 +30,7 @@ final class AggregateRootTest extends TestCase
             ->withEvent($event1)
             ->withEvent($event2);
 
-        $events = $aggregate->collectEvents();
+        $events = $aggregate->getDomainEvents();
 
         $this->assertCount(2, $events);
         $this->assertInstanceOf(TestEvent::class, $events[0]);

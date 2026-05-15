@@ -79,7 +79,7 @@ final readonly class BankAccount extends AggregateRoot
             $this->id,
             $newBalance,
             [...$this->transactions, $transaction],
-            [...$this->collectEvents(), $event]
+            [...$this->getDomainEvents(), $event]
         );
     }
 
@@ -98,7 +98,7 @@ final readonly class BankAccount extends AggregateRoot
             $this->id,
             $newBalance,
             [...$this->transactions, $transaction],
-            [...$this->collectEvents(), $event]
+            [...$this->getDomainEvents(), $event]
         );
     }
 
@@ -121,7 +121,7 @@ final readonly class BankAccount extends AggregateRoot
             $this->id,
             $newBalance,
             [...$this->transactions, $transaction],
-            [...$this->collectEvents(), $event]
+            [...$this->getDomainEvents(), $event]
         );
     }
 
@@ -140,7 +140,7 @@ final readonly class BankAccount extends AggregateRoot
             $this->id,
             $newBalance,
             [...$this->transactions, $transaction],
-            [...$this->collectEvents(), $event]
+            [...$this->getDomainEvents(), $event]
         );
     }
 

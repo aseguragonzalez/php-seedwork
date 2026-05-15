@@ -8,7 +8,7 @@ All components live under the `SeedWork\` namespace (Domain, Application, Infras
 
 - **Role:** Root of an aggregate; single entry point for changes; records domain events.
 - **Usage:** Extend with your aggregate. Implement `validate()`. State changes return a new instance and append events. Provide static factory methods (`create()`, `build()`). Annotate with `@extends AggregateRoot<YourIdType>`.
-- **Key methods:** `equals(AggregateRoot $other): bool`, `collectEvents(): array`.
+- **Key methods:** `equals(AggregateRoot $other): bool`, `getDomainEvents(): array`.
 - **`$id` type:** unconstrained (`@template TId`) — use any type your bounded context prefers: plain `string`, `int`, a UUID library type, or a lightweight custom value object.
 
 ### Entity (`SeedWork\Domain\Entity`)
@@ -198,7 +198,7 @@ All components live under the `SeedWork\` namespace (Domain, Application, Infras
 
 ### DomainEventPublishingRepository (`SeedWork\Infrastructure\DomainEventPublishingRepository`)
 
-- **Role:** Repository decorator that publishes `$aggregate->collectEvents()` via `DomainEventBusPublisher` after each `save()`.
+- **Role:** Repository decorator that publishes `$aggregate->getDomainEvents()` via `DomainEventBusPublisher` after each `save()`.
 - **Usage:** Do not instantiate directly. Extend it and implement your domain repository interface so command handlers can be typed against the domain port:
 
 ```php

@@ -14,7 +14,7 @@ namespace SeedWork\Domain;
  *
  * This base adds support for recording domain events. When the root applies a
  * state change, it can append a DomainEvent. The application or infrastructure
- * layer calls {@see collectEvents()} (e.g. after handling a command) to retrieve
+ * layer calls {@see getDomainEvents()} (e.g. after handling a command) to retrieve
  * events for publishing, without mutating the aggregate's internal list.
  *
  * The identity type TId is unconstrained: use any type your bounded context
@@ -64,7 +64,7 @@ abstract readonly class AggregateRoot
      *
      * @return array<DomainEvent> Cloned events for publishing; does not clear the aggregate.
      */
-    public function collectEvents(): array
+    public function getDomainEvents(): array
     {
         return array_map(
             fn (DomainEvent $domainEvent) => clone $domainEvent,

@@ -16,7 +16,7 @@ final class DomainEventPublishingRepositoryTest extends TestCase
     public function testSaveDelegatesToRepositoryThenPublishesCollectedEvents(): void
     {
         $aggregate = $this->createMock(AggregateRoot::class);
-        $aggregate->expects($this->once())->method('collectEvents')->willReturn([]);
+        $aggregate->expects($this->once())->method('getDomainEvents')->willReturn([]);
 
         $repository = $this->createMock(Repository::class);
         $repository->expects($this->once())->method('save')->with($aggregate);
@@ -34,7 +34,7 @@ final class DomainEventPublishingRepositoryTest extends TestCase
         $eventB = $this->createMock(DomainEvent::class);
         $events = [$eventA, $eventB];
         $aggregate = $this->createStub(AggregateRoot::class);
-        $aggregate->method('collectEvents')->willReturn($events);
+        $aggregate->method('getDomainEvents')->willReturn($events);
 
         $repository = $this->createStub(Repository::class);
 
@@ -48,7 +48,7 @@ final class DomainEventPublishingRepositoryTest extends TestCase
     public function testSaveDoesNotPublishEventsWhenRepositoryThrows(): void
     {
         $aggregate = $this->createMock(AggregateRoot::class);
-        $aggregate->expects($this->never())->method('collectEvents');
+        $aggregate->expects($this->never())->method('getDomainEvents');
 
         $repository = $this->createStub(Repository::class);
         $repository->method('save')->willThrowException(new \RuntimeException('DB error'));

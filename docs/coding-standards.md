@@ -117,7 +117,7 @@ them as the default for new code and when refactoring.
   - One command class per write use case extending `SeedWork\Application\Command`
   - One handler implementing `CommandHandler`
   - Use primitives or simple DTOs in commands when possible
-  - In the handler: load aggregate (`findById` or throw), call domain methods, save, then `publish(aggregate->collectEvents())`
+  - In the handler: load aggregate (`findById` or throw), call domain methods, save, then `publish(aggregate->getDomainEvents())`
   - Keep handlers thin (orchestration only)
 - **Don't:**
   - Put business logic in the handler
@@ -159,7 +159,7 @@ them as the default for new code and when refactoring.
   - Stack buses in order: `ValidationCommandBus` → `TransactionalCommandBus` →
     `DomainEventCoordinatorCommandBus` → `RegistryCommandBus`, so the transaction
     wraps both command execution and domain event dispatch
-  - Use `DomainEventPublishingRepository` to publish `aggregate->collectEvents()` after `save()`
+  - Use `DomainEventPublishingRepository` to publish `aggregate->getDomainEvents()` after `save()`
   - Subscribe event handlers directly on `DeferredDomainEventBus` via `subscribe()`
   - Prefer `DeferredDomainEventBus` in monoliths when you need transactionality
     and bounded-context isolation and are not using a message broker

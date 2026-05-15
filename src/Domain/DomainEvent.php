@@ -16,7 +16,7 @@ namespace SeedWork\Domain;
  *
  * Use equals() for deduplication (same id = same event).
  *
- * @see AggregateRoot Aggregates record events and expose them via collectEvents().
+ * @see AggregateRoot Aggregates record events and expose them via getDomainEvents().
  * @see https://domainlanguage.com/ddd/ Eric Evans, "Domain-Driven Design" – Domain Events.
  * @see https://martinfowler.com/eaaDev/DomainEvent.html Martin Fowler, P of EAA – Domain Event.
  * @see https://udidahan.com/2008/08/25/domain-events-take-2/ Udi Dahan, "Domain Events – Take 2".

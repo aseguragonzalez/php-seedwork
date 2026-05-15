@@ -113,7 +113,7 @@ final readonly class BankAccount extends AggregateRoot
     public function deposit(int $amount): self
     {
         $event = MoneyDeposited::create($this->id->value, $amount);
-        return new self($this->id, $this->balance + $amount, [...$this->collectEvents(), $event]);
+        return new self($this->id, $this->balance + $amount, [...$this->getDomainEvents(), $event]);
     }
 
     public function getBalance(): int
