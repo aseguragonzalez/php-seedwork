@@ -67,8 +67,6 @@ Update examples and fixtures each time you add or change a pattern.
   context: domain (aggregate, entities, value objects, events, repository interface, obtainer),
   application (commands, queries, handlers, event handlers), infrastructure (in-memory repository).
   **Always consult this fixture** before creating new patterns — follow its structure and naming.
-- **Consumer-facing examples:** [docs/examples/copilot-instructions.md](../docs/examples/copilot-instructions.md)
-  (for downstream projects) and [docs/examples/cursor-rules.md](../docs/examples/cursor-rules.md).
 - When adding a new base class or interface, add a concrete implementation in the fixture that
   demonstrates the intended usage.
 
