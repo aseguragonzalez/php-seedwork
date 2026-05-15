@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
-namespace SeedWork\Infrastructure;
+namespace SeedWork\Testing;
+
+use SeedWork\Infrastructure\TaskOutboxRecord;
+use SeedWork\Infrastructure\TaskOutboxRepository;
 
 /**
  * Spy extension of {@see TaskOutboxRepository} for use in tests.

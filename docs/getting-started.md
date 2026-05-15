@@ -325,7 +325,7 @@ A minimal composition root that ties everything together:
 use SeedWork\Infrastructure\CommandBusBuilder;
 use SeedWork\Infrastructure\DeferredDomainEventBus;
 use SeedWork\Infrastructure\DomainEventPublishingRepository;
-use SeedWork\Infrastructure\InMemoryIntegrationEventPublisher;
+use SeedWork\Testing\InMemoryIntegrationEventPublisher;
 use SeedWork\Infrastructure\RegistryCommandBus;
 
 $repository     = new InMemoryBankAccountRepository();

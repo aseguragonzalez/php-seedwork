@@ -7,7 +7,7 @@ namespace Tests\Infrastructure;
 use PHPUnit\Framework\TestCase;
 use SeedWork\Application\BackgroundTask;
 use SeedWork\Application\TaskHandler;
-use SeedWork\Infrastructure\InMemoryTaskScheduler;
+use SeedWork\Testing\InMemoryTaskScheduler;
 
 final class InMemoryTaskSchedulerTest extends TestCase
 {

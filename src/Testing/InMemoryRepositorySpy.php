@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace SeedWork\Infrastructure;
+namespace SeedWork\Testing;
 
 use SeedWork\Domain\AggregateRoot;
 use SeedWork\Domain\Repository;
 
 /**
- * Spy extension of {@see InMemoryRepository} for use in tests.
+ * Spy extension of {@see Repository} for use in tests.
  *
  * Adds introspection (all()) and reset() so tests can assert on stored
  * aggregates and start each scenario with a clean slate.

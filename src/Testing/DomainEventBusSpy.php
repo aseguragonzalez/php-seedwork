@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SeedWork\Infrastructure;
+namespace SeedWork\Testing;
 
 use SeedWork\Application\DomainEventBus;
 use SeedWork\Domain\DomainEvent;
@@ -17,7 +17,7 @@ use SeedWork\Domain\DomainEvent;
  * (command rejected — drop events); reset() is for test setup (wipe pending
  * buffer between scenarios, keeping handler subscriptions intact).
  *
- * @see DeferredDomainEventBus Concrete implementation of this interface.
+ * @see DeferredDomainEventBusSpy Concrete implementation of this interface.
  */
 interface DomainEventBusSpy extends DomainEventBus
 {

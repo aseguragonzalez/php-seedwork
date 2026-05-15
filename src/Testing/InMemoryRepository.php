@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace SeedWork\Infrastructure;
+namespace SeedWork\Testing;
 
 use SeedWork\Domain\AggregateRoot;
-use SeedWork\Domain\Repository;
 
 /**
- * In-memory implementation of {@see Repository} for use in tests and examples.
+ * In-memory implementation of {@see InMemoryRepositorySpy} for use in tests and examples.
  *
  * Keys aggregates by (string) cast of their id, so any id type that is stringable
  * (string, int, or object with __toString()) works out of the box.
@@ -16,8 +15,7 @@ use SeedWork\Domain\Repository;
  * @template T of AggregateRoot
  * @implements InMemoryRepositorySpy<T>
  *
- * @see Repository              Domain port this implements.
- * @see InMemoryRepositorySpy   Spy interface adding all() and reset().
+ * @see InMemoryRepositorySpy Spy interface adding all() and reset().
  */
 class InMemoryRepository implements InMemoryRepositorySpy
 {
@@ -59,14 +57,14 @@ class InMemoryRepository implements InMemoryRepositorySpy
         return array_values($this->store);
     }
 
+    public function reset(): void
+    {
+        $this->store = [];
+    }
+
     private function key(mixed $id): string
     {
         /** @var string|int|\Stringable $id */
         return (string) $id;
-    }
-
-    public function reset(): void
-    {
-        $this->store = [];
     }
 }

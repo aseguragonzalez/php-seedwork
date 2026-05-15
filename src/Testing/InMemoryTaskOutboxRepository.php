@@ -2,14 +2,16 @@
 
 declare(strict_types=1);
 
-namespace SeedWork\Infrastructure;
+namespace SeedWork\Testing;
 
 use SeedWork\Application\BackgroundTask;
+use SeedWork\Infrastructure\TaskOutboxRecord;
+use SeedWork\Infrastructure\TaskOutboxStatus;
 
 /**
  * In-memory implementation of {@see TaskOutboxRepositorySpy} for use in tests.
  *
- * @see TaskOutboxRepositorySpy Test-focused extension implemented here.
+ * @see TaskOutboxRepositorySpy Spy interface implemented here.
  */
 final class InMemoryTaskOutboxRepository implements TaskOutboxRepositorySpy
 {

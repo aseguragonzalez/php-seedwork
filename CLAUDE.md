@@ -20,8 +20,10 @@ Every class is extended/implemented/composed by downstream projects — design d
 - `src/Application/` — Command/Query/handlers/buses, DomainEventBus, IntegrationEvent/Publisher,
  BackgroundTask/TaskScheduler, Result/Maybe, ValidationErrors. **Depends only on Domain.**
 - `src/Infrastructure/` — RegistryCommandBus/QueryBus, TransactionalCommandBus,
- DomainEventCoordinatorCommandBus, DeferredDomainEventBus, outbox patterns, spy interfaces, etc.
+ DomainEventCoordinatorCommandBus, DeferredDomainEventBus, outbox patterns.
  **Only layer that may use PSR or library types.**
+- `src/Testing/` — Spy interfaces and InMemory/fake implementations for use in consumer tests.
+ **Must not be used in production code.**
 
 Never leak Infrastructure or framework types into Domain or Application.
 

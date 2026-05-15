@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SeedWork\Infrastructure;
+namespace SeedWork\Testing;
 
 use SeedWork\Application\BackgroundTask;
 use SeedWork\Application\TaskHandler;

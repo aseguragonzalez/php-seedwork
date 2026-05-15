@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Infrastructure;
 
 use PHPUnit\Framework\TestCase;
-use SeedWork\Infrastructure\InMemoryIntegrationEventPublisher;
+use SeedWork\Testing\InMemoryIntegrationEventPublisher;
 use Tests\Fixtures\FakeIntegrationEvent;
 
 final class InMemoryIntegrationEventPublisherTest extends TestCase

@@ -2,15 +2,14 @@
 
 declare(strict_types=1);
 
-namespace SeedWork\Infrastructure;
+namespace SeedWork\Testing;
 
 use SeedWork\Application\IntegrationEvent;
-use SeedWork\Infrastructure\IntegrationEventPublisherSpy;
 
 /**
  * In-memory implementation of {@see IntegrationEventPublisherSpy} for use in tests.
  *
- * @see IntegrationEventPublisherSpy Test-focused extension implemented here.
+ * @see IntegrationEventPublisherSpy Spy interface implemented here.
  */
 final class InMemoryIntegrationEventPublisher implements IntegrationEventPublisherSpy
 {

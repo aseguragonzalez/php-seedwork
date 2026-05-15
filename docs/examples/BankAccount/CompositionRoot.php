@@ -9,7 +9,7 @@ use SeedWork\Application\QueryBus;
 use SeedWork\Infrastructure\CommandBusBuilder;
 use SeedWork\Infrastructure\DeferredDomainEventBus;
 use Examples\BankAccount\Infrastructure\Repositories\PublishingBankAccountRepository;
-use SeedWork\Infrastructure\InMemoryIntegrationEventPublisher;
+use SeedWork\Testing\InMemoryIntegrationEventPublisher;
 use SeedWork\Infrastructure\QueryBusBuilder;
 use SeedWork\Infrastructure\RegistryCommandBus;
 use SeedWork\Infrastructure\RegistryQueryBus;

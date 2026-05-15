@@ -17,9 +17,12 @@ depends on this package.
   BackgroundTask/TaskScheduler/TaskHandler, Result/Maybe/ResultError, ValidationErrors/ValidationErrorDetail.
 - **Infrastructure** (`SeedWork\Infrastructure\*`): RegistryCommandBus/QueryBus, CommandBusBuilder/QueryBusBuilder,
   TransactionalCommandBus, ValidationCommandBus/QueryBus, DomainEventCoordinatorCommandBus,
-  DeferredDomainEventBus, DomainEventPublishingRepository, InMemoryRepository,
-  OutboxIntegrationEventPublisher/InMemoryIntegrationEventPublisher, OutboxTaskScheduler/InMemoryTaskScheduler,
-  IntegrationEventOutboxRepository/TaskOutboxRepository, plus spy interfaces for all of the above.
+  DeferredDomainEventBus, DomainEventPublishingRepository, OutboxIntegrationEventPublisher,
+  OutboxTaskScheduler, IntegrationEventOutboxRepository, TaskOutboxRepository.
+- **Testing** (`SeedWork\Testing\*`): Spy interfaces (DomainEventBusSpy, InMemoryRepositorySpy,
+  IntegrationEventPublisherSpy, etc.) and InMemory/fake implementations (InMemoryRepository,
+  DeferredDomainEventBusSpy, InMemoryIntegrationEventPublisher, InMemoryTaskScheduler, etc.).
+  For use in consumer tests only — not in production code.
 
 See [README](../README.md) and [docs/](../docs/) for the full picture.
 

@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
-namespace SeedWork\Infrastructure;
+namespace SeedWork\Testing;
+
+use SeedWork\Infrastructure\IntegrationEventOutboxRecord;
+use SeedWork\Infrastructure\IntegrationEventOutboxRepository;
 
 /**
  * Spy extension of {@see IntegrationEventOutboxRepository} for use in tests.
