@@ -270,7 +270,7 @@ $registry->register(DepositMoneyCommand::class, new DepositMoneyCommandHandler($
 
 $commandBus = (new CommandBusBuilder($registry))
     ->withValidation()                               // outermost: validates before anything
-    ->withTransactional($unitOfWork)                 // wraps in DB transaction
+    ->withTransaction($unitOfWork)                 // wraps in DB transaction
     ->withDomainEventCoordination($domainEventBus)   // dispatches or discards events after command
     ->build();
 
@@ -289,7 +289,7 @@ The full stack (outermost → innermost):
 ValidationCommandBus → TransactionalCommandBus → DomainEventCoordinatorCommandBus → RegistryCommandBus
 ```
 
-> **Note:** `withTransactional()` requires a `UnitOfWork` implementation (e.g. a Doctrine wrapper). Omit it when there is no database transaction boundary (e.g. in tests).
+> **Note:** `withTransaction()` requires a `UnitOfWork` implementation (e.g. a Doctrine wrapper). Omit it when there is no database transaction boundary (e.g. in tests).
 
 ---
 

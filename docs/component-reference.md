@@ -165,7 +165,7 @@ All components live under the `SeedWork\` namespace (Domain, Application, Infras
 ### CommandBusBuilder (`SeedWork\Infrastructure\CommandBusBuilder`)
 
 - **Role:** Fluent builder for composing a `CommandBus` decorator pipeline.
-- **Usage:** `new CommandBusBuilder($registry)`, then chain `withValidation()`, `withTransactional($uow)`, `withDomainEventCoordination($eventBus)`, `use($closure)`, then `build()`. The first step added becomes the outermost decorator.
+- **Usage:** `new CommandBusBuilder($registry)`, then chain `withValidation()`, `withTransaction($uow)`, `withDomainEventCoordination($eventBus)`, `use($closure)`, then `build()`. The first step added becomes the outermost decorator.
 - **Methods:** `registry(): RegistryCommandBus`, `build(): CommandBus`.
 
 ### QueryBusBuilder (`SeedWork\Infrastructure\QueryBusBuilder`)
@@ -273,7 +273,7 @@ $registry->register(DepositMoneyCommand::class, new DepositMoneyCommandHandler($
 
 $commandBus = (new CommandBusBuilder($registry))
     ->withValidation()
-    ->withTransactional($unitOfWork)
+    ->withTransaction($unitOfWork)
     ->withDomainEventCoordination($domainBus)
     ->build();
 
