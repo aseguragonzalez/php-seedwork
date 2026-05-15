@@ -10,7 +10,7 @@ use Examples\BankAccount\Domain\Entities\TransactionId;
 
 final readonly class MoneyTransferredOut extends DomainEvent
 {
-    public function __construct(
+    private function __construct(
         public BankAccountId $fromAccountId,
         public BankAccountId $toAccountId,
         public \Examples\BankAccount\Domain\ValueObjects\Money $amount,

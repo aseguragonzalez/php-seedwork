@@ -11,7 +11,7 @@ use Examples\BankAccount\Domain\ValueObjects\Money;
 
 final readonly class MoneyWithdrawn extends DomainEvent
 {
-    public function __construct(
+    private function __construct(
         public BankAccountId $accountId,
         public Money $amount,
         public TransactionId $transactionId,
