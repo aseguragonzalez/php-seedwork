@@ -137,3 +137,13 @@ When reviewing a PR (or self-reviewing before pushing), verify:
 - `make lint` — PHP_CodeSniffer (PSR-12).
 - `make static-analyse` — PHPStan (level max).
 - `make all` — format-check, lint, static analysis, and tests.
+
+## Pre-commit workflow
+
+**Always** run both before committing:
+1. `make all` — validates format, lint, static analysis, and tests.
+2. `pre-commit run --all-files` — enforces JSON/YAML formatting, trailing whitespace,
+   no-commit-to-main, conventional commit message, and re-runs PHP checks.
+
+The project ships a `.pre-commit-config.yaml` that hooks format-check, phpcs, and
+PHPStan into every `git commit`. Running `make all` first avoids surprises at hook time.

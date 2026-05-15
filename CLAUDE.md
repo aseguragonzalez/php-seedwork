@@ -11,7 +11,17 @@ Every class is extended/implemented/composed by downstream projects — design d
 - `make format-check` — check only
 - `make lint` — PHP_CodeSniffer (PSR-12)
 - `make static-analyse` — PHPStan level max
-- `make all` — format-check + lint + static analysis + tests. Run before every commit.
+- `make all` — format-check + lint + static analysis + tests. **Run before every commit.**
+
+## Pre-commit workflow
+
+**Always** run both before committing:
+1. `make all` — catches format, lint, static analysis, and test failures.
+2. `pre-commit run --all-files` — enforces JSON/YAML formatting, trailing whitespace,
+   conventional commit message, and re-runs PHP checks via the git hook.
+
+In Docker (no coverage driver), substitute `make test` with:
+`vendor/bin/phpunit -c phpunit.xml --testsuite default --no-coverage`
 
 ## Architecture
 
