@@ -41,7 +41,7 @@ All components live under the `SeedWork\` namespace (Domain, Application, Infras
 
 ### Exceptions
 
-- **DomainException** (`SeedWork\Domain\Exceptions\DomainException`): Base for domain errors. Extend to define concrete exceptions in your bounded context.
+- **DomainException** (PHP stdlib `\DomainException`): Base for domain errors. Extend to define concrete exceptions in your bounded context. No seedwork wrapper — consumers extend the stdlib class directly.
 
 ---
 

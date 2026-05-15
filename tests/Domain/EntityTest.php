@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Domain;
 
 use PHPUnit\Framework\TestCase;
-use SeedWork\Domain\Exceptions\DomainException;
 use Tests\Fixtures\TestEntity;
 
 final class EntityTest extends TestCase
@@ -22,7 +21,7 @@ final class EntityTest extends TestCase
 
     public function testValidate(): void
     {
-        $this->expectException(DomainException::class);
+        $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('TestEntity createdAt cannot be in the future.');
 
         TestEntity::create(createdAt: new \DateTimeImmutable('tomorrow'));

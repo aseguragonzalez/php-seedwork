@@ -101,7 +101,7 @@ them as the default for new code and when refactoring.
 ### Exceptions
 
 - **Do:**
-  - Extend `SeedWork\Domain\Exceptions\DomainException` to define concrete exceptions in your bounded context
+  - Extend PHP's `\DomainException` to define concrete exceptions in your bounded context
   - Use clear, domain-oriented messages
 - **Don't:**
   - Throw generic `\Exception` or framework-specific exceptions in domain code
@@ -117,12 +117,11 @@ them as the default for new code and when refactoring.
   - One command class per write use case extending `SeedWork\Application\Command`
   - One handler implementing `CommandHandler`
   - Use primitives or simple DTOs in commands when possible
-  - In the handler: load aggregate (`findById` or throw), call domain methods, save, then `publish(aggregate->getDomainEvents())`
+  - In the handler: load aggregate (`findById` or throw), call domain methods, save — event publication is handled by the repository decorator (`DomainEventPublishingRepository`)
   - Keep handlers thin (orchestration only)
 - **Don't:**
   - Put business logic in the handler
   - Dispatch commands from inside another command handler without a clear reason
-  - Forget to publish collected events after save
   - Use one handler for multiple command types
 
 ### Queries and query handlers
@@ -219,7 +218,7 @@ them as the default for new code and when refactoring.
 | **DomainEvent** | Past tense; string id; readonly properties; UTC | Command-like names; generic type/version/payload fields |
 | **Repository** | Interface in domain; implementation in infra | Implementation in domain; rich query API in interface |
 | **Command** | One per use case; primitives/simple DTOs | Business logic; multiple intents |
-| **CommandHandler** | Obtain → domain → save → publish events | Business logic; skip event publish |
+| **CommandHandler** | Obtain → domain → save (decorator publishes events) | Business logic; call publish() directly in the handler |
 | **Query** | One per read use case; no side effects | State changes; command dispatch |
 | **QueryHandler** | Return QueryResult DTO; read-only | Return entities; mutate state |
 | **DomainEventHandler** | One concern; idempotent when async | Many concerns; assume exactly-once |

@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Examples\BankAccount\Domain\Exceptions;
 
-use SeedWork\Domain\Exceptions\DomainException;
-
-class BankAccountException extends DomainException
+class BankAccountException extends \DomainException
 {
     public function __construct(string $message, int $code = 0)
     {

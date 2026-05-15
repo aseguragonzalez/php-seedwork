@@ -17,7 +17,6 @@ Requires **PHP 8.4** or later.
 Value objects are immutable and equal by value, not identity. Extend `ValueObject`, add `readonly` properties, and implement `equals()` and `validate()`.
 
 ```php
-use SeedWork\Domain\Exceptions\DomainException;
 use SeedWork\Domain\ValueObject;
 
 final readonly class Money extends ValueObject
@@ -39,7 +38,7 @@ final readonly class Money extends ValueObject
     protected function validate(): void
     {
         if ($this->amount <= 0) {
-            throw new DomainException('Amount must be greater than 0');
+            throw new \DomainException('Amount must be greater than 0');
         }
     }
 }

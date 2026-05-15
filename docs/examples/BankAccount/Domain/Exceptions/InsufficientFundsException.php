@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Examples\BankAccount\Domain\Exceptions;
 
-use SeedWork\Domain\Exceptions\DomainException;
-
-final class InsufficientFundsException extends DomainException
+final class InsufficientFundsException extends \DomainException
 {
     public static function forWithdrawal(int $balance, int $requested): self
     {
