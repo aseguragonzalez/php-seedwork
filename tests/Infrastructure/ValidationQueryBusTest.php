@@ -9,17 +9,15 @@ use SeedWork\Application\Maybe;
 use SeedWork\Application\QueryBus;
 use SeedWork\Application\ValidationErrors;
 use SeedWork\Infrastructure\ValidationQueryBus;
-use Examples\BankAccount\Application\GetBankAccountStatus\BankAccountStatusResult;
-use Examples\BankAccount\Application\GetBankAccountStatus\GetBankAccountStatusQuery;
-use Examples\BankAccount\Domain\Entities\BankAccountId;
-use Examples\BankAccount\Domain\ValueObjects\AccountBalance;
+use Tests\Fixtures\TestQuery;
+use Tests\Fixtures\TestQueryResult;
 
 final class ValidationQueryBusTest extends TestCase
 {
     public function testAskDelegatesToInnerBusWhenValidationPasses(): void
     {
-        $query = $this->createValidQuery();
-        $expectedMaybe = Maybe::just(new BankAccountStatusResult(BankAccountId::create(), AccountBalance::zero(), []));
+        $query = new TestQuery('some-id');
+        $expectedMaybe = Maybe::just(new TestQueryResult('some-id'));
         $innerBus = $this->createMock(QueryBus::class);
         $innerBus->expects($this->once())
             ->method('ask')
@@ -34,7 +32,7 @@ final class ValidationQueryBusTest extends TestCase
 
     public function testAskThrowsAndSkipsInnerBusWhenValidationFails(): void
     {
-        $query = $this->createInvalidQuery();
+        $query = new TestQuery('');
         $innerBus = $this->createMock(QueryBus::class);
         $innerBus->expects($this->never())->method('ask');
 
@@ -42,15 +40,5 @@ final class ValidationQueryBusTest extends TestCase
 
         $this->expectException(ValidationErrors::class);
         $bus->ask($query);
-    }
-
-    private function createValidQuery(): GetBankAccountStatusQuery
-    {
-        return new GetBankAccountStatusQuery(BankAccountId::create()->value);
-    }
-
-    private function createInvalidQuery(): GetBankAccountStatusQuery
-    {
-        return new GetBankAccountStatusQuery('');
     }
 }

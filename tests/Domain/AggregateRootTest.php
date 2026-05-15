@@ -5,38 +5,35 @@ declare(strict_types=1);
 namespace Tests\Domain;
 
 use PHPUnit\Framework\TestCase;
-use Examples\BankAccount\Domain\Entities\BankAccount;
-use Examples\BankAccount\Domain\Events\MoneyDeposited;
-use Examples\BankAccount\Domain\Events\MoneyWithdrawn;
-use Examples\BankAccount\Domain\ValueObjects\Currency;
-use Examples\BankAccount\Domain\ValueObjects\Money;
+use Tests\Fixtures\AnotherTestEvent;
+use Tests\Fixtures\TestAggregate;
+use Tests\Fixtures\TestEvent;
 
 final class AggregateRootTest extends TestCase
 {
     public function testEquals(): void
     {
-        $account1 = BankAccount::create();
-        $account2 = BankAccount::create();
-        $account3 = BankAccount::build(
-            $account1->id,
-            $account1->getBalance(),
-            $account1->getTransactions()
-        );
+        $aggregate1 = TestAggregate::create();
+        $aggregate2 = TestAggregate::create();
+        $aggregate3 = TestAggregate::build($aggregate1->id);
 
-        $this->assertFalse($account1->equals($account2));
-        $this->assertTrue($account1->equals($account3));
+        $this->assertFalse($aggregate1->equals($aggregate2));
+        $this->assertTrue($aggregate1->equals($aggregate3));
     }
 
     public function testCollectEvents(): void
     {
-        $account = BankAccount::create()
-            ->deposit(new Money(100, Currency::USD))
-            ->withdraw(new Money(30, Currency::USD));
+        $event1 = TestEvent::create('first');
+        $event2 = AnotherTestEvent::create();
 
-        $events = $account->collectEvents();
+        $aggregate = TestAggregate::create()
+            ->withEvent($event1)
+            ->withEvent($event2);
+
+        $events = $aggregate->collectEvents();
 
         $this->assertCount(2, $events);
-        $this->assertInstanceOf(MoneyDeposited::class, $events[0]);
-        $this->assertInstanceOf(MoneyWithdrawn::class, $events[1]);
+        $this->assertInstanceOf(TestEvent::class, $events[0]);
+        $this->assertInstanceOf(AnotherTestEvent::class, $events[1]);
     }
 }

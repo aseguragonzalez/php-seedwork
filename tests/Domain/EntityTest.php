@@ -6,34 +6,25 @@ namespace Tests\Domain;
 
 use PHPUnit\Framework\TestCase;
 use SeedWork\Domain\Exceptions\ValueException;
-use Examples\BankAccount\Domain\Entities\Transaction;
-use Examples\BankAccount\Domain\ValueObjects\Currency;
-use Examples\BankAccount\Domain\ValueObjects\Money;
-use Examples\BankAccount\Domain\ValueObjects\TransactionType;
+use Tests\Fixtures\TestEntity;
 
 final class EntityTest extends TestCase
 {
     public function testEquals(): void
     {
-        $type = TransactionType::DEPOSIT;
-        $amount = new Money(100, Currency::USD);
-        $transaction = Transaction::create($type, $amount);
-        $transaction2 = Transaction::build($transaction->id, $type, $amount, $transaction->createdAt);
-        $transaction3 = Transaction::create($type, $amount);
+        $entity = TestEntity::create();
+        $entity2 = TestEntity::build($entity->id, $entity->createdAt);
+        $entity3 = TestEntity::create();
 
-        $this->assertTrue($transaction->equals($transaction2));
-        $this->assertFalse($transaction->equals($transaction3));
+        $this->assertTrue($entity->equals($entity2));
+        $this->assertFalse($entity->equals($entity3));
     }
 
     public function testValidate(): void
     {
         $this->expectException(ValueException::class);
-        $this->expectExceptionMessage('Transaction created at cannot be in the future');
+        $this->expectExceptionMessage('TestEntity createdAt cannot be in the future.');
 
-        Transaction::create(
-            TransactionType::DEPOSIT,
-            new Money(100, Currency::USD),
-            createdAt: new \DateTimeImmutable('tomorrow'),
-        );
+        TestEntity::create(createdAt: new \DateTimeImmutable('tomorrow'));
     }
 }

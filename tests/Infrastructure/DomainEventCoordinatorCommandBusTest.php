@@ -12,47 +12,43 @@ use SeedWork\Application\Result;
 use SeedWork\Application\ResultError;
 use SeedWork\Infrastructure\DeferredDomainEventBus;
 use SeedWork\Infrastructure\DomainEventCoordinatorCommandBus;
-use Examples\BankAccount\Application\DepositMoney\DepositMoneyCommand;
-use Examples\BankAccount\Domain\Entities\BankAccountId;
-use Examples\BankAccount\Domain\Entities\TransactionId;
-use Examples\BankAccount\Domain\Events\MoneyDeposited;
-use Examples\BankAccount\Domain\ValueObjects\Currency;
-use Examples\BankAccount\Domain\ValueObjects\Money;
+use Tests\Fixtures\TestCommand;
+use Tests\Fixtures\TestEvent;
 
 final class DomainEventCoordinatorCommandBusTest extends TestCase
 {
     public function testDispatchCallsEventBusDispatchWhenResultIsOk(): void
     {
-        $event = $this->createMoneyDepositedEvent();
+        $event = TestEvent::create();
         $eventHandler = $this->createMock(DomainEventHandler::class);
         $eventHandler->expects($this->once())->method('handle')->with($event);
 
         $eventBus = new DeferredDomainEventBus();
-        $eventBus->subscribe(MoneyDeposited::class, $eventHandler);
+        $eventBus->subscribe(TestEvent::class, $eventHandler);
         $eventBus->publish([$event]);
 
         $innerBus = $this->createInnerBusReturning(Result::ok());
 
         $decorator = new DomainEventCoordinatorCommandBus($innerBus, $eventBus);
-        $result = $decorator->dispatch($this->createDepositMoneyCommand());
+        $result = $decorator->dispatch(new TestCommand());
 
         $this->assertTrue($result->isOk());
     }
 
     public function testDispatchCallsEventBusDiscardWhenResultIsFailed(): void
     {
-        $event = $this->createMoneyDepositedEvent();
+        $event = TestEvent::create();
         $eventHandler = $this->createMock(DomainEventHandler::class);
         $eventHandler->expects($this->never())->method('handle');
 
         $eventBus = new DeferredDomainEventBus();
-        $eventBus->subscribe(MoneyDeposited::class, $eventHandler);
+        $eventBus->subscribe(TestEvent::class, $eventHandler);
         $eventBus->publish([$event]);
 
         $innerBus = $this->createInnerBusReturning(Result::failed([new ResultError('err', 'fail')]));
 
         $decorator = new DomainEventCoordinatorCommandBus($innerBus, $eventBus);
-        $result = $decorator->dispatch($this->createDepositMoneyCommand());
+        $result = $decorator->dispatch(new TestCommand());
 
         $this->assertTrue($result->isFail());
 
@@ -62,12 +58,12 @@ final class DomainEventCoordinatorCommandBusTest extends TestCase
 
     public function testDispatchDiscardsEventBusAndRethrowsOnException(): void
     {
-        $event = $this->createMoneyDepositedEvent();
+        $event = TestEvent::create();
         $eventHandler = $this->createMock(DomainEventHandler::class);
         $eventHandler->expects($this->never())->method('handle');
 
         $eventBus = new DeferredDomainEventBus();
-        $eventBus->subscribe(MoneyDeposited::class, $eventHandler);
+        $eventBus->subscribe(TestEvent::class, $eventHandler);
         $eventBus->publish([$event]);
 
         $innerBus = $this->createMock(CommandBus::class);
@@ -80,17 +76,17 @@ final class DomainEventCoordinatorCommandBusTest extends TestCase
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('infrastructure failure');
 
-        $decorator->dispatch($this->createDepositMoneyCommand());
+        $decorator->dispatch(new TestCommand());
     }
 
     public function testExceptionDiscardsBufferSoSubsequentDispatchIsClean(): void
     {
-        $event = $this->createMoneyDepositedEvent();
+        $event = TestEvent::create();
         $eventHandler = $this->createMock(DomainEventHandler::class);
         $eventHandler->expects($this->never())->method('handle');
 
         $eventBus = new DeferredDomainEventBus();
-        $eventBus->subscribe(MoneyDeposited::class, $eventHandler);
+        $eventBus->subscribe(TestEvent::class, $eventHandler);
         $eventBus->publish([$event]);
 
         $innerBus = $this->createMock(CommandBus::class);
@@ -100,7 +96,7 @@ final class DomainEventCoordinatorCommandBusTest extends TestCase
         $decorator = new DomainEventCoordinatorCommandBus($innerBus, $eventBus);
 
         try {
-            $decorator->dispatch($this->createDepositMoneyCommand());
+            $decorator->dispatch(new TestCommand());
         } catch (\RuntimeException) {
         }
 
@@ -110,7 +106,6 @@ final class DomainEventCoordinatorCommandBusTest extends TestCase
 
     public function testEventBusDispatchExceptionDiscardsAndRethrows(): void
     {
-        $event = $this->createMoneyDepositedEvent();
         $eventBus = $this->createMock(DomainEventBus::class);
         $eventBus->expects($this->once())->method('dispatch')
             ->willThrowException(new \RuntimeException('handler failure'));
@@ -122,7 +117,7 @@ final class DomainEventCoordinatorCommandBusTest extends TestCase
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('handler failure');
 
-        $decorator->dispatch($this->createDepositMoneyCommand());
+        $decorator->dispatch(new TestCommand());
     }
 
     public function testAcceptsDomainEventBusInterface(): void
@@ -133,25 +128,7 @@ final class DomainEventCoordinatorCommandBusTest extends TestCase
         $innerBus = $this->createInnerBusReturning(Result::ok());
 
         $decorator = new DomainEventCoordinatorCommandBus($innerBus, $eventBus);
-        $decorator->dispatch($this->createDepositMoneyCommand());
-    }
-
-    private function createDepositMoneyCommand(): DepositMoneyCommand
-    {
-        return new DepositMoneyCommand(
-            BankAccountId::create()->value,
-            100,
-            'USD'
-        );
-    }
-
-    private function createMoneyDepositedEvent(): MoneyDeposited
-    {
-        return MoneyDeposited::create(
-            new Money(100, Currency::USD),
-            BankAccountId::create(),
-            TransactionId::create()
-        );
+        $decorator->dispatch(new TestCommand());
     }
 
     private function createInnerBusReturning(Result $result): CommandBus
