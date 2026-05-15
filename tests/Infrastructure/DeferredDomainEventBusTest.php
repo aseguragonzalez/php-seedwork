@@ -9,7 +9,6 @@ use SeedWork\Application\DomainEventHandler;
 use SeedWork\Infrastructure\DeferredDomainEventBus;
 use Tests\Fixtures\AnotherTestEvent;
 use Tests\Fixtures\TestEvent;
-use Tests\Fixtures\TestEventId;
 
 final class DeferredDomainEventBusTest extends TestCase
 {
@@ -107,8 +106,7 @@ final class DeferredDomainEventBusTest extends TestCase
 
     public function testPublishIsIdempotentForSameEventId(): void
     {
-        $eventId = TestEventId::fromString('evt-idempotent-test.1');
-        $event = TestEvent::create('test.event', $eventId);
+        $event = TestEvent::create('test.event', 'evt-idempotent-test.1');
 
         $handler = $this->createMock(DomainEventHandler::class);
         $handler->expects($this->once())->method('handle');

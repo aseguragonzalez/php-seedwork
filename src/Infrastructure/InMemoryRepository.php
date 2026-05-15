@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace SeedWork\Infrastructure;
 
 use SeedWork\Domain\AggregateRoot;
-use SeedWork\Domain\EntityId;
 use SeedWork\Domain\Repository;
 
 /**
  * In-memory implementation of {@see Repository} for use in tests and examples.
+ *
+ * Keys aggregates by (string) cast of their id, so any id type that is stringable
+ * (string, int, or object with __toString()) works out of the box.
  *
  * @template T of AggregateRoot
  * @implements Repository<T>
@@ -18,7 +20,7 @@ use SeedWork\Domain\Repository;
  */
 class InMemoryRepository implements Repository
 {
-    /** @var array<string, AggregateRoot<EntityId>> */
+    /** @var array<string, AggregateRoot> */
     protected array $store = [];
 
     /**
@@ -26,24 +28,24 @@ class InMemoryRepository implements Repository
      */
     public function save(AggregateRoot $aggregateRoot): void
     {
-        $this->store[$aggregateRoot->id->value] = $aggregateRoot;
+        $this->store[(string) $aggregateRoot->id] = $aggregateRoot;
     }
 
     /**
-     * @param EntityId $id
+     * @param mixed $id
      * @return T|null
      */
-    public function findBy(EntityId $id): ?AggregateRoot
+    public function findBy(mixed $id): ?AggregateRoot
     {
         /** @var T|null */
-        return $this->store[$id->value] ?? null;
+        return $this->store[(string) $id] ?? null;
     }
 
     /**
-     * @param EntityId $id
+     * @param mixed $id
      */
-    public function deleteBy(EntityId $id): void
+    public function deleteBy(mixed $id): void
     {
-        unset($this->store[$id->value]);
+        unset($this->store[(string) $id]);
     }
 }

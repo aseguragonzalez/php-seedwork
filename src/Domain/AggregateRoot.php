@@ -17,12 +17,14 @@ namespace SeedWork\Domain;
  * layer calls {@see collectEvents()} (e.g. after handling a command) to retrieve
  * events for publishing, without mutating the aggregate's internal list.
  *
+ * The identity type TId is unconstrained: use any type your bounded context
+ * prefers — a plain string, an int, a UUID, or a custom value object.
+ *
  * @see DomainEvent Events recorded by the aggregate for downstream consumers.
- * @see EntityId Subclasses use a dedicated ID type (e.g. BankAccountId) as TId.
  * @see https://domainlanguage.com/ddd/ Eric Evans, "Domain-Driven Design" – Aggregates (Ch. 6).
  * @see https://martinfowler.com/bliki/DDD_Aggregate.html Martin Fowler, P of EAA – DDD Aggregate.
  *
- * @template TId of EntityId
+ * @template TId
  */
 abstract readonly class AggregateRoot
 {
@@ -35,7 +37,7 @@ abstract readonly class AggregateRoot
      * @param TId $id Unique identity of this aggregate; also the consistency boundary identifier.
      * @param array<DomainEvent> $domainEvents Events already recorded (e.g. from previous operations in the same flow).
      */
-    protected function __construct(public EntityId $id, private array $domainEvents = [])
+    protected function __construct(public mixed $id, private array $domainEvents = [])
     {
         $this->validate();
     }
@@ -43,12 +45,14 @@ abstract readonly class AggregateRoot
     /**
      * Identity-based equality: two aggregate roots are equal iff they have the same ID.
      *
+     * Uses loose equality (==) so both scalars and value objects compare correctly.
+     *
      * @param AggregateRoot<TId> $other Another aggregate root (typically same concrete type).
      * @return bool True if both have the same identity.
      */
     public function equals(AggregateRoot $other): bool
     {
-        return $this->id->equals($other->id);
+        return $this->id == $other->id;
     }
 
     /**

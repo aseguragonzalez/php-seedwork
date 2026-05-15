@@ -29,7 +29,7 @@ final class InMemoryRepositoryTest extends TestCase
         $result = $repo->findBy($aggregate->id);
 
         $this->assertNotNull($result);
-        $this->assertTrue($result->id->equals($aggregate->id));
+        $this->assertEquals($aggregate->id, $result->id);
     }
 
     public function testDeleteByRemovesAggregate(): void

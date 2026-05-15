@@ -13,7 +13,7 @@ final readonly class AccountOpened extends DomainEvent
     private function __construct(
         public BankAccountId $accountId,
         public AccountBalance $initialBalance,
-        BankAccountEventId $id,
+        string $id,
         \DateTimeImmutable $createdAt
     ) {
         parent::__construct($id, $createdAt);
@@ -22,13 +22,13 @@ final readonly class AccountOpened extends DomainEvent
     public static function create(
         BankAccountId $accountId,
         AccountBalance $initialBalance,
-        ?BankAccountEventId $id = null,
+        ?string $id = null,
         ?\DateTimeImmutable $createdAt = null
     ): self {
         return new self(
             $accountId,
             $initialBalance,
-            $id ?? BankAccountEventId::create(),
+            $id ?? 'evt-' . uniqid('', true),
             $createdAt ?? new \DateTimeImmutable('now', new \DateTimeZone('UTC'))
         );
     }

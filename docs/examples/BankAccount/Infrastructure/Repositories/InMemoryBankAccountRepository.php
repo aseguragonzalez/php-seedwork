@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace Examples\BankAccount\Infrastructure\Repositories;
 
 use SeedWork\Domain\AggregateRoot;
-use SeedWork\Domain\EntityId;
 use Examples\BankAccount\Domain\Entities\BankAccount;
-use Examples\BankAccount\Domain\Entities\BankAccountId;
 use Examples\BankAccount\Domain\Repositories\BankAccountRepository;
 
 /**
@@ -23,28 +21,26 @@ final class InMemoryBankAccountRepository implements BankAccountRepository
      */
     public function save(AggregateRoot $aggregateRoot): void
     {
-        $this->accounts[$aggregateRoot->id->value] = clone $aggregateRoot;
+        $this->accounts[(string) $aggregateRoot->id] = clone $aggregateRoot;
     }
 
     /**
-     * @param BankAccountId $id
+     * @param mixed $id
      * @return BankAccount|null
      */
-    public function findBy(EntityId $id): ?AggregateRoot
+    public function findBy(mixed $id): ?AggregateRoot
     {
-        if (!isset($this->accounts[$id->value])) {
-            return null;
-        }
+        $key = (string) $id;
 
-        return clone $this->accounts[$id->value];
+        return isset($this->accounts[$key]) ? clone $this->accounts[$key] : null;
     }
 
     /**
-     * @param BankAccountId $id
+     * @param mixed $id
      */
-    public function deleteBy(EntityId $id): void
+    public function deleteBy(mixed $id): void
     {
-        unset($this->accounts[$id->value]);
+        unset($this->accounts[(string) $id]);
     }
 
     /**

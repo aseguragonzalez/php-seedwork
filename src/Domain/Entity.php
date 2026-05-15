@@ -12,11 +12,13 @@ namespace SeedWork\Domain;
  * identity, even when their other properties differ. Identity persists across
  * time and different representations (e.g. after reload from persistence).
  *
- * @see EntityId Identity is represented by a subtype of EntityId (e.g. BankAccountId).
+ * The identity type TId is unconstrained: use any type your bounded context
+ * prefers — a plain string, an int, a UUID, or a custom value object.
+ *
  * @see https://domainlanguage.com/ddd/ Eric Evans, "Domain-Driven Design" (DDD reference).
  * @see https://martinfowler.com/bliki/EvansClassification.html Martin Fowler, P of EAA – Entity.
  *
- * @template T of EntityId
+ * @template TId
  */
 abstract readonly class Entity
 {
@@ -26,9 +28,9 @@ abstract readonly class Entity
      * Identity is required and immutable; it is the sole basis for equality
      * between entities of the same type.
      *
-     * @param T $id The unique identity of this entity (subclass of EntityId).
+     * @param TId $id The unique identity of this entity.
      */
-    protected function __construct(public EntityId $id)
+    protected function __construct(public mixed $id)
     {
         $this->validate();
     }
@@ -36,15 +38,14 @@ abstract readonly class Entity
     /**
      * Identity-based equality: two entities are equal iff they have the same ID.
      *
-     * This reflects the DDD rule that entity equality is determined by identity,
-     * not by comparing attributes.
+     * Uses loose equality (==) so both scalars and value objects compare correctly.
      *
-     * @param Entity<T> $other Another entity (typically of the same concrete type).
+     * @param Entity<TId> $other Another entity (typically of the same concrete type).
      * @return bool True if both entities have the same identity.
      */
     public function equals(Entity $other): bool
     {
-        return $this->id->equals($other->id);
+        return $this->id == $other->id;
     }
 
     /**

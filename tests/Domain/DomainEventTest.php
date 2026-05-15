@@ -6,7 +6,6 @@ namespace Tests\Domain;
 
 use PHPUnit\Framework\TestCase;
 use Tests\Fixtures\TestEvent;
-use Tests\Fixtures\TestEventId;
 
 final class DomainEventTest extends TestCase
 {
@@ -14,7 +13,6 @@ final class DomainEventTest extends TestCase
     {
         $event1 = TestEvent::create('payment.processed');
         $event2 = TestEvent::create('payment.processed');
-        /** @var TestEventId $id */
         $id = $event1->id;
         $event3 = TestEvent::create('payment.processed', $id);
 

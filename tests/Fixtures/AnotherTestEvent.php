@@ -9,18 +9,18 @@ use SeedWork\Domain\DomainEvent;
 final readonly class AnotherTestEvent extends DomainEvent
 {
     private function __construct(
-        TestEventId $id,
+        string $id,
         \DateTimeImmutable $createdAt,
     ) {
         parent::__construct($id, $createdAt);
     }
 
     public static function create(
-        ?TestEventId $id = null,
+        ?string $id = null,
         ?\DateTimeImmutable $createdAt = null,
     ): self {
         return new self(
-            $id ?? TestEventId::create(),
+            $id ?? 'evt-' . uniqid('', true),
             $createdAt ?? new \DateTimeImmutable('now', new \DateTimeZone('UTC')),
         );
     }

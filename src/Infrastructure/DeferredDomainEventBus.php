@@ -13,7 +13,7 @@ use SeedWork\Domain\DomainEvent;
  * dispatches them only when dispatch() is called (deferred dispatch).
  *
  * The pending buffer is keyed by event id (string) for idempotency: publishing the
- * same event twice (same {@see \SeedWork\Domain\EventId}) results in a single
+ * same event twice (same id) results in a single
  * dispatch. This prevents double-handling when aggregates share events across calls.
  *
  * @see DomainEventBus Application port.
@@ -43,7 +43,7 @@ final class DeferredDomainEventBus implements DomainEventBus
     public function publish(array $events): void
     {
         foreach ($events as $event) {
-            $id = $event->id->value;
+            $id = $event->id;
             if (!isset($this->pending[$id])) {
                 $this->pending[$id] = $event;
             }

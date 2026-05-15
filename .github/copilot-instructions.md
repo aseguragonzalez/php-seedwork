@@ -11,8 +11,7 @@ depends on this package.
 
 ## Architecture
 
-- **Domain** (`SeedWork\Domain\*`): Entity, ValueObject, AggregateRoot, DomainEvent, EntityId, EventId,
-  Repository, UnitOfWork, DomainException.
+- **Domain** (`SeedWork\Domain\*`): Entity, ValueObject, AggregateRoot, DomainEvent, Repository, UnitOfWork, DomainException.
 - **Application** (`SeedWork\Application\*`): Command, CommandBus, CommandHandler, Query, QueryBus,
   QueryHandler, QueryResult, DomainEventBus, DomainEventHandler.
 - **Infrastructure** (`SeedWork\Infrastructure\*`): ContainerCommandBus, ContainerQueryBus,

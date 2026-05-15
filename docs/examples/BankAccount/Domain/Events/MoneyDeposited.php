@@ -15,7 +15,7 @@ final readonly class MoneyDeposited extends DomainEvent
         public BankAccountId $accountId,
         public Money $amount,
         public TransactionId $transactionId,
-        BankAccountEventId $id,
+        string $id,
         \DateTimeImmutable $createdAt
     ) {
         parent::__construct($id, $createdAt);
@@ -25,14 +25,14 @@ final readonly class MoneyDeposited extends DomainEvent
         Money $amount,
         BankAccountId $accountId,
         TransactionId $transactionId,
-        ?BankAccountEventId $id = null,
+        ?string $id = null,
         ?\DateTimeImmutable $createdAt = null
     ): self {
         return new self(
             $accountId,
             $amount,
             $transactionId,
-            $id ?? BankAccountEventId::create(),
+            $id ?? 'evt-' . uniqid('', true),
             $createdAt ?? new \DateTimeImmutable('now', new \DateTimeZone('UTC'))
         );
     }

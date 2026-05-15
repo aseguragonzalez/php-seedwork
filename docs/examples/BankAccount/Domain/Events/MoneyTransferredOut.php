@@ -7,26 +7,27 @@ namespace Examples\BankAccount\Domain\Events;
 use SeedWork\Domain\DomainEvent;
 use Examples\BankAccount\Domain\Entities\BankAccountId;
 use Examples\BankAccount\Domain\Entities\TransactionId;
+use Examples\BankAccount\Domain\ValueObjects\Money;
 
 final readonly class MoneyTransferredOut extends DomainEvent
 {
     private function __construct(
         public BankAccountId $fromAccountId,
         public BankAccountId $toAccountId,
-        public \Examples\BankAccount\Domain\ValueObjects\Money $amount,
+        public Money $amount,
         public TransactionId $transactionId,
-        BankAccountEventId $id,
+        string $id,
         \DateTimeImmutable $createdAt
     ) {
         parent::__construct($id, $createdAt);
     }
 
     public static function create(
-        \Examples\BankAccount\Domain\ValueObjects\Money $amount,
+        Money $amount,
         BankAccountId $fromAccountId,
         BankAccountId $toAccountId,
         TransactionId $transactionId,
-        ?BankAccountEventId $id = null,
+        ?string $id = null,
         ?\DateTimeImmutable $createdAt = null
     ): self {
         return new self(
@@ -34,7 +35,7 @@ final readonly class MoneyTransferredOut extends DomainEvent
             $toAccountId,
             $amount,
             $transactionId,
-            $id ?? BankAccountEventId::create(),
+            $id ?? 'evt-' . uniqid('', true),
             $createdAt ?? new \DateTimeImmutable('now', new \DateTimeZone('UTC'))
         );
     }

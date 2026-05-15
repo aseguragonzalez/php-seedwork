@@ -53,30 +53,29 @@ Domain events are immutable records of something that happened. Extend `DomainEv
 
 ```php
 use SeedWork\Domain\DomainEvent;
-use SeedWork\Domain\EventId;
 
 final readonly class MoneyDeposited extends DomainEvent
 {
     private function __construct(
         public string $accountId,
         public int $amount,
-        EventId $id,
-        \DateTimeImmutable $occurredAt,
+        string $id,
+        \DateTimeImmutable $createdAt,
     ) {
-        parent::__construct($id, $occurredAt);
+        parent::__construct($id, $createdAt);
     }
 
     public static function create(
         string $accountId,
         int $amount,
-        ?EventId $id = null,
-        ?\DateTimeImmutable $occurredAt = null,
+        ?string $id = null,
+        ?\DateTimeImmutable $createdAt = null,
     ): self {
         return new self(
             $accountId,
             $amount,
-            $id ?? MyEventId::create(),
-            $occurredAt ?? new \DateTimeImmutable('now', new \DateTimeZone('UTC')),
+            $id ?? 'evt-' . uniqid('', true),
+            $createdAt ?? new \DateTimeImmutable('now', new \DateTimeZone('UTC')),
         );
     }
 }
@@ -84,8 +83,8 @@ final readonly class MoneyDeposited extends DomainEvent
 
 Key rules:
 - Name events in past tense (`MoneyDeposited`, not `DepositMoney`).
-- Use `occurredAt` (UTC) for the timestamp.
-- `equals()` is inherited and compares by `EventId`.
+- Use UTC for `createdAt`.
+- `equals()` is inherited and compares by string `id`.
 
 ---
 
@@ -143,8 +142,8 @@ interface BankAccountRepository extends Repository {}
 
 The `Repository<T>` interface declares:
 - `save(AggregateRoot $aggregateRoot): void`
-- `findById(EntityId $id): ?AggregateRoot`
-- `deleteById(EntityId $id): void`
+- `findBy(mixed $id): ?AggregateRoot`
+- `deleteBy(mixed $id): void`
 
 ---
 

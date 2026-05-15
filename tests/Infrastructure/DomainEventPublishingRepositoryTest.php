@@ -8,7 +8,6 @@ use PHPUnit\Framework\TestCase;
 use SeedWork\Application\DomainEventBusPublisher;
 use SeedWork\Domain\AggregateRoot;
 use SeedWork\Domain\DomainEvent;
-use SeedWork\Domain\EntityId;
 use SeedWork\Domain\Repository;
 use SeedWork\Infrastructure\DomainEventPublishingRepository;
 
@@ -66,7 +65,7 @@ final class DomainEventPublishingRepositoryTest extends TestCase
 
     public function testFindByDelegatesToInnerRepository(): void
     {
-        $id = $this->createStub(EntityId::class);
+        $id = 'test-id-123';
         $aggregate = $this->createStub(AggregateRoot::class);
 
         $repository = $this->createMock(Repository::class);
@@ -82,7 +81,7 @@ final class DomainEventPublishingRepositoryTest extends TestCase
 
     public function testDeleteByDelegatesToInnerRepository(): void
     {
-        $id = $this->createStub(EntityId::class);
+        $id = 'test-id-456';
 
         $repository = $this->createMock(Repository::class);
         $repository->expects($this->once())->method('deleteBy')->with($id);

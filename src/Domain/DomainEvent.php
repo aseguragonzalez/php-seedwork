@@ -14,9 +14,8 @@ namespace SeedWork\Domain;
  * (projections, other bounded contexts) can react without coupling to the
  * aggregate's internals.
  *
- * Use equals() for deduplication (same EventId = same event).
+ * Use equals() for deduplication (same id = same event).
  *
- * @see EventId Unique identifier for this event instance (e.g. for idempotency).
  * @see AggregateRoot Aggregates record events and expose them via collectEvents().
  * @see https://domainlanguage.com/ddd/ Eric Evans, "Domain-Driven Design" – Domain Events.
  * @see https://martinfowler.com/eaaDev/DomainEvent.html Martin Fowler, P of EAA – Domain Event.
@@ -27,11 +26,11 @@ abstract readonly class DomainEvent
     /**
      * Constructs an immutable domain event.
      *
-     * @param EventId $id Unique identity of this event (e.g. UUID); used for equality and deduplication.
+     * @param string $id Unique identity of this event (e.g. UUID); used for equality and deduplication.
      * @param \DateTimeImmutable $createdAt When the event occurred; use UTC for consistency.
      */
     protected function __construct(
-        public EventId $id,
+        public string $id,
         public \DateTimeImmutable $createdAt = new \DateTimeImmutable(
             'now',
             new \DateTimeZone('UTC')
@@ -45,10 +44,10 @@ abstract readonly class DomainEvent
      * Use when deduplicating (e.g. same event received twice from a message bus).
      *
      * @param DomainEvent $other Another domain event.
-     * @return bool True if both have the same EventId.
+     * @return bool True if both have the same id.
      */
     public function equals(DomainEvent $other): bool
     {
-        return $this->id->equals($other->id);
+        return $this->id === $other->id;
     }
 }

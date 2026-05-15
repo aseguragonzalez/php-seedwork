@@ -10,7 +10,7 @@ final readonly class TestEvent extends DomainEvent
 {
     private function __construct(
         public string $name,
-        TestEventId $id,
+        string $id,
         \DateTimeImmutable $createdAt,
     ) {
         parent::__construct($id, $createdAt);
@@ -18,12 +18,12 @@ final readonly class TestEvent extends DomainEvent
 
     public static function create(
         string $name = 'test.event',
-        ?TestEventId $id = null,
+        ?string $id = null,
         ?\DateTimeImmutable $createdAt = null,
     ): self {
         return new self(
             $name,
-            $id ?? TestEventId::create(),
+            $id ?? 'evt-' . uniqid('', true),
             $createdAt ?? new \DateTimeImmutable('now', new \DateTimeZone('UTC')),
         );
     }

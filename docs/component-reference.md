@@ -7,20 +7,16 @@ All components live under the `SeedWork\` namespace (Domain, Application, Infras
 ### AggregateRoot (`SeedWork\Domain\AggregateRoot`)
 
 - **Role:** Root of an aggregate; single entry point for changes; records domain events.
-- **Usage:** Extend with your aggregate. Implement `validate()`. State changes return a new instance and append events. Provide static factory methods (`create()`, `build()`).
+- **Usage:** Extend with your aggregate. Implement `validate()`. State changes return a new instance and append events. Provide static factory methods (`create()`, `build()`). Annotate with `@extends AggregateRoot<YourIdType>`.
 - **Key methods:** `equals(AggregateRoot $other): bool`, `collectEvents(): array`.
+- **`$id` type:** unconstrained (`@template TId`) — use any type your bounded context prefers: plain `string`, `int`, a UUID library type, or a lightweight custom value object.
 
 ### Entity (`SeedWork\Domain\Entity`)
 
 - **Role:** Base for DDD entities. Identity over attributes; equality by ID.
-- **Usage:** Extend per entity type; implement `validate()`.
+- **Usage:** Extend per entity type; implement `validate()`. Annotate with `@extends Entity<YourIdType>`.
 - **Key methods:** `equals(Entity $other): bool`, `validate(): void`.
-
-### EntityId (`SeedWork\Domain\EntityId`)
-
-- **Role:** Base for entity identifiers. One subclass per entity (e.g. `BankAccountId`).
-- **Usage:** Protected constructor with `string $value`; implement `validate()`; expose static factory.
-- **Key methods:** `equals(EntityId $other): bool`, `__toString(): string`.
+- **`$id` type:** unconstrained (`@template TId`) — same freedom as `AggregateRoot`.
 
 ### ValueObject (`SeedWork\Domain\ValueObject`)
 
@@ -29,19 +25,14 @@ All components live under the `SeedWork\` namespace (Domain, Application, Infras
 
 ### DomainEvent (`SeedWork\Domain\DomainEvent`)
 
-- **Role:** Immutable record of something that happened (past tense, e.g. `MoneyDeposited`). Carries identity and timestamp; event-specific facts are readonly properties of the subclass.
-- **Usage:** Extend; add your own readonly properties for domain-specific data. Use static factory (e.g. `create()`).
-- **Key methods:** `equals(DomainEvent $other): bool` (by EventId).
-
-### EventId (`SeedWork\Domain\EventId`)
-
-- **Role:** Unique identifier for a domain event (e.g. for idempotency).
-- **Usage:** One subclass per event family; same pattern as EntityId.
+- **Role:** Immutable record of something that happened (past tense, e.g. `MoneyDeposited`). Carries a string id and timestamp; event-specific facts are readonly properties of the subclass.
+- **Usage:** Extend; add your own readonly properties for domain-specific data. Use static factory (e.g. `create()`). Pass a unique string id (e.g. `'evt-' . uniqid()` or a UUID) to the parent constructor.
+- **Key methods:** `equals(DomainEvent $other): bool` (by string id).
 
 ### Repository (`SeedWork\Domain\Repository`)
 
 - **Role:** Collection-like interface for an aggregate root: get by id, save, delete.
-- **Methods:** `save(AggregateRoot $aggregateRoot): void`, `findBy(EntityId $id): ?AggregateRoot`, `deleteBy(EntityId $id): void`.
+- **Methods:** `save(AggregateRoot $aggregateRoot): void`, `findBy(mixed $id): ?AggregateRoot`, `deleteBy(mixed $id): void`.
 
 ### UnitOfWork (`SeedWork\Domain\UnitOfWork`)
 

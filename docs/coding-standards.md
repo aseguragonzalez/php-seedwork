@@ -34,7 +34,7 @@ them as the default for new code and when refactoring.
 
 - **Do:**
   - Extend `SeedWork\Domain\Entity`
-  - Use a dedicated `EntityId` subclass per entity type
+  - Choose any id type that fits your context (`string`, `int`, a UUID, or a custom value object)
   - Implement `validate()` for invariants
   - Base equality only on identity
   - Provide a static factory method to create a new instance (e.g. `create()` and `build()`)
@@ -77,8 +77,8 @@ them as the default for new code and when refactoring.
   - Name events in past tense
   - Make them immutable (`readonly`)
   - Extend `SeedWork\Domain\DomainEvent` and expose event-specific data as readonly properties on the subclass
-  - Include an `EventId` (via `parent::__construct(id: ..., occurredAt: ...)`)
-  - Use UTC for `occurredAt`
+  - Pass a unique string id to `parent::__construct(id: ..., createdAt: ...)` (e.g. a UUID or `'evt-' . uniqid()`)
+  - Use UTC for `createdAt`
   - Record events when something meaningful happens in the aggregate
   - Provide a static factory method to create a new instance (e.g. `create()`)
 - **Don't:**
@@ -190,7 +190,8 @@ them as the default for new code and when refactoring.
   - Events: past tense (e.g. `MoneyDeposited`, `OrderPlaced`)
   - Handlers: `XxxCommandHandler`, `XxxQueryHandler`, `XxxEventHandler`
   - Repositories: `XxxRepository`
-  - IDs: `XxxId` (entity), `XxxEventId` (event)
+  - Entity ids: any type; if using a custom class, name it `XxxId` (e.g. `OrderId`)
+  - Event ids: `string`; generated in the `create()` factory
 - **Don't:**
   - Use command-like names for events
   - Use vague names like `ProcessData` or `HandleRequest` for commands
@@ -212,10 +213,10 @@ them as the default for new code and when refactoring.
 
 | Component | Do | Don't |
 | --- | --- | --- |
-| **Entity** | Identity via EntityId; override `validate()` | Compare by attributes; mutable setters |
+| **Entity** | Free id type (string, int, custom); override `validate()` | Compare by attributes; mutable setters |
 | **ValueObject** | Immutable; `equals()` by value; `validate()` | Identity; mutability |
 | **AggregateRoot** | Return new instance + events; single entry point | Mutate and emit separately; expose internals |
-| **DomainEvent** | Past tense; EventId; readonly properties; UTC | Command-like names; generic type/version/payload fields |
+| **DomainEvent** | Past tense; string id; readonly properties; UTC | Command-like names; generic type/version/payload fields |
 | **Repository** | Interface in domain; implementation in infra | Implementation in domain; rich query API in interface |
 | **Command** | One per use case; primitives/simple DTOs | Business logic; multiple intents |
 | **CommandHandler** | Obtain → domain → save → publish events | Business logic; skip event publish |

@@ -15,7 +15,7 @@ Every class is extended/implemented/composed by downstream projects — design d
 
 ## Architecture
 
-- `src/Domain/` — Entity, ValueObject, AggregateRoot, DomainEvent, EntityId, Repository, UnitOfWork,
+- `src/Domain/` — Entity, ValueObject, AggregateRoot, DomainEvent, Repository, UnitOfWork,
  exceptions. **Zero external dependencies.**
 - `src/Application/` — Command, Query, handlers, buses, QueryResult. **Depends only on Domain.**
 - `src/Infrastructure/` — ContainerCommandBus, TransactionalCommandBus, DeferredDomainEventBus, etc.

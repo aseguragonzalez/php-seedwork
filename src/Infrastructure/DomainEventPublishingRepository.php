@@ -6,7 +6,6 @@ namespace SeedWork\Infrastructure;
 
 use SeedWork\Application\DomainEventBusPublisher;
 use SeedWork\Domain\AggregateRoot;
-use SeedWork\Domain\EntityId;
 use SeedWork\Domain\Repository;
 
 /**
@@ -60,12 +59,12 @@ class DomainEventPublishingRepository implements Repository
     /**
      * @return T|null
      */
-    public function findBy(EntityId $id): ?AggregateRoot
+    public function findBy(mixed $id): ?AggregateRoot
     {
         return $this->repository->findBy($id);
     }
 
-    public function deleteBy(EntityId $id): void
+    public function deleteBy(mixed $id): void
     {
         $this->repository->deleteBy($id);
     }
