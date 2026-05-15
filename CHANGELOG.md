@@ -1,3 +1,10 @@
+# [0.4.0](https://github.com/aseguragonzalez/php-seedwork/compare/v0.3.0...v0.4.0) (2026-05-15)
+
+
+### Features
+
+* release 0.3.0 ([#26](https://github.com/aseguragonzalez/php-seedwork/issues/26)) ([9df28c7](https://github.com/aseguragonzalez/php-seedwork/commit/9df28c7abc995b900cc8b6d98730d26f9a7fc849))
+
 # [0.3.0](https://github.com/aseguragonzalez/php-seedwork/compare/v0.2.0...v0.3.0) (2026-05-14)
 
 
