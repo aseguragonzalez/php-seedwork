@@ -38,7 +38,7 @@ final class ResultTest extends TestCase
 
         $this->assertCount(2, $errors);
         $this->assertSame('E001', $errors[0]->code);
-        $this->assertSame('First error', $errors[0]->message);
+        $this->assertSame('First error', $errors[0]->description);
         $this->assertSame('E002', $errors[1]->code);
     }
 

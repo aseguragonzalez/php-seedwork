@@ -15,7 +15,7 @@ final readonly class ResultError
 {
     public function __construct(
         public string $code,
-        public string $message
+        public string $description
     ) {
     }
 }

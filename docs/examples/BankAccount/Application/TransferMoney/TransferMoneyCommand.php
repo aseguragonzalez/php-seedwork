@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Examples\BankAccount\Application\TransferMoney;
 
 use SeedWork\Application\Command;
-use SeedWork\Application\ValidationError;
+use SeedWork\Application\ValidationErrorDetail;
 use SeedWork\Application\ValidationErrors;
 
 final readonly class TransferMoneyCommand extends Command
@@ -23,16 +23,16 @@ final readonly class TransferMoneyCommand extends Command
     {
         $errors = [];
         if (empty($this->fromAccountId)) {
-            $errors[] = new ValidationError('fromAccountId', 'From account ID is required.');
+            $errors[] = new ValidationErrorDetail('from_account_id_required', 'From account ID is required.');
         }
         if (empty($this->toAccountId)) {
-            $errors[] = new ValidationError('toAccountId', 'To account ID is required.');
+            $errors[] = new ValidationErrorDetail('to_account_id_required', 'To account ID is required.');
         }
         if ($this->amount <= 0) {
-            $errors[] = new ValidationError('amount', 'Amount must be positive.');
+            $errors[] = new ValidationErrorDetail('amount_must_be_positive', 'Amount must be positive.');
         }
         if (empty($this->currency)) {
-            $errors[] = new ValidationError('currency', 'Currency is required.');
+            $errors[] = new ValidationErrorDetail('currency_required', 'Currency is required.');
         }
         if (count($errors) > 0) {
             throw new ValidationErrors($errors);

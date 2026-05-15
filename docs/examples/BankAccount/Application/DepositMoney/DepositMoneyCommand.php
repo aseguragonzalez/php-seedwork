@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Examples\BankAccount\Application\DepositMoney;
 
 use SeedWork\Application\Command;
-use SeedWork\Application\ValidationError;
+use SeedWork\Application\ValidationErrorDetail;
 use SeedWork\Application\ValidationErrors;
 
 final readonly class DepositMoneyCommand extends Command
@@ -22,13 +22,13 @@ final readonly class DepositMoneyCommand extends Command
     {
         $errors = [];
         if (empty($this->accountId)) {
-            $errors[] = new ValidationError('accountId', 'Account ID is required.');
+            $errors[] = new ValidationErrorDetail('account_id_required', 'Account ID is required.');
         }
         if ($this->amount <= 0) {
-            $errors[] = new ValidationError('amount', 'Amount must be positive.');
+            $errors[] = new ValidationErrorDetail('amount_must_be_positive', 'Amount must be positive.');
         }
         if (empty($this->currency)) {
-            $errors[] = new ValidationError('currency', 'Currency is required.');
+            $errors[] = new ValidationErrorDetail('currency_required', 'Currency is required.');
         }
         if (count($errors) > 0) {
             throw new ValidationErrors($errors);

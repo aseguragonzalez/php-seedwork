@@ -14,12 +14,12 @@ namespace SeedWork\Application;
  * application-layer concern — input validation at the boundary — distinct from
  * domain invariant violations expressed by DomainException.
  *
- * @see ValidationError A single field-level error detail.
+ * @see ValidationErrorDetail A single field-level error detail.
  */
 final class ValidationErrors extends \Exception
 {
     /**
-     * @param array<ValidationError> $errors Field-level validation failures; may be empty.
+     * @param array<ValidationErrorDetail> $errors Field-level validation failures; may be empty.
      */
     public function __construct(public readonly array $errors)
     {

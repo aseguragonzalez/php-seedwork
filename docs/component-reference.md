@@ -71,7 +71,7 @@ All components live under the `SeedWork\` namespace (Domain, Application, Infras
 ### ResultError (`SeedWork\Application\ResultError`)
 
 - **Role:** A single error detail within a failed result.
-- **Properties:** `string $code`, `string $message`.
+- **Properties:** `string $code`, `string $description`.
 
 ### Query (`SeedWork\Application\Query`)
 
@@ -144,7 +144,7 @@ All components live under the `SeedWork\` namespace (Domain, Application, Infras
 - **Role:** Handler for a specific background task type.
 - **Usage:** Implement `handle(BackgroundTask $task): void`. Registered by type in `InMemoryTaskScheduler`.
 
-### ValidationError / ValidationErrors (`SeedWork\Application\ValidationError`, `SeedWork\Application\ValidationErrors`)
+### ValidationErrorDetail / ValidationErrors (`SeedWork\Application\ValidationErrorDetail`, `SeedWork\Application\ValidationErrors`)
 
 - **Role:** Structured validation errors thrown by `validate()` in Command/Query.
 

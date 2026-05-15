@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Examples\BankAccount\Application\GetBankAccountStatus;
 
 use SeedWork\Application\Query;
-use SeedWork\Application\ValidationError;
+use SeedWork\Application\ValidationErrorDetail;
 use SeedWork\Application\ValidationErrors;
 
 final readonly class GetBankAccountStatusQuery extends Query
@@ -20,7 +20,7 @@ final readonly class GetBankAccountStatusQuery extends Query
     {
         $errors = [];
         if (empty($this->accountId)) {
-            $errors[] = new ValidationError('accountId', 'Account ID is required.');
+            $errors[] = new ValidationErrorDetail('account_id_required', 'Account ID is required.');
         }
         if (count($errors) > 0) {
             throw new ValidationErrors($errors);
