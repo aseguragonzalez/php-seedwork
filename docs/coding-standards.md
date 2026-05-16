@@ -128,7 +128,7 @@ them as the default for new code and when refactoring.
 
 - **Do:**
   - One query class per read use case extending `SeedWork\Application\Query`
-  - One handler implementing `QueryHandler` and returning a `QueryResult` subclass
+  - One handler implementing `QueryHandler` and returning a `Maybe<T>` container
   - Keep queries and results with primitive or simple DTO attributes when possible
   - Make query handlers read-only (no state changes, no command dispatch)
 - **Don't:**
@@ -175,7 +175,7 @@ them as the default for new code and when refactoring.
 
 - **Do:**
   - Use clear layer names: `…\Domain\` (Entities, ValueObjects, Events, Repositories, Exceptions),
-    `…\Application\<UseCase>\` (Command, CommandHandler, Query, QueryHandler, QueryResult),
+    `…\Application\<UseCase>\` (Command, CommandHandler, Query, QueryHandler),
     `…\Infrastructure\` (implementations)
 - **Don't:**
   - Mix layers in one namespace
@@ -220,7 +220,7 @@ them as the default for new code and when refactoring.
 | **Command** | One per use case; primitives/simple DTOs | Business logic; multiple intents |
 | **CommandHandler** | Obtain → domain → save (decorator publishes events) | Business logic; call publish() directly in the handler |
 | **Query** | One per read use case; no side effects | State changes; command dispatch |
-| **QueryHandler** | Return QueryResult DTO; read-only | Return entities; mutate state |
+| **QueryHandler** | Return `Maybe<T>` container; read-only | Return entities; mutate state |
 | **DomainEventHandler** | One concern; idempotent when async | Many concerns; assume exactly-once |
 
 These do/don't notes and the component reference together define the coding
