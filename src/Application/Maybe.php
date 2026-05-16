@@ -26,8 +26,9 @@ final class Maybe
     }
 
     /**
-     * @param T $value
-     * @return self<T>
+     * @template TVal
+     * @param TVal $value
+     * @return self<TVal>
      * @throws \InvalidArgumentException When null is passed. Use {@see nothing()} instead.
      */
     public static function just(mixed $value): self
@@ -39,10 +40,11 @@ final class Maybe
     }
 
     /**
-     * @return self<null>
+     * @return self<never>
      */
     public static function nothing(): self
     {
+        /** @phpstan-ignore return.type */
         return new self(null, false);
     }
 

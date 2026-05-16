@@ -9,19 +9,22 @@ use SeedWork\Domain\DomainEvent;
 final readonly class AnotherTestEvent extends DomainEvent
 {
     private function __construct(
-        TestEventId $id,
-        \DateTimeImmutable $createdAt,
+        string $id,
+        string $aggregateId,
+        \DateTimeImmutable $occurredAt,
     ) {
-        parent::__construct($id, $createdAt);
+        parent::__construct($id, $aggregateId, $occurredAt);
     }
 
     public static function create(
-        ?TestEventId $id = null,
-        ?\DateTimeImmutable $createdAt = null,
+        ?string $id = null,
+        ?string $aggregateId = null,
+        ?\DateTimeImmutable $occurredAt = null,
     ): self {
         return new self(
-            $id ?? TestEventId::create(),
-            $createdAt ?? new \DateTimeImmutable('now', new \DateTimeZone('UTC')),
+            $id ?? 'evt-' . uniqid('', true),
+            $aggregateId ?? 'agg-test',
+            $occurredAt ?? new \DateTimeImmutable('now', new \DateTimeZone('UTC')),
         );
     }
 }

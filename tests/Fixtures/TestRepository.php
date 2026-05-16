@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures;
 
-use SeedWork\Infrastructure\InMemoryRepository;
+use SeedWork\Testing\InMemoryRepository;
 
 /**
- * @extends InMemoryRepository<TestAggregate>
+ * @extends InMemoryRepository<TestId, TestAggregate>
  */
 final class TestRepository extends InMemoryRepository
 {

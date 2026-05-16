@@ -28,7 +28,7 @@ final readonly class GetBankAccountStatusQueryHandler implements GetBankAccountS
     {
         $accountId = BankAccountId::fromString($query->accountId);
         /** @var BankAccount|null $account */
-        $account = $this->repository->findBy($accountId);
+        $account = $this->repository->findById($accountId);
 
         if ($account === null) {
             return Maybe::nothing();

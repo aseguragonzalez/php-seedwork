@@ -2,14 +2,16 @@
 
 declare(strict_types=1);
 
-namespace SeedWork\Infrastructure;
+namespace SeedWork\Testing;
 
 use SeedWork\Application\IntegrationEvent;
+use SeedWork\Infrastructure\IntegrationEventOutboxRecord;
+use SeedWork\Infrastructure\IntegrationEventOutboxStatus;
 
 /**
  * In-memory implementation of {@see IntegrationEventOutboxRepositorySpy} for use in tests.
  *
- * @see IntegrationEventOutboxRepositorySpy Test-focused extension implemented here.
+ * @see IntegrationEventOutboxRepositorySpy Spy interface implemented here.
  */
 final class InMemoryIntegrationEventOutboxRepository implements IntegrationEventOutboxRepositorySpy
 {
@@ -17,7 +19,7 @@ final class InMemoryIntegrationEventOutboxRepository implements IntegrationEvent
     private array $records = [];
 
     /**
-     * @return array<IntegrationEventOutboxRecord>
+     * @return list<IntegrationEventOutboxRecord>
      */
     public function all(): array
     {
@@ -40,7 +42,7 @@ final class InMemoryIntegrationEventOutboxRepository implements IntegrationEvent
     }
 
     /**
-     * @return array<IntegrationEventOutboxRecord>
+     * @return list<IntegrationEventOutboxRecord>
      */
     public function findPending(int $limit = 100): array
     {

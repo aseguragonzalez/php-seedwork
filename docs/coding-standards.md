@@ -19,8 +19,7 @@ them as the default for new code and when refactoring.
 | Keep domain free of framework and infrastructure | Import framework or DB types in domain |
 | One use case = one command/query + one handler | Put multiple use cases in one handler |
 | Return new aggregate instances from behavior methods | Mutate aggregate state in place and then emit events |
-| Use AggregateObtainer in handlers for "load or throw" | Repeat findById + null check in every handler |
-| Use domain exceptions (DomainException, ValueException, NotFoundResource) | Throw generic \Exception or framework exceptions in domain |
+| Use domain exceptions extending DomainException | Throw generic \Exception or framework exceptions in domain |
 | Name events in past tense (MoneyDeposited, OrderPlaced) | Name events as commands (DepositMoney, PlaceOrder) |
 | Keep aggregates small and focused | Reference full aggregates from other aggregates |
 | Prefer primitives/simple DTOs at command/query boundary | Leak complex domain types through ports when avoidable |
@@ -35,7 +34,7 @@ them as the default for new code and when refactoring.
 
 - **Do:**
   - Extend `SeedWork\Domain\Entity`
-  - Use a dedicated `EntityId` subclass per entity type
+  - Choose any id type that fits your context (`string`, `int`, a UUID, or a custom value object)
   - Implement `validate()` for invariants
   - Base equality only on identity
   - Provide a static factory method to create a new instance (e.g. `create()` and `build()`)
@@ -78,7 +77,7 @@ them as the default for new code and when refactoring.
   - Name events in past tense
   - Make them immutable (`readonly`)
   - Extend `SeedWork\Domain\DomainEvent` and expose event-specific data as readonly properties on the subclass
-  - Include an `EventId` (via `parent::__construct(id: ..., occurredAt: ...)`)
+  - Pass all three arguments to `parent::__construct(id: ..., aggregateId: ..., occurredAt: ...)` — `id` is a unique string (e.g. a UUID or `'evt-' . uniqid()`), `aggregateId` is the identity of the raising aggregate, and both must be non-empty
   - Use UTC for `occurredAt`
   - Record events when something meaningful happens in the aggregate
   - Provide a static factory method to create a new instance (e.g. `create()`)
@@ -102,7 +101,7 @@ them as the default for new code and when refactoring.
 ### Exceptions
 
 - **Do:**
-  - Use `SeedWork\Domain\Exceptions\DomainException` (and subclasses `ValueException`, `NotFoundResource`) for domain failures
+  - Extend PHP's `\DomainException` to define concrete exceptions in your bounded context
   - Use clear, domain-oriented messages
 - **Don't:**
   - Throw generic `\Exception` or framework-specific exceptions in domain code
@@ -118,19 +117,18 @@ them as the default for new code and when refactoring.
   - One command class per write use case extending `SeedWork\Application\Command`
   - One handler implementing `CommandHandler`
   - Use primitives or simple DTOs in commands when possible
-  - In the handler: obtain aggregate (e.g. via AggregateObtainer), call domain methods, save, then `publish(aggregate->collectEvents())`
+  - In the handler: load aggregate (`findById` or throw), call domain methods, save — event publication is handled by the repository decorator (`DomainEventPublishingRepository`)
   - Keep handlers thin (orchestration only)
 - **Don't:**
   - Put business logic in the handler
   - Dispatch commands from inside another command handler without a clear reason
-  - Forget to publish collected events after save
   - Use one handler for multiple command types
 
 ### Queries and query handlers
 
 - **Do:**
   - One query class per read use case extending `SeedWork\Application\Query`
-  - One handler implementing `QueryHandler` and returning a `QueryResult` subclass
+  - One handler implementing `QueryHandler` and returning a `Maybe<T>` container
   - Keep queries and results with primitive or simple DTO attributes when possible
   - Make query handlers read-only (no state changes, no command dispatch)
 - **Don't:**
@@ -160,7 +158,7 @@ them as the default for new code and when refactoring.
   - Stack buses in order: `ValidationCommandBus` → `TransactionalCommandBus` →
     `DomainEventCoordinatorCommandBus` → `RegistryCommandBus`, so the transaction
     wraps both command execution and domain event dispatch
-  - Use `DomainEventPublishingRepository` to publish `aggregate->collectEvents()` after `save()`
+  - Use `DomainEventPublishingRepository` to publish `aggregate->getDomainEvents()` after `save()`
   - Subscribe event handlers directly on `DeferredDomainEventBus` via `subscribe()`
   - Prefer `DeferredDomainEventBus` in monoliths when you need transactionality
     and bounded-context isolation and are not using a message broker
@@ -177,7 +175,7 @@ them as the default for new code and when refactoring.
 
 - **Do:**
   - Use clear layer names: `…\Domain\` (Entities, ValueObjects, Events, Repositories, Exceptions),
-    `…\Application\<UseCase>\` (Command, CommandHandler, Query, QueryHandler, QueryResult),
+    `…\Application\<UseCase>\` (Command, CommandHandler, Query, QueryHandler),
     `…\Infrastructure\` (implementations)
 - **Don't:**
   - Mix layers in one namespace
@@ -191,7 +189,8 @@ them as the default for new code and when refactoring.
   - Events: past tense (e.g. `MoneyDeposited`, `OrderPlaced`)
   - Handlers: `XxxCommandHandler`, `XxxQueryHandler`, `XxxEventHandler`
   - Repositories: `XxxRepository`
-  - IDs: `XxxId` (entity), `XxxEventId` (event)
+  - Entity ids: any type; if using a custom class, name it `XxxId` (e.g. `OrderId`)
+  - Event ids: `string`; generated in the `create()` factory
 - **Don't:**
   - Use command-like names for events
   - Use vague names like `ProcessData` or `HandleRequest` for commands
@@ -213,15 +212,15 @@ them as the default for new code and when refactoring.
 
 | Component | Do | Don't |
 | --- | --- | --- |
-| **Entity** | Identity via EntityId; override `validate()` | Compare by attributes; mutable setters |
+| **Entity** | Free id type (string, int, custom); override `validate()` | Compare by attributes; mutable setters |
 | **ValueObject** | Immutable; `equals()` by value; `validate()` | Identity; mutability |
 | **AggregateRoot** | Return new instance + events; single entry point | Mutate and emit separately; expose internals |
-| **DomainEvent** | Past tense; EventId; readonly properties; UTC | Command-like names; generic type/version/payload fields |
+| **DomainEvent** | Past tense; string id; readonly properties; UTC | Command-like names; generic type/version/payload fields |
 | **Repository** | Interface in domain; implementation in infra | Implementation in domain; rich query API in interface |
 | **Command** | One per use case; primitives/simple DTOs | Business logic; multiple intents |
-| **CommandHandler** | Obtain → domain → save → publish events | Business logic; skip event publish |
+| **CommandHandler** | Obtain → domain → save (decorator publishes events) | Business logic; call publish() directly in the handler |
 | **Query** | One per read use case; no side effects | State changes; command dispatch |
-| **QueryHandler** | Return QueryResult DTO; read-only | Return entities; mutate state |
+| **QueryHandler** | Return `Maybe<T>` container; read-only | Return entities; mutate state |
 | **DomainEventHandler** | One concern; idempotent when async | Many concerns; assume exactly-once |
 
 These do/don't notes and the component reference together define the coding

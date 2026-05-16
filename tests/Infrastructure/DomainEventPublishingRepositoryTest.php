@@ -8,7 +8,6 @@ use PHPUnit\Framework\TestCase;
 use SeedWork\Application\DomainEventBusPublisher;
 use SeedWork\Domain\AggregateRoot;
 use SeedWork\Domain\DomainEvent;
-use SeedWork\Domain\EntityId;
 use SeedWork\Domain\Repository;
 use SeedWork\Infrastructure\DomainEventPublishingRepository;
 
@@ -17,7 +16,7 @@ final class DomainEventPublishingRepositoryTest extends TestCase
     public function testSaveDelegatesToRepositoryThenPublishesCollectedEvents(): void
     {
         $aggregate = $this->createMock(AggregateRoot::class);
-        $aggregate->expects($this->once())->method('collectEvents')->willReturn([]);
+        $aggregate->expects($this->once())->method('getDomainEvents')->willReturn([]);
 
         $repository = $this->createMock(Repository::class);
         $repository->expects($this->once())->method('save')->with($aggregate);
@@ -35,7 +34,7 @@ final class DomainEventPublishingRepositoryTest extends TestCase
         $eventB = $this->createMock(DomainEvent::class);
         $events = [$eventA, $eventB];
         $aggregate = $this->createStub(AggregateRoot::class);
-        $aggregate->method('collectEvents')->willReturn($events);
+        $aggregate->method('getDomainEvents')->willReturn($events);
 
         $repository = $this->createStub(Repository::class);
 
@@ -49,7 +48,7 @@ final class DomainEventPublishingRepositoryTest extends TestCase
     public function testSaveDoesNotPublishEventsWhenRepositoryThrows(): void
     {
         $aggregate = $this->createMock(AggregateRoot::class);
-        $aggregate->expects($this->never())->method('collectEvents');
+        $aggregate->expects($this->never())->method('getDomainEvents');
 
         $repository = $this->createStub(Repository::class);
         $repository->method('save')->willThrowException(new \RuntimeException('DB error'));
@@ -66,30 +65,30 @@ final class DomainEventPublishingRepositoryTest extends TestCase
 
     public function testFindByDelegatesToInnerRepository(): void
     {
-        $id = $this->createStub(EntityId::class);
+        $id = 'test-id-123';
         $aggregate = $this->createStub(AggregateRoot::class);
 
         $repository = $this->createMock(Repository::class);
-        $repository->expects($this->once())->method('findBy')->with($id)->willReturn($aggregate);
+        $repository->expects($this->once())->method('findById')->with($id)->willReturn($aggregate);
 
         $eventBus = $this->createStub(DomainEventBusPublisher::class);
 
         $publishingRepo = new DomainEventPublishingRepository($repository, $eventBus);
-        $result = $publishingRepo->findBy($id);
+        $result = $publishingRepo->findById($id);
 
         self::assertSame($aggregate, $result);
     }
 
     public function testDeleteByDelegatesToInnerRepository(): void
     {
-        $id = $this->createStub(EntityId::class);
+        $id = 'test-id-456';
 
         $repository = $this->createMock(Repository::class);
-        $repository->expects($this->once())->method('deleteBy')->with($id);
+        $repository->expects($this->once())->method('deleteById')->with($id);
 
         $eventBus = $this->createStub(DomainEventBusPublisher::class);
 
         $publishingRepo = new DomainEventPublishingRepository($repository, $eventBus);
-        $publishingRepo->deleteBy($id);
+        $publishingRepo->deleteById($id);
     }
 }

@@ -10,12 +10,12 @@ namespace SeedWork\Application;
  * Used as elements of {@see ValidationErrors}; keeps error details serializable
  * (scalars only).
  *
- * @see ValidationErrors Exception that aggregates one or more ValidationError instances.
+ * @see ValidationErrors Exception that aggregates one or more ValidationErrorDetail instances.
  */
-final readonly class ValidationError
+final readonly class ValidationErrorDetail
 {
     public function __construct(
-        public string $field,
+        public string $code,
         public string $message,
     ) {
     }

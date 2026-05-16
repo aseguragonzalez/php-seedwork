@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Examples\BankAccount\Domain\ValueObjects;
 
-use SeedWork\Domain\Exceptions\ValueException;
+use Examples\BankAccount\Domain\Exceptions\BankAccountException;
 use SeedWork\Domain\ValueObject;
 
 final readonly class AccountBalance extends ValueObject
@@ -28,7 +28,7 @@ final readonly class AccountBalance extends ValueObject
     protected function validate(): void
     {
         if ($this->amount < 0) {
-            throw new ValueException('Balance cannot be negative');
+            throw new BankAccountException('Balance cannot be negative');
         }
     }
 

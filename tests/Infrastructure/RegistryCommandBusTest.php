@@ -42,7 +42,7 @@ final class RegistryCommandBusTest extends TestCase
 
         $this->assertTrue($result->isFail());
         $this->assertNotEmpty($result->errors());
-        $this->assertStringContainsString('Insufficient', $result->errors()[0]->message);
+        $this->assertStringContainsString('Insufficient', $result->errors()[0]->description);
     }
 
     public function testDispatchThrowsLogicExceptionWhenNoHandlerRegistered(): void

@@ -8,7 +8,7 @@ namespace SeedWork\Application;
  * Represents the outcome of a command dispatch.
  *
  * A {@see Result} is either successful (ok) or failed (with one or more errors).
- * Command handlers return void and domain logic throws {@see \SeedWork\Domain\Exceptions\DomainException};
+ * Command handlers return void and domain logic throws {@see \DomainException};
  * the bus layer converts these into Result instances so callers have a typed,
  * exception-free way to check outcomes.
  *

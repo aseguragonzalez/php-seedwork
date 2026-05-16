@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures;
 
-use SeedWork\Domain\EntityId;
-use SeedWork\Domain\Exceptions\ValueException;
-
-final readonly class TestId extends EntityId
+final readonly class TestId
 {
     public static function create(): self
     {
@@ -19,15 +16,15 @@ final readonly class TestId extends EntityId
         return new self($value);
     }
 
-    private function __construct(string $value)
-    {
-        parent::__construct($value);
-    }
-
-    protected function validate(): void
+    private function __construct(public string $value)
     {
         if (empty($this->value)) {
-            throw new ValueException('TestId cannot be empty.');
+            throw new TestDomainException('TestId cannot be empty.');
         }
+    }
+
+    public function __toString(): string
+    {
+        return $this->value;
     }
 }

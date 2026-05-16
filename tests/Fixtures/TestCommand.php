@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Fixtures;
 
 use SeedWork\Application\Command;
-use SeedWork\Application\ValidationError;
+use SeedWork\Application\ValidationErrorDetail;
 use SeedWork\Application\ValidationErrors;
 
 final readonly class TestCommand extends Command
@@ -19,7 +19,7 @@ final readonly class TestCommand extends Command
     {
         if (empty($this->payload)) {
             throw new ValidationErrors([
-                new ValidationError('payload', 'Payload is required.'),
+                new ValidationErrorDetail('payload_required', 'Payload is required.'),
             ]);
         }
     }

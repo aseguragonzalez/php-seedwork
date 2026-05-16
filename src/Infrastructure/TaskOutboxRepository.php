@@ -29,7 +29,7 @@ interface TaskOutboxRepository
      * Returns pending outbox records up to the given limit.
      *
      * @param int $limit Maximum number of records to return.
-     * @return array<TaskOutboxRecord> Pending records ordered by creation time.
+     * @return list<TaskOutboxRecord> Pending records ordered by creation time.
      */
     public function findPending(int $limit = 100): array;
 

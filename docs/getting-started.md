@@ -17,7 +17,6 @@ Requires **PHP 8.4** or later.
 Value objects are immutable and equal by value, not identity. Extend `ValueObject`, add `readonly` properties, and implement `equals()` and `validate()`.
 
 ```php
-use SeedWork\Domain\Exceptions\ValueException;
 use SeedWork\Domain\ValueObject;
 
 final readonly class Money extends ValueObject
@@ -39,7 +38,7 @@ final readonly class Money extends ValueObject
     protected function validate(): void
     {
         if ($this->amount <= 0) {
-            throw new ValueException('Amount must be greater than 0');
+            throw new \DomainException('Amount must be greater than 0');
         }
     }
 }
@@ -53,29 +52,28 @@ Domain events are immutable records of something that happened. Extend `DomainEv
 
 ```php
 use SeedWork\Domain\DomainEvent;
-use SeedWork\Domain\EventId;
 
 final readonly class MoneyDeposited extends DomainEvent
 {
     private function __construct(
-        public string $accountId,
         public int $amount,
-        EventId $id,
+        string $id,
+        string $aggregateId,
         \DateTimeImmutable $occurredAt,
     ) {
-        parent::__construct($id, $occurredAt);
+        parent::__construct($id, $aggregateId, $occurredAt);
     }
 
     public static function create(
-        string $accountId,
+        string $aggregateId,
         int $amount,
-        ?EventId $id = null,
+        ?string $id = null,
         ?\DateTimeImmutable $occurredAt = null,
     ): self {
         return new self(
-            $accountId,
             $amount,
-            $id ?? MyEventId::create(),
+            $id ?? 'evt-' . uniqid('', true),
+            $aggregateId,
             $occurredAt ?? new \DateTimeImmutable('now', new \DateTimeZone('UTC')),
         );
     }
@@ -84,8 +82,8 @@ final readonly class MoneyDeposited extends DomainEvent
 
 Key rules:
 - Name events in past tense (`MoneyDeposited`, not `DepositMoney`).
-- Use `occurredAt` (UTC) for the timestamp.
-- `equals()` is inherited and compares by `EventId`.
+- Use UTC for `occurredAt`.
+- `equals()` is inherited and compares by string `id`.
 
 ---
 
@@ -114,7 +112,7 @@ final readonly class BankAccount extends AggregateRoot
     public function deposit(int $amount): self
     {
         $event = MoneyDeposited::create($this->id->value, $amount);
-        return new self($this->id, $this->balance + $amount, [...$this->collectEvents(), $event]);
+        return new self($this->id, $this->balance + $amount, [...$this->getDomainEvents(), $event]);
     }
 
     public function getBalance(): int
@@ -130,21 +128,21 @@ final readonly class BankAccount extends AggregateRoot
 
 ## 4. Defining the Repository (interface)
 
-Repositories belong to the domain layer. Define an interface per aggregate that extends `Repository<T>`. Implementations live in the infrastructure layer.
+Repositories belong to the domain layer. Define an interface per aggregate that extends `Repository<TId, T>`. Implementations live in the infrastructure layer.
 
 ```php
 use SeedWork\Domain\Repository;
 
 /**
- * @extends Repository<BankAccount>
+ * @extends Repository<BankAccountId, BankAccount>
  */
 interface BankAccountRepository extends Repository {}
 ```
 
-The `Repository<T>` interface declares:
+The `Repository<TId, T>` interface declares:
 - `save(AggregateRoot $aggregateRoot): void`
-- `findById(EntityId $id): ?AggregateRoot`
-- `deleteById(EntityId $id): void`
+- `findById(mixed $id): ?AggregateRoot`
+- `deleteById(mixed $id): void`
 
 ---
 
@@ -154,7 +152,7 @@ Commands are immutable DTOs for write use cases. Handlers orchestrate the domain
 
 ```php
 use SeedWork\Application\Command;
-use SeedWork\Application\ValidationError;
+use SeedWork\Application\ValidationErrorDetail;
 use SeedWork\Application\ValidationErrors;
 
 final readonly class DepositMoneyCommand extends Command
@@ -171,10 +169,10 @@ final readonly class DepositMoneyCommand extends Command
     {
         $errors = [];
         if (empty($this->accountId)) {
-            $errors[] = new ValidationError('accountId', 'Account ID is required.');
+            $errors[] = new ValidationErrorDetail('account_id_required', 'Account ID is required.');
         }
         if ($this->amount <= 0) {
-            $errors[] = new ValidationError('amount', 'Amount must be positive.');
+            $errors[] = new ValidationErrorDetail('amount_must_be_positive', 'Amount must be positive.');
         }
         if (count($errors) > 0) {
             throw new ValidationErrors($errors);
@@ -197,10 +195,8 @@ final readonly class DepositMoneyCommandHandler implements CommandHandler
     {
         /** @var DepositMoneyCommand $command */
         $accountId = BankAccountId::fromString($command->accountId);
-        $account = $this->repository->findById($accountId);
-        if ($account === null) {
-            throw new \SeedWork\Domain\Exceptions\NotFoundResource('BankAccount', $accountId);
-        }
+        $account = $this->repository->findById($accountId)
+            ?? throw new \DomainException("BankAccount '{$accountId}' not found");
 
         $updated = $account->deposit($command->amount);
         $this->repository->save($updated);
@@ -216,7 +212,7 @@ Queries are immutable DTOs for read use cases. Handlers return `Maybe<T>` — ei
 
 ```php
 use SeedWork\Application\Query;
-use SeedWork\Application\ValidationError;
+use SeedWork\Application\ValidationErrorDetail;
 use SeedWork\Application\ValidationErrors;
 
 final readonly class GetAccountBalanceQuery extends Query
@@ -229,7 +225,7 @@ final readonly class GetAccountBalanceQuery extends Query
     public function validate(): void
     {
         if (empty($this->accountId)) {
-            throw new ValidationErrors([new ValidationError('accountId', 'Account ID is required.')]);
+            throw new ValidationErrors([new ValidationErrorDetail('account_id_required', 'Account ID is required.')]);
         }
     }
 }
@@ -274,7 +270,7 @@ $registry->register(DepositMoneyCommand::class, new DepositMoneyCommandHandler($
 
 $commandBus = (new CommandBusBuilder($registry))
     ->withValidation()                               // outermost: validates before anything
-    ->withTransactional($unitOfWork)                 // wraps in DB transaction
+    ->withTransaction($unitOfWork)                 // wraps in DB transaction
     ->withDomainEventCoordination($domainEventBus)   // dispatches or discards events after command
     ->build();
 
@@ -283,7 +279,7 @@ if ($result->isOk()) {
     // success
 } elseif ($result->isFail()) {
     foreach ($result->errors() as $error) {
-        echo $error->code . ': ' . $error->message;
+        echo $error->code . ': ' . $error->description;
     }
 }
 ```
@@ -293,17 +289,33 @@ The full stack (outermost → innermost):
 ValidationCommandBus → TransactionalCommandBus → DomainEventCoordinatorCommandBus → RegistryCommandBus
 ```
 
-> **Note:** `withTransactional()` requires a `UnitOfWork` implementation (e.g. a Doctrine wrapper). Omit it when there is no database transaction boundary (e.g. in tests).
+> **Note:** `withTransaction()` requires a `UnitOfWork` implementation (e.g. a Doctrine wrapper). Omit it when there is no database transaction boundary (e.g. in tests).
 
 ---
 
 ## 8. Publishing Domain Events with DomainEventPublishingRepository
 
-Wrap any `Repository` with `DomainEventPublishingRepository` to automatically publish domain events after every `save()`. The handler stays unaware of event publication.
+Extend `DomainEventPublishingRepository` with a thin typed wrapper that also implements your domain repository interface. This is required because PHP has no runtime generics: the base class only implements the seedwork `Repository` interface, so passing it directly where a `BankAccountRepository` is expected causes a `TypeError`.
+
+```php
+use SeedWork\Application\DomainEventBusPublisher;
+use SeedWork\Infrastructure\DomainEventPublishingRepository;
+
+final class PublishingBankAccountRepository
+    extends DomainEventPublishingRepository
+    implements BankAccountRepository
+{
+    public function __construct(
+        BankAccountRepository $repository,
+        DomainEventBusPublisher $eventBus,
+    ) {
+        parent::__construct($repository, $eventBus);
+    }
+}
+```
 
 ```php
 use SeedWork\Infrastructure\DeferredDomainEventBus;
-use SeedWork\Infrastructure\DomainEventPublishingRepository;
 
 $domainEventBus = new DeferredDomainEventBus();
 
@@ -313,8 +325,8 @@ $domainEventBus->subscribe(
     new AccountOpenedDomainEventHandler($integrationEventPublisher)
 );
 
-// Wrap the repository — publish happens automatically after save()
-$publishingRepository = new DomainEventPublishingRepository($repository, $domainEventBus);
+// Typed wrapper — satisfies BankAccountRepository, publishes events after save()
+$publishingRepository = new PublishingBankAccountRepository($repository, $domainEventBus);
 ```
 
 `DeferredDomainEventBus` buffers events keyed by `event.id` (idempotent). The `DomainEventCoordinatorCommandBus` calls `dispatch()` on success or `discard()` on failure/exception.
@@ -328,8 +340,7 @@ A minimal composition root that ties everything together:
 ```php
 use SeedWork\Infrastructure\CommandBusBuilder;
 use SeedWork\Infrastructure\DeferredDomainEventBus;
-use SeedWork\Infrastructure\DomainEventPublishingRepository;
-use SeedWork\Infrastructure\InMemoryIntegrationEventPublisher;
+use SeedWork\Testing\InMemoryIntegrationEventPublisher;
 use SeedWork\Infrastructure\RegistryCommandBus;
 
 $repository     = new InMemoryBankAccountRepository();
@@ -338,7 +349,7 @@ $integrationPub = new InMemoryIntegrationEventPublisher();
 $domainEventBus = new DeferredDomainEventBus();
 $domainEventBus->subscribe(AccountOpened::class, new AccountOpenedDomainEventHandler($integrationPub));
 
-$publishingRepo = new DomainEventPublishingRepository($repository, $domainEventBus);
+$publishingRepo = new PublishingBankAccountRepository($repository, $domainEventBus);
 
 $registry = new RegistryCommandBus();
 $registry->register(DepositMoneyCommand::class, new DepositMoneyCommandHandler($publishingRepo));

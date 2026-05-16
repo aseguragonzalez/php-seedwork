@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Infrastructure;
 
 use PHPUnit\Framework\TestCase;
-use SeedWork\Infrastructure\InMemoryIntegrationEventOutboxRepository;
+use SeedWork\Testing\InMemoryIntegrationEventOutboxRepository;
 use SeedWork\Infrastructure\IntegrationEventOutboxStatus;
 use Tests\Fixtures\FakeIntegrationEvent;
 

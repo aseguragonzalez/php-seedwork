@@ -13,18 +13,21 @@ use SeedWork\Domain\DomainEvent;
  * dispatches them only when dispatch() is called (deferred dispatch).
  *
  * The pending buffer is keyed by event id (string) for idempotency: publishing the
- * same event twice (same {@see \SeedWork\Domain\EventId}) results in a single
- * dispatch. This prevents double-handling when aggregates share events across calls.
+ * same event twice (same id) results in a single dispatch. This prevents
+ * double-handling when aggregates share events across calls.
+ *
+ * For test use, extend with {@see \SeedWork\Testing\DeferredDomainEventBusSpy} to
+ * gain the typed {@see \SeedWork\Testing\DomainEventBusSpy} contract.
  *
  * @see DomainEventBus Application port.
  * @see DomainEventHandler Handlers registered via subscribe() and invoked at dispatch.
  */
-final class DeferredDomainEventBus implements DomainEventBus
+class DeferredDomainEventBus implements DomainEventBus
 {
     /** @var array<string, list<DomainEventHandler<DomainEvent>>> */
     private array $handlers = [];
     /** @var array<string, DomainEvent> keyed by event id for idempotency */
-    private array $pending = [];
+    protected array $pending = [];
 
     /**
      * @param string $eventType FQCN of the domain event.
@@ -43,7 +46,7 @@ final class DeferredDomainEventBus implements DomainEventBus
     public function publish(array $events): void
     {
         foreach ($events as $event) {
-            $id = $event->id->value;
+            $id = $event->id;
             if (!isset($this->pending[$id])) {
                 $this->pending[$id] = $event;
             }

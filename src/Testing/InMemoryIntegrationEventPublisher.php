@@ -2,29 +2,23 @@
 
 declare(strict_types=1);
 
-namespace SeedWork\Infrastructure;
+namespace SeedWork\Testing;
 
 use SeedWork\Application\IntegrationEvent;
-use SeedWork\Infrastructure\IntegrationEventPublisherSpy;
 
 /**
  * In-memory implementation of {@see IntegrationEventPublisherSpy} for use in tests.
  *
- * @see IntegrationEventPublisherSpy Test-focused extension implemented here.
+ * @see IntegrationEventPublisherSpy Spy interface implemented here.
  */
 final class InMemoryIntegrationEventPublisher implements IntegrationEventPublisherSpy
 {
     /** @var list<IntegrationEvent> */
     private array $published = [];
 
-    /**
-     * @param array<IntegrationEvent> $events
-     */
-    public function publish(array $events): void
+    public function publish(IntegrationEvent $event): void
     {
-        foreach ($events as $event) {
-            $this->published[] = $event;
-        }
+        $this->published[] = $event;
     }
 
     /**

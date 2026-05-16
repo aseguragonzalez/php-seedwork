@@ -6,7 +6,6 @@ namespace Tests\Domain;
 
 use PHPUnit\Framework\TestCase;
 use Tests\Fixtures\TestEvent;
-use Tests\Fixtures\TestEventId;
 
 final class DomainEventTest extends TestCase
 {
@@ -14,11 +13,31 @@ final class DomainEventTest extends TestCase
     {
         $event1 = TestEvent::create('payment.processed');
         $event2 = TestEvent::create('payment.processed');
-        /** @var TestEventId $id */
         $id = $event1->id;
         $event3 = TestEvent::create('payment.processed', $id);
 
         $this->assertFalse($event1->equals($event2));
         $this->assertTrue($event1->equals($event3));
+    }
+
+    public function testAggregateIdIsStored(): void
+    {
+        $event = TestEvent::create('payment.processed', aggregateId: 'account-42');
+
+        $this->assertSame('account-42', $event->aggregateId);
+    }
+
+    public function testEmptyIdIsRejected(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        TestEvent::create(id: '');
+    }
+
+    public function testEmptyAggregateIdIsRejected(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        TestEvent::create(aggregateId: '');
     }
 }

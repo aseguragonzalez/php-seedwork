@@ -17,13 +17,15 @@ final readonly class TestQueryHandler implements QueryHandler
     {
     }
 
+    /**
+     * @param TestQuery $query
+     * @return Maybe<TestQueryResult>
+     */
     public function handle(Query $query): Maybe
     {
-        $aggregate = $this->repository->findBy(TestId::fromString($query->id));
+        $aggregate = $this->repository->findById(TestId::fromString($query->id));
         if ($aggregate === null) {
-            /** @var Maybe<mixed> $nothing */
-            $nothing = Maybe::nothing();
-            return $nothing;
+            return Maybe::nothing();
         }
 
         return Maybe::just(new TestQueryResult($aggregate->id->value));

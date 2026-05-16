@@ -15,9 +15,7 @@ namespace SeedWork\Application;
 interface IntegrationEventPublisher
 {
     /**
-     * Publishes the given integration events.
-     *
-     * @param array<IntegrationEvent> $events Events to publish.
+     * Publishes a single integration event.
      */
-    public function publish(array $events): void;
+    public function publish(IntegrationEvent $event): void;
 }

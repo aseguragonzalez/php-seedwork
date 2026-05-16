@@ -7,20 +7,16 @@ All components live under the `SeedWork\` namespace (Domain, Application, Infras
 ### AggregateRoot (`SeedWork\Domain\AggregateRoot`)
 
 - **Role:** Root of an aggregate; single entry point for changes; records domain events.
-- **Usage:** Extend with your aggregate. Implement `validate()`. State changes return a new instance and append events. Provide static factory methods (`create()`, `build()`).
-- **Key methods:** `equals(AggregateRoot $other): bool`, `collectEvents(): array`.
+- **Usage:** Extend with your aggregate. Implement `validate()`. State changes return a new instance and append events. Provide static factory methods (`create()`, `build()`). Annotate with `@extends AggregateRoot<YourIdType>`.
+- **Key methods:** `equals(AggregateRoot $other): bool`, `getDomainEvents(): array`.
+- **`$id` type:** unconstrained (`@template TId`) — use any type your bounded context prefers: plain `string`, `int`, a UUID library type, or a lightweight custom value object.
 
 ### Entity (`SeedWork\Domain\Entity`)
 
 - **Role:** Base for DDD entities. Identity over attributes; equality by ID.
-- **Usage:** Extend per entity type; implement `validate()`.
+- **Usage:** Extend per entity type; implement `validate()`. Annotate with `@extends Entity<YourIdType>`.
 - **Key methods:** `equals(Entity $other): bool`, `validate(): void`.
-
-### EntityId (`SeedWork\Domain\EntityId`)
-
-- **Role:** Base for entity identifiers. One subclass per entity (e.g. `BankAccountId`).
-- **Usage:** Protected constructor with `string $value`; implement `validate()`; expose static factory.
-- **Key methods:** `equals(EntityId $other): bool`, `__toString(): string`.
+- **`$id` type:** unconstrained (`@template TId`) — same freedom as `AggregateRoot`.
 
 ### ValueObject (`SeedWork\Domain\ValueObject`)
 
@@ -29,35 +25,23 @@ All components live under the `SeedWork\` namespace (Domain, Application, Infras
 
 ### DomainEvent (`SeedWork\Domain\DomainEvent`)
 
-- **Role:** Immutable record of something that happened (past tense, e.g. `MoneyDeposited`). Carries identity and timestamp; event-specific facts are readonly properties of the subclass.
-- **Usage:** Extend; add your own readonly properties for domain-specific data. Use static factory (e.g. `create()`).
-- **Key methods:** `equals(DomainEvent $other): bool` (by EventId).
-
-### EventId (`SeedWork\Domain\EventId`)
-
-- **Role:** Unique identifier for a domain event (e.g. for idempotency).
-- **Usage:** One subclass per event family; same pattern as EntityId.
+- **Role:** Immutable record of something that happened (past tense, e.g. `MoneyDeposited`). Carries a string id, the aggregate id that raised it, and a timestamp; event-specific facts are readonly properties of the subclass.
+- **Usage:** Extend; add your own readonly properties for domain-specific data. Use a static factory (e.g. `create()`). The parent constructor requires three arguments in order: `$id` (unique string, e.g. a UUID), `$aggregateId` (identity of the raising aggregate), and `$occurredAt` (defaults to UTC now). Both `$id` and `$aggregateId` must be non-empty strings.
+- **Key methods:** `equals(DomainEvent $other): bool` (by string id).
 
 ### Repository (`SeedWork\Domain\Repository`)
 
 - **Role:** Collection-like interface for an aggregate root: get by id, save, delete.
-- **Methods:** `save(AggregateRoot $aggregateRoot): void`, `findBy(EntityId $id): ?AggregateRoot`, `deleteBy(EntityId $id): void`.
+- **Methods:** `save(AggregateRoot $aggregateRoot): void`, `findById(mixed $id): ?AggregateRoot`, `deleteById(mixed $id): void`.
 
 ### UnitOfWork (`SeedWork\Domain\UnitOfWork`)
 
 - **Role:** Transaction boundary: begin, commit, rollback.
 - **Methods:** `createSession(): void`, `commit(): void`, `rollback(): void`.
 
-### AggregateObtainer (`SeedWork\Domain\AggregateObtainer`)
-
-- **Role:** Load aggregate by id or throw `NotFoundResource`.
-- **Key method:** `obtain(EntityId $id): AggregateRoot`.
-
 ### Exceptions
 
-- **DomainException** (`SeedWork\Domain\Exceptions\DomainException`): Base for domain errors.
-- **ValueException** (`SeedWork\Domain\Exceptions\ValueException`): Invalid value object state.
-- **NotFoundResource** (`SeedWork\Domain\Exceptions\NotFoundResource`): Aggregate/entity not found.
+- **DomainException** (PHP stdlib `\DomainException`): Base for domain errors. Extend to define concrete exceptions in your bounded context. No seedwork wrapper — consumers extend the stdlib class directly.
 
 ---
 
@@ -87,7 +71,7 @@ All components live under the `SeedWork\` namespace (Domain, Application, Infras
 ### ResultError (`SeedWork\Application\ResultError`)
 
 - **Role:** A single error detail within a failed result.
-- **Properties:** `string $code`, `string $message`.
+- **Properties:** `string $code`, `string $description`.
 
 ### Query (`SeedWork\Application\Query`)
 
@@ -160,7 +144,7 @@ All components live under the `SeedWork\` namespace (Domain, Application, Infras
 - **Role:** Handler for a specific background task type.
 - **Usage:** Implement `handle(BackgroundTask $task): void`. Registered by type in `InMemoryTaskScheduler`.
 
-### ValidationError / ValidationErrors (`SeedWork\Application\ValidationError`, `SeedWork\Application\ValidationErrors`)
+### ValidationErrorDetail / ValidationErrors (`SeedWork\Application\ValidationErrorDetail`, `SeedWork\Application\ValidationErrors`)
 
 - **Role:** Structured validation errors thrown by `validate()` in Command/Query.
 
@@ -181,7 +165,7 @@ All components live under the `SeedWork\` namespace (Domain, Application, Infras
 ### CommandBusBuilder (`SeedWork\Infrastructure\CommandBusBuilder`)
 
 - **Role:** Fluent builder for composing a `CommandBus` decorator pipeline.
-- **Usage:** `new CommandBusBuilder($registry)`, then chain `withValidation()`, `withTransactional($uow)`, `withDomainEventCoordination($eventBus)`, `use($closure)`, then `build()`. The first step added becomes the outermost decorator.
+- **Usage:** `new CommandBusBuilder($registry)`, then chain `withValidation()`, `withTransaction($uow)`, `withDomainEventCoordination($eventBus)`, `use($closure)`, then `build()`. The first step added becomes the outermost decorator.
 - **Methods:** `registry(): RegistryCommandBus`, `build(): CommandBus`.
 
 ### QueryBusBuilder (`SeedWork\Infrastructure\QueryBusBuilder`)
@@ -214,7 +198,7 @@ All components live under the `SeedWork\` namespace (Domain, Application, Infras
 
 ### DomainEventPublishingRepository (`SeedWork\Infrastructure\DomainEventPublishingRepository`)
 
-- **Role:** Repository decorator that publishes `$aggregate->collectEvents()` via `DomainEventBusPublisher` after each `save()`.
+- **Role:** Repository decorator that publishes `$aggregate->getDomainEvents()` via `DomainEventBusPublisher` after each `save()`.
 - **Usage:** Do not instantiate directly. Extend it and implement your domain repository interface so command handlers can be typed against the domain port:
 
 ```php
@@ -283,15 +267,13 @@ $domainBus->subscribe(AccountOpened::class, new AccountOpenedDomainEventHandler(
 // Typed decorator: satisfies BankAccountRepository while adding event publishing
 $publishingRepository = new PublishingBankAccountRepository($repository, $domainBus);
 
-$obtainer = new BankAccountObtainer($repository);
-
 $registry = new RegistryCommandBus();
 $registry->register(OpenAccountCommand::class,  new OpenAccountCommandHandler($publishingRepository));
-$registry->register(DepositMoneyCommand::class, new DepositMoneyCommandHandler($obtainer, $publishingRepository));
+$registry->register(DepositMoneyCommand::class, new DepositMoneyCommandHandler($publishingRepository));
 
 $commandBus = (new CommandBusBuilder($registry))
     ->withValidation()
-    ->withTransactional($unitOfWork)
+    ->withTransaction($unitOfWork)
     ->withDomainEventCoordination($domainBus)
     ->build();
 

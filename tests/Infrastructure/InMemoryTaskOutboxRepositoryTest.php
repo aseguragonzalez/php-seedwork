@@ -6,7 +6,7 @@ namespace Tests\Infrastructure;
 
 use PHPUnit\Framework\TestCase;
 use SeedWork\Application\BackgroundTask;
-use SeedWork\Infrastructure\InMemoryTaskOutboxRepository;
+use SeedWork\Testing\InMemoryTaskOutboxRepository;
 use SeedWork\Infrastructure\TaskOutboxStatus;
 
 final class InMemoryTaskOutboxRepositoryTest extends TestCase

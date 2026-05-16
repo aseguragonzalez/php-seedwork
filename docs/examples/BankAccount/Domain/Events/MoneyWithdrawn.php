@@ -11,29 +11,29 @@ use Examples\BankAccount\Domain\ValueObjects\Money;
 
 final readonly class MoneyWithdrawn extends DomainEvent
 {
-    public function __construct(
+    private function __construct(
         public BankAccountId $accountId,
         public Money $amount,
         public TransactionId $transactionId,
-        BankAccountEventId $id,
-        \DateTimeImmutable $createdAt
+        string $id,
+        \DateTimeImmutable $occurredAt
     ) {
-        parent::__construct($id, $createdAt);
+        parent::__construct($id, (string) $accountId, $occurredAt);
     }
 
     public static function create(
         Money $amount,
         BankAccountId $accountId,
         TransactionId $transactionId,
-        ?BankAccountEventId $id = null,
-        ?\DateTimeImmutable $createdAt = null
+        ?string $id = null,
+        ?\DateTimeImmutable $occurredAt = null
     ): self {
         return new self(
             $accountId,
             $amount,
             $transactionId,
-            $id ?? BankAccountEventId::create(),
-            $createdAt ?? new \DateTimeImmutable('now', new \DateTimeZone('UTC'))
+            $id ?? 'evt-' . uniqid('', true),
+            $occurredAt ?? new \DateTimeImmutable('now', new \DateTimeZone('UTC'))
         );
     }
 }
