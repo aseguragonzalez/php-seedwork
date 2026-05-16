@@ -44,7 +44,7 @@ final class Result
         return $this->success;
     }
 
-    public function isFail(): bool
+    public function isFailed(): bool
     {
         return !$this->success;
     }

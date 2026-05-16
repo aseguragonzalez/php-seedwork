@@ -15,17 +15,17 @@ final class ResultTest extends TestCase
         $result = Result::ok();
 
         $this->assertTrue($result->isOk());
-        $this->assertFalse($result->isFail());
+        $this->assertFalse($result->isFailed());
         $this->assertSame([], $result->errors());
     }
 
-    public function testFailedIsFail(): void
+    public function testFailedIsFailed(): void
     {
         $errors = [new ResultError('E001', 'Something went wrong')];
         $result = Result::failed($errors);
 
         $this->assertFalse($result->isOk());
-        $this->assertTrue($result->isFail());
+        $this->assertTrue($result->isFailed());
     }
 
     public function testFailedErrorsAreAccessible(): void

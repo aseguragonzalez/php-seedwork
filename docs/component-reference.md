@@ -66,7 +66,7 @@ All components live under the `SeedWork\` namespace (Domain, Application, Infras
 
 - **Role:** Outcome of a command dispatch. Either ok or failed with one or more errors.
 - **Factory methods:** `Result::ok(): Result`, `Result::failed(non-empty-array<ResultError>): Result`.
-- **Methods:** `isOk(): bool`, `isFail(): bool`, `errors(): array<ResultError>`.
+- **Methods:** `isOk(): bool`, `isFailed(): bool`, `errors(): array<ResultError>`.
 
 ### ResultError (`SeedWork\Application\ResultError`)
 
@@ -279,7 +279,7 @@ $commandBus = (new CommandBusBuilder($registry))
 
 // Entry point (controller, CLI, etc.)
 $result = $commandBus->dispatch(new DepositMoneyCommand($accountId, 100, 'USD'));
-if ($result->isFail()) {
+if ($result->isFailed()) {
     // handle domain rejection
 }
 ```

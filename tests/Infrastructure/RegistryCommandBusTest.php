@@ -40,7 +40,7 @@ final class RegistryCommandBusTest extends TestCase
 
         $result = $bus->dispatch($command);
 
-        $this->assertTrue($result->isFail());
+        $this->assertTrue($result->isFailed());
         $this->assertNotEmpty($result->errors());
         $this->assertStringContainsString('Insufficient', $result->errors()[0]->description);
     }

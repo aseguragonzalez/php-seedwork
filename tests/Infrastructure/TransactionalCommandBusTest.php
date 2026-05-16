@@ -62,7 +62,7 @@ final class TransactionalCommandBusTest extends TestCase
         $bus = new TransactionalCommandBus($innerBus, $unitOfWork);
         $result = $bus->dispatch(new TestCommand());
 
-        $this->assertTrue($result->isFail());
+        $this->assertTrue($result->isFailed());
     }
 
     public function testRollbackIsCalledAndExceptionRethrownWhenDispatchThrows(): void
