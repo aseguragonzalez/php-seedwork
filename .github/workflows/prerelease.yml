@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       preid:
-        description: 'Pre-release identifier (e.g. pr-42, alpha, beta)'
+        description: Pre-release identifier (e.g. pr-42, alpha, beta)
         required: true
         type: string
 

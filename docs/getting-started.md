@@ -277,7 +277,7 @@ $commandBus = (new CommandBusBuilder($registry))
 $result = $commandBus->dispatch(new DepositMoneyCommand($accountId, 100, 'USD'));
 if ($result->isOk()) {
     // success
-} elseif ($result->isFail()) {
+} elseif ($result->isFailed()) {
     foreach ($result->errors() as $error) {
         echo $error->code . ': ' . $error->description;
     }

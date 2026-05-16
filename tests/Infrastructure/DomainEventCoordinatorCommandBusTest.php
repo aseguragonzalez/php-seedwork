@@ -50,7 +50,7 @@ final class DomainEventCoordinatorCommandBusTest extends TestCase
         $decorator = new DomainEventCoordinatorCommandBus($innerBus, $eventBus);
         $result = $decorator->dispatch(new TestCommand());
 
-        $this->assertTrue($result->isFail());
+        $this->assertTrue($result->isFailed());
 
         // Verify buffer was discarded: a subsequent dispatch should not call handlers
         $eventBus->dispatch();
