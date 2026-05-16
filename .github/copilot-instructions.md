@@ -69,7 +69,7 @@ Because every component is a public contract consumed by other projects:
 Update examples and fixtures each time you add or change a pattern.
 
 - **Canonical example:** [docs/examples/BankAccount/](../docs/examples/BankAccount/) — full bounded
-  context: domain (aggregate, entities, value objects, events, repository interface, obtainer),
+  context: domain (aggregate, entities, value objects, events, repository interface),
   application (commands, queries, handlers, event handlers), infrastructure (in-memory repository).
   **Always consult this fixture** before creating new patterns — follow its structure and naming.
 - When adding a new base class or interface, add a concrete implementation in the fixture that
@@ -143,7 +143,9 @@ When reviewing a PR (or self-reviewing before pushing), verify:
 **Always** run both before committing:
 1. `make all` — validates format, lint, static analysis, and tests.
 2. `pre-commit run --all-files` — enforces JSON/YAML formatting, trailing whitespace,
-   no-commit-to-main, conventional commit message, and re-runs PHP checks.
+   no-commit-to-main, and re-runs PHP checks.
+   The conventional commit message hook runs at the `commit-msg` stage only; it is
+   not triggered by `--all-files`. It is enforced automatically when you run `git commit`.
 
 The project ships a `.pre-commit-config.yaml` that hooks format-check, phpcs, and
 PHPStan into every `git commit`. Running `make all` first avoids surprises at hook time.

@@ -12,13 +12,14 @@ namespace SeedWork\Domain;
  * (database, cache, remote API). The domain uses repositories by identity and behaviour, not
  * by infrastructure; concrete implementations live in the application or infrastructure layer.
  *
- * The id type is unconstrained (mixed) to match the free generic TId on AggregateRoot.
- * Concrete implementations narrow it to the aggregate's actual id type.
+ * TId is the identity type (e.g. string, int, or a value object); T is the aggregate type.
+ * Concrete implementations specify both: @extends Repository<MyId, MyAggregate>.
  *
  * @see https://martinfowler.com/eaaCatalog/repository.html Repository (Fowler, P of EAA)
  * @see https://domainlanguage.com/ddd/reference/ Eric Evans, Domain-Driven Design
  *
- * @template T of AggregateRoot
+ * @template TId
+ * @template T of AggregateRoot<TId>
  */
 interface Repository
 {
@@ -32,7 +33,7 @@ interface Repository
     /**
      * Returns the aggregate for the given id, or null if not found.
      *
-     * @param mixed $id The id of the aggregate to load.
+     * @param TId $id The id of the aggregate to load.
      * @return T|null The aggregate, or null if not found.
      */
     public function findById(mixed $id): ?AggregateRoot;
@@ -40,7 +41,7 @@ interface Repository
     /**
      * Removes the aggregate for the given id.
      *
-     * @param mixed $id The id of the aggregate to delete.
+     * @param TId $id The id of the aggregate to delete.
      */
     public function deleteById(mixed $id): void;
 }

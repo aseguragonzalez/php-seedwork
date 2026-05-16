@@ -38,6 +38,12 @@ abstract readonly class DomainEvent
             new \DateTimeZone('UTC')
         )
     ) {
+        if ($id === '') {
+            throw new \InvalidArgumentException('Domain event id must not be empty.');
+        }
+        if ($aggregateId === '') {
+            throw new \InvalidArgumentException('Domain event aggregateId must not be empty.');
+        }
     }
 
     /**

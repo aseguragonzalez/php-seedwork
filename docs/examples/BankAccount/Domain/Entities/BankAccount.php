@@ -13,6 +13,7 @@ use Examples\BankAccount\Domain\Events\MoneyDeposited;
 use Examples\BankAccount\Domain\Events\MoneyTransferredIn;
 use Examples\BankAccount\Domain\Events\MoneyTransferredOut;
 use Examples\BankAccount\Domain\Events\MoneyWithdrawn;
+use Examples\BankAccount\Domain\Exceptions\BankAccountException;
 use Examples\BankAccount\Domain\Exceptions\InsufficientFundsException;
 use Examples\BankAccount\Domain\ValueObjects\AccountBalance;
 use Examples\BankAccount\Domain\ValueObjects\Money;
@@ -160,7 +161,7 @@ final readonly class BankAccount extends AggregateRoot
     private function assertSameCurrency(Money $amount): void
     {
         if ($this->balance->currency !== $amount->currency) {
-            throw new \InvalidArgumentException(
+            throw new BankAccountException(
                 sprintf(
                     'Currency mismatch: account uses %s, operation uses %s',
                     $this->balance->currency->value,

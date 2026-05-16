@@ -39,8 +39,9 @@ use SeedWork\Domain\Repository;
  * }
  * </code>
  *
- * @template T of AggregateRoot
- * @implements Repository<T>
+ * @template TId
+ * @template T of AggregateRoot<TId>
+ * @implements Repository<TId, T>
  *
  * @see Repository              Domain port this decorates.
  * @see DomainEventBusPublisher Application port for publishing events.
@@ -48,7 +49,7 @@ use SeedWork\Domain\Repository;
 class DomainEventPublishingRepository implements Repository
 {
     /**
-     * @param Repository<T> $repository
+     * @param Repository<TId, T> $repository
      */
     public function __construct(
         private readonly Repository $repository,

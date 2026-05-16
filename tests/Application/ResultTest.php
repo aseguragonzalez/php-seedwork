@@ -48,4 +48,11 @@ final class ResultTest extends TestCase
 
         $this->assertEmpty($result->errors());
     }
+
+    public function testFailedWithEmptyErrorsThrows(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        Result::failed([]);
+    }
 }

@@ -13,8 +13,9 @@ use SeedWork\Domain\Repository;
  * Adds introspection (all()) and reset() so tests can assert on stored
  * aggregates and start each scenario with a clean slate.
  *
- * @template T of AggregateRoot
- * @extends Repository<T>
+ * @template TId
+ * @template T of AggregateRoot<TId>
+ * @extends Repository<TId, T>
  *
  * @see InMemoryRepository Concrete implementation of this interface.
  */

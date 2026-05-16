@@ -26,4 +26,18 @@ final class DomainEventTest extends TestCase
 
         $this->assertSame('account-42', $event->aggregateId);
     }
+
+    public function testEmptyIdIsRejected(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        TestEvent::create(id: '');
+    }
+
+    public function testEmptyAggregateIdIsRejected(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        TestEvent::create(aggregateId: '');
+    }
 }

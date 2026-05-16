@@ -27,7 +27,7 @@ class DeferredDomainEventBus implements DomainEventBus
     /** @var array<string, list<DomainEventHandler<DomainEvent>>> */
     private array $handlers = [];
     /** @var array<string, DomainEvent> keyed by event id for idempotency */
-    private array $pending = [];
+    protected array $pending = [];
 
     /**
      * @param string $eventType FQCN of the domain event.
@@ -72,19 +72,6 @@ class DeferredDomainEventBus implements DomainEventBus
      * Clears the buffer without dispatching. Use when the command was rejected.
      */
     public function discard(): void
-    {
-        $this->pending = [];
-    }
-
-    /**
-     * @return list<DomainEvent>
-     */
-    public function pending(): array
-    {
-        return array_values($this->pending);
-    }
-
-    public function reset(): void
     {
         $this->pending = [];
     }

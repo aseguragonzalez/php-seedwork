@@ -12,8 +12,9 @@ use SeedWork\Domain\AggregateRoot;
  * Keys aggregates by (string) cast of their id, so any id type that is stringable
  * (string, int, or object with __toString()) works out of the box.
  *
- * @template T of AggregateRoot
- * @implements InMemoryRepositorySpy<T>
+ * @template TId
+ * @template T of AggregateRoot<TId>
+ * @implements InMemoryRepositorySpy<TId, T>
  *
  * @see InMemoryRepositorySpy Spy interface adding all() and reset().
  */

@@ -18,7 +18,9 @@ Every class is extended/implemented/composed by downstream projects — design d
 **Always** run both before committing:
 1. `make all` — catches format, lint, static analysis, and test failures.
 2. `pre-commit run --all-files` — enforces JSON/YAML formatting, trailing whitespace,
-   conventional commit message, and re-runs PHP checks via the git hook.
+   and re-runs PHP checks via the git hook.
+   The conventional commit message hook runs at the `commit-msg` stage only; it is
+   not triggered by `--all-files`. It is enforced automatically when you run `git commit`.
 
 In Docker (no coverage driver), substitute `make test` with:
 `vendor/bin/phpunit -c phpunit.xml --testsuite default --no-coverage`

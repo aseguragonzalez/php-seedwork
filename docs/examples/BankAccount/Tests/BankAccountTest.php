@@ -9,6 +9,7 @@ use Examples\BankAccount\Domain\Entities\BankAccount;
 use Examples\BankAccount\Domain\Events\AccountOpened;
 use Examples\BankAccount\Domain\Events\MoneyDeposited;
 use Examples\BankAccount\Domain\Events\MoneyWithdrawn;
+use Examples\BankAccount\Domain\Exceptions\BankAccountException;
 use Examples\BankAccount\Domain\Exceptions\InsufficientFundsException;
 use Examples\BankAccount\Domain\ValueObjects\AccountBalance;
 use Examples\BankAccount\Domain\ValueObjects\Currency;
@@ -94,7 +95,7 @@ final class BankAccountTest extends TestCase
     {
         $account = BankAccount::create(initialBalance: new AccountBalance(100, Currency::USD));
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(BankAccountException::class);
         $account->deposit(new Money(50, Currency::EUR));
     }
 
@@ -102,7 +103,7 @@ final class BankAccountTest extends TestCase
     {
         $account = BankAccount::create(initialBalance: new AccountBalance(100, Currency::USD));
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(BankAccountException::class);
         $account->withdraw(new Money(30, Currency::EUR));
     }
 }

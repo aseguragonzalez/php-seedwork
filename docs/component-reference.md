@@ -25,8 +25,8 @@ All components live under the `SeedWork\` namespace (Domain, Application, Infras
 
 ### DomainEvent (`SeedWork\Domain\DomainEvent`)
 
-- **Role:** Immutable record of something that happened (past tense, e.g. `MoneyDeposited`). Carries a string id and timestamp; event-specific facts are readonly properties of the subclass.
-- **Usage:** Extend; add your own readonly properties for domain-specific data. Use static factory (e.g. `create()`). Pass a unique string id (e.g. `'evt-' . uniqid()` or a UUID) to the parent constructor.
+- **Role:** Immutable record of something that happened (past tense, e.g. `MoneyDeposited`). Carries a string id, the aggregate id that raised it, and a timestamp; event-specific facts are readonly properties of the subclass.
+- **Usage:** Extend; add your own readonly properties for domain-specific data. Use a static factory (e.g. `create()`). The parent constructor requires three arguments in order: `$id` (unique string, e.g. a UUID), `$aggregateId` (identity of the raising aggregate), and `$occurredAt` (defaults to UTC now). Both `$id` and `$aggregateId` must be non-empty strings.
 - **Key methods:** `equals(DomainEvent $other): bool` (by string id).
 
 ### Repository (`SeedWork\Domain\Repository`)

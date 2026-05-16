@@ -36,16 +36,25 @@ abstract readonly class Entity
     }
 
     /**
-     * Identity-based equality: two entities are equal iff they have the same ID.
+     * Identity-based equality: two entities are equal iff they are of the same concrete
+     * type and their IDs produce the same string representation.
      *
-     * Uses loose equality (==) so both scalars and value objects compare correctly.
+     * The class guard prevents cross-type false positives (e.g. Order#1 == Product#1).
+     * String-cast strict comparison avoids PHP loose-equality quirks ("0e123" == 0).
+     * TId must be stringable (string, int, or object with __toString()).
      *
      * @param Entity<TId> $other Another entity (typically of the same concrete type).
-     * @return bool True if both entities have the same identity.
+     * @return bool True if both entities have the same concrete type and identity.
      */
     public function equals(Entity $other): bool
     {
-        return $this->id == $other->id;
+        /** @var string|int|\Stringable $thisId */
+        $thisId = $this->id;
+        /** @var string|int|\Stringable $otherId */
+        $otherId = $other->id;
+
+        return $this::class === $other::class
+            && (string) $thisId === (string) $otherId;
     }
 
     /**

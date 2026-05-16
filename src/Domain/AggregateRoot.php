@@ -43,16 +43,25 @@ abstract readonly class AggregateRoot
     }
 
     /**
-     * Identity-based equality: two aggregate roots are equal iff they have the same ID.
+     * Identity-based equality: two aggregate roots are equal iff they are of the same
+     * concrete type and their IDs produce the same string representation.
      *
-     * Uses loose equality (==) so both scalars and value objects compare correctly.
+     * The class guard prevents cross-type false positives (e.g. Order#1 == Product#1).
+     * String-cast strict comparison avoids PHP loose-equality quirks ("0e123" == 0).
+     * TId must be stringable (string, int, or object with __toString()).
      *
      * @param AggregateRoot<TId> $other Another aggregate root (typically same concrete type).
-     * @return bool True if both have the same identity.
+     * @return bool True if both have the same concrete type and identity.
      */
     public function equals(AggregateRoot $other): bool
     {
-        return $this->id == $other->id;
+        /** @var string|int|\Stringable $thisId */
+        $thisId = $this->id;
+        /** @var string|int|\Stringable $otherId */
+        $otherId = $other->id;
+
+        return $this::class === $other::class
+            && (string) $thisId === (string) $otherId;
     }
 
     /**

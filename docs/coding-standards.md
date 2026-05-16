@@ -77,8 +77,8 @@ them as the default for new code and when refactoring.
   - Name events in past tense
   - Make them immutable (`readonly`)
   - Extend `SeedWork\Domain\DomainEvent` and expose event-specific data as readonly properties on the subclass
-  - Pass a unique string id to `parent::__construct(id: ..., createdAt: ...)` (e.g. a UUID or `'evt-' . uniqid()`)
-  - Use UTC for `createdAt`
+  - Pass all three arguments to `parent::__construct(id: ..., aggregateId: ..., occurredAt: ...)` — `id` is a unique string (e.g. a UUID or `'evt-' . uniqid()`), `aggregateId` is the identity of the raising aggregate, and both must be non-empty
+  - Use UTC for `occurredAt`
   - Record events when something meaningful happens in the aggregate
   - Provide a static factory method to create a new instance (e.g. `create()`)
 - **Don't:**

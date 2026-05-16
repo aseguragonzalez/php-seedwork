@@ -56,24 +56,24 @@ use SeedWork\Domain\DomainEvent;
 final readonly class MoneyDeposited extends DomainEvent
 {
     private function __construct(
-        public string $accountId,
         public int $amount,
         string $id,
+        string $aggregateId,
         \DateTimeImmutable $occurredAt,
     ) {
-        parent::__construct($id, $occurredAt);
+        parent::__construct($id, $aggregateId, $occurredAt);
     }
 
     public static function create(
-        string $accountId,
+        string $aggregateId,
         int $amount,
         ?string $id = null,
         ?\DateTimeImmutable $occurredAt = null,
     ): self {
         return new self(
-            $accountId,
             $amount,
             $id ?? 'evt-' . uniqid('', true),
+            $aggregateId,
             $occurredAt ?? new \DateTimeImmutable('now', new \DateTimeZone('UTC')),
         );
     }
@@ -128,18 +128,18 @@ final readonly class BankAccount extends AggregateRoot
 
 ## 4. Defining the Repository (interface)
 
-Repositories belong to the domain layer. Define an interface per aggregate that extends `Repository<T>`. Implementations live in the infrastructure layer.
+Repositories belong to the domain layer. Define an interface per aggregate that extends `Repository<TId, T>`. Implementations live in the infrastructure layer.
 
 ```php
 use SeedWork\Domain\Repository;
 
 /**
- * @extends Repository<BankAccount>
+ * @extends Repository<BankAccountId, BankAccount>
  */
 interface BankAccountRepository extends Repository {}
 ```
 
-The `Repository<T>` interface declares:
+The `Repository<TId, T>` interface declares:
 - `save(AggregateRoot $aggregateRoot): void`
 - `findById(mixed $id): ?AggregateRoot`
 - `deleteById(mixed $id): void`
@@ -196,7 +196,7 @@ final readonly class DepositMoneyCommandHandler implements CommandHandler
         /** @var DepositMoneyCommand $command */
         $accountId = BankAccountId::fromString($command->accountId);
         $account = $this->repository->findById($accountId)
-            ?? throw new BankAccountNotFoundException("BankAccount '{$accountId}' not found");
+            ?? throw new \DomainException("BankAccount '{$accountId}' not found");
 
         $updated = $account->deposit($command->amount);
         $this->repository->save($updated);
@@ -295,11 +295,27 @@ ValidationCommandBus → TransactionalCommandBus → DomainEventCoordinatorComma
 
 ## 8. Publishing Domain Events with DomainEventPublishingRepository
 
-Wrap any `Repository` with `DomainEventPublishingRepository` to automatically publish domain events after every `save()`. The handler stays unaware of event publication.
+Extend `DomainEventPublishingRepository` with a thin typed wrapper that also implements your domain repository interface. This is required because PHP has no runtime generics: the base class only implements the seedwork `Repository` interface, so passing it directly where a `BankAccountRepository` is expected causes a `TypeError`.
+
+```php
+use SeedWork\Application\DomainEventBusPublisher;
+use SeedWork\Infrastructure\DomainEventPublishingRepository;
+
+final class PublishingBankAccountRepository
+    extends DomainEventPublishingRepository
+    implements BankAccountRepository
+{
+    public function __construct(
+        BankAccountRepository $repository,
+        DomainEventBusPublisher $eventBus,
+    ) {
+        parent::__construct($repository, $eventBus);
+    }
+}
+```
 
 ```php
 use SeedWork\Infrastructure\DeferredDomainEventBus;
-use SeedWork\Infrastructure\DomainEventPublishingRepository;
 
 $domainEventBus = new DeferredDomainEventBus();
 
@@ -309,8 +325,8 @@ $domainEventBus->subscribe(
     new AccountOpenedDomainEventHandler($integrationEventPublisher)
 );
 
-// Wrap the repository — publish happens automatically after save()
-$publishingRepository = new DomainEventPublishingRepository($repository, $domainEventBus);
+// Typed wrapper — satisfies BankAccountRepository, publishes events after save()
+$publishingRepository = new PublishingBankAccountRepository($repository, $domainEventBus);
 ```
 
 `DeferredDomainEventBus` buffers events keyed by `event.id` (idempotent). The `DomainEventCoordinatorCommandBus` calls `dispatch()` on success or `discard()` on failure/exception.
@@ -324,7 +340,6 @@ A minimal composition root that ties everything together:
 ```php
 use SeedWork\Infrastructure\CommandBusBuilder;
 use SeedWork\Infrastructure\DeferredDomainEventBus;
-use SeedWork\Infrastructure\DomainEventPublishingRepository;
 use SeedWork\Testing\InMemoryIntegrationEventPublisher;
 use SeedWork\Infrastructure\RegistryCommandBus;
 
@@ -334,7 +349,7 @@ $integrationPub = new InMemoryIntegrationEventPublisher();
 $domainEventBus = new DeferredDomainEventBus();
 $domainEventBus->subscribe(AccountOpened::class, new AccountOpenedDomainEventHandler($integrationPub));
 
-$publishingRepo = new DomainEventPublishingRepository($repository, $domainEventBus);
+$publishingRepo = new PublishingBankAccountRepository($repository, $domainEventBus);
 
 $registry = new RegistryCommandBus();
 $registry->register(DepositMoneyCommand::class, new DepositMoneyCommandHandler($publishingRepo));
