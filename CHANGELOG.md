@@ -1,3 +1,10 @@
+# [0.5.0](https://github.com/aseguragonzalez/php-seedwork/compare/v0.4.0...v0.5.0) (2026-05-16)
+
+
+### Features
+
+* align PHP seedwork API with TypeScript and Python counterparts ([#29](https://github.com/aseguragonzalez/php-seedwork/issues/29)) ([ed10706](https://github.com/aseguragonzalez/php-seedwork/commit/ed10706fca043a2ef59640a589a0aa20fe854d0f))
+
 ### Features
 
 # [0.4.0](https://github.com/aseguragonzalez/php-seedwork/compare/v0.3.0...v0.4.0) (2026-05-15)
