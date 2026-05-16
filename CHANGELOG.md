@@ -1,3 +1,10 @@
+# [0.6.0](https://github.com/aseguragonzalez/php-seedwork/compare/v0.5.0...v0.6.0) (2026-05-16)
+
+
+### Features
+
+* rename Result::isFail() to isFailed() for API consistency ([#31](https://github.com/aseguragonzalez/php-seedwork/issues/31)) ([480360e](https://github.com/aseguragonzalez/php-seedwork/commit/480360e852f892aa9e77cd87642c729d5371c431))
+
 # [0.5.0](https://github.com/aseguragonzalez/php-seedwork/compare/v0.4.0...v0.5.0) (2026-05-16)
 
 
