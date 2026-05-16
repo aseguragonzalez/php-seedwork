@@ -107,7 +107,7 @@ final class CommandBusBuilderTest extends TestCase
 
     public function testUseAppliesCustomMiddleware(): void
     {
-        $customBus = $this->createMock(CommandBus::class);
+        $customBus = $this->createStub(CommandBus::class);
         $customBus->method('dispatch')->willReturn(Result::ok());
 
         $result = (new CommandBusBuilder(new RegistryCommandBus()))
@@ -120,7 +120,7 @@ final class CommandBusBuilderTest extends TestCase
     public function testUseCanBeChainedWithNamedDecorators(): void
     {
         $unitOfWork = $this->createStub(UnitOfWork::class);
-        $customWrapper = $this->createMock(CommandBus::class);
+        $customWrapper = $this->createStub(CommandBus::class);
         $customWrapper->method('dispatch')->willReturn(Result::ok());
 
         $result = (new CommandBusBuilder(new RegistryCommandBus()))
