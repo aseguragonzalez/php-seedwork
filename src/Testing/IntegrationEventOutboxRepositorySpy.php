@@ -20,7 +20,7 @@ interface IntegrationEventOutboxRepositorySpy extends IntegrationEventOutboxRepo
     /**
      * Returns all outbox records, regardless of status.
      *
-     * @return array<IntegrationEventOutboxRecord>
+     * @return list<IntegrationEventOutboxRecord>
      */
     public function all(): array;
 

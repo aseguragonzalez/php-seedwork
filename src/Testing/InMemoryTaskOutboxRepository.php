@@ -19,7 +19,7 @@ final class InMemoryTaskOutboxRepository implements TaskOutboxRepositorySpy
     private array $records = [];
 
     /**
-     * @return array<TaskOutboxRecord>
+     * @return list<TaskOutboxRecord>
      */
     public function all(): array
     {
@@ -42,7 +42,7 @@ final class InMemoryTaskOutboxRepository implements TaskOutboxRepositorySpy
     }
 
     /**
-     * @return array<TaskOutboxRecord>
+     * @return list<TaskOutboxRecord>
      */
     public function findPending(int $limit = 100): array
     {

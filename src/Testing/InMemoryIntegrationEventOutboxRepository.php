@@ -19,7 +19,7 @@ final class InMemoryIntegrationEventOutboxRepository implements IntegrationEvent
     private array $records = [];
 
     /**
-     * @return array<IntegrationEventOutboxRecord>
+     * @return list<IntegrationEventOutboxRecord>
      */
     public function all(): array
     {
@@ -42,7 +42,7 @@ final class InMemoryIntegrationEventOutboxRepository implements IntegrationEvent
     }
 
     /**
-     * @return array<IntegrationEventOutboxRecord>
+     * @return list<IntegrationEventOutboxRecord>
      */
     public function findPending(int $limit = 100): array
     {

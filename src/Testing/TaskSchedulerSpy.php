@@ -22,7 +22,7 @@ interface TaskSchedulerSpy extends TaskScheduler
     /**
      * Returns all tasks scheduled so far.
      *
-     * @return array<BackgroundTask>
+     * @return list<BackgroundTask>
      */
     public function scheduled(): array;
 

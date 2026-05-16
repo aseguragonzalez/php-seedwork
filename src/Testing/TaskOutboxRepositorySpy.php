@@ -20,7 +20,7 @@ interface TaskOutboxRepositorySpy extends TaskOutboxRepository
     /**
      * Returns all outbox records, regardless of status.
      *
-     * @return array<TaskOutboxRecord>
+     * @return list<TaskOutboxRecord>
      */
     public function all(): array;
 
