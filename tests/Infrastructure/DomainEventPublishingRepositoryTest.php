@@ -30,8 +30,8 @@ final class DomainEventPublishingRepositoryTest extends TestCase
 
     public function testSavePublishesEventsReturnedByAggregate(): void
     {
-        $eventA = $this->createMock(DomainEvent::class);
-        $eventB = $this->createMock(DomainEvent::class);
+        $eventA = $this->createStub(DomainEvent::class);
+        $eventB = $this->createStub(DomainEvent::class);
         $events = [$eventA, $eventB];
         $aggregate = $this->createStub(AggregateRoot::class);
         $aggregate->method('getDomainEvents')->willReturn($events);

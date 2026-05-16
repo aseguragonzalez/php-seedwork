@@ -34,7 +34,7 @@ test:
 	@./vendor/bin/phpunit -c phpunit.xml --testsuite default --coverage-html coverage/
 
 test-examples:
-	@./vendor/bin/phpunit -c phpunit.xml --testsuite examples
+	@./vendor/bin/phpunit -c phpunit.xml --testsuite examples --no-coverage
 
 update-autoload:
 	@composer dump-autoload
