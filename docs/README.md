@@ -28,12 +28,3 @@ A full working example that uses all SeedWork building blocks lives in:
   Queries, Buses, Event handling.
 - [Infrastructure](component-reference.md#infrastructure-layer) — Container
   buses, transactions, deferred events.
-
-## Examples for your project
-
-- [Copilot instructions](examples/copilot-instructions.md) — Example instructions
-  for GitHub Copilot.
-- [Cursor rules](examples/cursor-rules.md) — Example Cursor rule to use in your
-  project (e.g. `.cursor/rules/seedwork-ddd.mdc`).
-- [CLAUDE instructions](examples/claude-example.md) — Example instructions
-  for Claude.

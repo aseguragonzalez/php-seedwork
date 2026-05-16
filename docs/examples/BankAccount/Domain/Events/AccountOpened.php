@@ -13,23 +13,23 @@ final readonly class AccountOpened extends DomainEvent
     private function __construct(
         public BankAccountId $accountId,
         public AccountBalance $initialBalance,
-        BankAccountEventId $id,
-        \DateTimeImmutable $createdAt
+        string $id,
+        \DateTimeImmutable $occurredAt
     ) {
-        parent::__construct($id, $createdAt);
+        parent::__construct($id, (string) $accountId, $occurredAt);
     }
 
     public static function create(
         BankAccountId $accountId,
         AccountBalance $initialBalance,
-        ?BankAccountEventId $id = null,
-        ?\DateTimeImmutable $createdAt = null
+        ?string $id = null,
+        ?\DateTimeImmutable $occurredAt = null
     ): self {
         return new self(
             $accountId,
             $initialBalance,
-            $id ?? BankAccountEventId::create(),
-            $createdAt ?? new \DateTimeImmutable('now', new \DateTimeZone('UTC'))
+            $id ?? 'evt-' . uniqid('', true),
+            $occurredAt ?? new \DateTimeImmutable('now', new \DateTimeZone('UTC'))
         );
     }
 }

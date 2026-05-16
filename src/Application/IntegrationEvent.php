@@ -11,31 +11,40 @@ namespace SeedWork\Application;
  * to react without needing to call back into the source. It is a serializable snapshot
  * with explicit schema versioning (type + version) to support evolution.
  *
+ * $id and $occurredAt are optional: omit them and the constructor auto-generates
+ * a unique id ('evt-{uniqid}') and timestamps to UTC now.
+ *
  * @see IntegrationEventPublisher Application port for publishing integration events.
  */
 abstract readonly class IntegrationEvent
 {
+    public string $id;
+
     /**
-     * @param string $id              Unique event ID (UUID).
      * @param string $type            Event name/topic (e.g. 'bc.aggregate.event_name').
      * @param string $version         Payload schema version (e.g. '1.0').
      * @param string $aggregateId     ID of the aggregate that raised the event.
-     * @param \DateTimeImmutable $occurredAt When the event occurred (UTC).
      * @param array<string, mixed> $payload  Serializable primitive facts.
-     * @param string $correlationId   Correlation ID for distributed tracing (required).
+     * @param string $correlationId   Correlation ID for distributed tracing.
+     * @param string $id              Unique event ID; auto-generated when empty.
+     * @param \DateTimeImmutable $occurredAt When the event occurred (UTC); defaults to now.
      * @param string|null $causationId ID of the command or event that caused this one.
      * @param array<string, string>|null $metadata Optional trace/tenant metadata.
      */
     public function __construct(
-        public string $id,
         public string $type,
         public string $version,
         public string $aggregateId,
-        public \DateTimeImmutable $occurredAt,
         public array $payload,
         public string $correlationId,
+        string $id = '',
+        public \DateTimeImmutable $occurredAt = new \DateTimeImmutable(
+            'now',
+            new \DateTimeZone('UTC')
+        ),
         public ?string $causationId = null,
         public ?array $metadata = null
     ) {
+        $this->id = $id !== '' ? $id : 'evt-' . uniqid('', true);
     }
 }

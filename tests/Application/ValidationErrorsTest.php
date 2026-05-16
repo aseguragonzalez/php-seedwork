@@ -5,24 +5,24 @@ declare(strict_types=1);
 namespace Tests\Application;
 
 use PHPUnit\Framework\TestCase;
-use SeedWork\Application\ValidationError;
+use SeedWork\Application\ValidationErrorDetail;
 use SeedWork\Application\ValidationErrors;
 
 final class ValidationErrorsTest extends TestCase
 {
-    public function testValidationErrorStoresFieldAndMessage(): void
+    public function testValidationErrorDetailStoresCodeAndMessage(): void
     {
-        $error = new ValidationError('email', 'must be a valid email');
+        $error = new ValidationErrorDetail('email_invalid', 'must be a valid email');
 
-        self::assertSame('email', $error->field);
+        self::assertSame('email_invalid', $error->code);
         self::assertSame('must be a valid email', $error->message);
     }
 
     public function testValidationErrorsStoresErrors(): void
     {
         $errors = [
-            new ValidationError('email', 'must be a valid email'),
-            new ValidationError('name', 'is required'),
+            new ValidationErrorDetail('email_invalid', 'must be a valid email'),
+            new ValidationErrorDetail('name_required', 'is required'),
         ];
 
         $exception = new ValidationErrors($errors);
@@ -32,7 +32,7 @@ final class ValidationErrorsTest extends TestCase
 
     public function testValidationErrorsHasFixedMessage(): void
     {
-        $exception = new ValidationErrors([new ValidationError('field', 'message')]);
+        $exception = new ValidationErrors([new ValidationErrorDetail('field_invalid', 'message')]);
 
         self::assertSame('Validation errors', $exception->getMessage());
     }

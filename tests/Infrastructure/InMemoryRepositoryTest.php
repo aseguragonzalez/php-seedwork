@@ -15,7 +15,7 @@ final class InMemoryRepositoryTest extends TestCase
     {
         $repo = new TestRepository();
 
-        $result = $repo->findBy(TestId::create());
+        $result = $repo->findById(TestId::create());
 
         $this->assertNull($result);
     }
@@ -26,10 +26,10 @@ final class InMemoryRepositoryTest extends TestCase
         $aggregate = TestAggregate::create();
 
         $repo->save($aggregate);
-        $result = $repo->findBy($aggregate->id);
+        $result = $repo->findById($aggregate->id);
 
         $this->assertNotNull($result);
-        $this->assertTrue($result->id->equals($aggregate->id));
+        $this->assertEquals($aggregate->id, $result->id);
     }
 
     public function testDeleteByRemovesAggregate(): void
@@ -38,9 +38,9 @@ final class InMemoryRepositoryTest extends TestCase
         $aggregate = TestAggregate::create();
         $repo->save($aggregate);
 
-        $repo->deleteBy($aggregate->id);
+        $repo->deleteById($aggregate->id);
 
-        $this->assertNull($repo->findBy($aggregate->id));
+        $this->assertNull($repo->findById($aggregate->id));
     }
 
     public function testSaveOverwritesExistingAggregate(): void
@@ -52,7 +52,38 @@ final class InMemoryRepositoryTest extends TestCase
         // Save the same ID again (simulating an update)
         $repo->save($aggregate);
 
-        $result = $repo->findBy($aggregate->id);
+        $result = $repo->findById($aggregate->id);
         $this->assertNotNull($result);
+    }
+
+    public function testAllReturnsAllStoredAggregates(): void
+    {
+        $repo = new TestRepository();
+        $a = TestAggregate::create();
+        $b = TestAggregate::create();
+        $repo->save($a);
+        $repo->save($b);
+
+        $all = $repo->all();
+
+        $this->assertCount(2, $all);
+    }
+
+    public function testAllReturnsEmptyWhenStoreIsEmpty(): void
+    {
+        $repo = new TestRepository();
+
+        $this->assertSame([], $repo->all());
+    }
+
+    public function testResetClearsAllAggregates(): void
+    {
+        $repo = new TestRepository();
+        $repo->save(TestAggregate::create());
+        $repo->save(TestAggregate::create());
+
+        $repo->reset();
+
+        $this->assertSame([], $repo->all());
     }
 }

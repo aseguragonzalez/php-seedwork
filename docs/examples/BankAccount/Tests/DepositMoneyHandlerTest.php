@@ -11,7 +11,6 @@ use Examples\BankAccount\Infrastructure\Repositories\PublishingBankAccountReposi
 use SeedWork\Infrastructure\RegistryCommandBus;
 use Examples\BankAccount\Application\DepositMoney\DepositMoneyCommand;
 use Examples\BankAccount\Application\DepositMoney\DepositMoneyCommandHandler;
-use Examples\BankAccount\Domain\BankAccountObtainer;
 use Examples\BankAccount\Domain\Entities\BankAccount;
 use Examples\BankAccount\Domain\ValueObjects\AccountBalance;
 use Examples\BankAccount\Domain\ValueObjects\Currency;
@@ -28,12 +27,10 @@ final class DepositMoneyHandlerTest extends TestCase
         $account = BankAccount::create(initialBalance: new AccountBalance(100, Currency::USD));
         $repository->save($account);
 
-        $obtainer = new BankAccountObtainer($repository);
-
         $registry = new RegistryCommandBus();
         $registry->register(
             DepositMoneyCommand::class,
-            new DepositMoneyCommandHandler($obtainer, $publishingRepo)
+            new DepositMoneyCommandHandler($publishingRepo)
         );
         $bus = (new CommandBusBuilder($registry))
             ->withValidation()
@@ -44,7 +41,7 @@ final class DepositMoneyHandlerTest extends TestCase
 
         $this->assertTrue($result->isOk());
 
-        $updated = $repository->findBy($account->id);
+        $updated = $repository->findById($account->id);
         $this->assertNotNull($updated);
         $this->assertSame(150, $updated->getBalance()->amount);
     }

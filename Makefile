@@ -28,13 +28,13 @@ static-analyse:
 	@./vendor/bin/phpstan analyse ./src ./tests --level=max --memory-limit=1G
 
 check-layer-boundaries:
-	@! grep -rn "use Examples\\\\" tests/ --include="*.php" || (echo "\nERROR: tests/ must not import from Examples\\"; exit 1)
+	@! find tests/ -name "*.php" -exec grep -l "use Examples\\\\" {} + 2>/dev/null | grep -q . || (printf '\nERROR: tests/ must not import from Examples\\\n'; exit 1)
 
 test:
 	@./vendor/bin/phpunit -c phpunit.xml --testsuite default --coverage-html coverage/
 
 test-examples:
-	@./vendor/bin/phpunit -c phpunit.xml --testsuite examples
+	@./vendor/bin/phpunit -c phpunit.xml --testsuite examples --no-coverage
 
 update-autoload:
 	@composer dump-autoload

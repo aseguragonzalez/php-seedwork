@@ -22,13 +22,8 @@ final class OutboxIntegrationEventPublisher implements IntegrationEventPublisher
     ) {
     }
 
-    /**
-     * @param array<IntegrationEvent> $events
-     */
-    public function publish(array $events): void
+    public function publish(IntegrationEvent $event): void
     {
-        foreach ($events as $event) {
-            $this->repository->save($event);
-        }
+        $this->repository->save($event);
     }
 }

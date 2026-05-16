@@ -45,7 +45,7 @@ final class CommandBusBuilderTest extends TestCase
 
         $builder
             ->withDomainEventCoordination($deferredEventBus)
-            ->withTransactional($unitOfWork)
+            ->withTransaction($unitOfWork)
             ->withValidation();
 
         self::assertSame($registry, $builder->registry());
@@ -56,7 +56,7 @@ final class CommandBusBuilderTest extends TestCase
         $unitOfWork = $this->createStub(UnitOfWork::class);
 
         $result = (new CommandBusBuilder(new RegistryCommandBus()))
-            ->withTransactional($unitOfWork)
+            ->withTransaction($unitOfWork)
             ->build();
 
         self::assertInstanceOf(TransactionalCommandBus::class, $result);
@@ -98,7 +98,7 @@ final class CommandBusBuilderTest extends TestCase
 
         $result = (new CommandBusBuilder(new RegistryCommandBus()))
             ->withValidation()
-            ->withTransactional($unitOfWork)
+            ->withTransaction($unitOfWork)
             ->withDomainEventCoordination($deferredEventBus)
             ->build();
 
@@ -107,7 +107,7 @@ final class CommandBusBuilderTest extends TestCase
 
     public function testUseAppliesCustomMiddleware(): void
     {
-        $customBus = $this->createMock(CommandBus::class);
+        $customBus = $this->createStub(CommandBus::class);
         $customBus->method('dispatch')->willReturn(Result::ok());
 
         $result = (new CommandBusBuilder(new RegistryCommandBus()))
@@ -120,12 +120,12 @@ final class CommandBusBuilderTest extends TestCase
     public function testUseCanBeChainedWithNamedDecorators(): void
     {
         $unitOfWork = $this->createStub(UnitOfWork::class);
-        $customWrapper = $this->createMock(CommandBus::class);
+        $customWrapper = $this->createStub(CommandBus::class);
         $customWrapper->method('dispatch')->willReturn(Result::ok());
 
         $result = (new CommandBusBuilder(new RegistryCommandBus()))
             ->withValidation()
-            ->withTransactional($unitOfWork)
+            ->withTransaction($unitOfWork)
             ->use(fn (CommandBus $inner): CommandBus => $customWrapper)
             ->build();
 

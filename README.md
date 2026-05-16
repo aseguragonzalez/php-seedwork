@@ -30,8 +30,8 @@ SeedWork sits between project conventions and application/domain code.
 ### Layers
 
 - **Domain layer:** Extends SeedWork domain bases (`AggregateRoot`, `Entity`,
-  `ValueObject`), uses `EntityId`, raises `DomainEvent` and `DomainException`/
-  `ValueException`, and defines repository interfaces extending `Repository`.
+  `ValueObject`), raises `DomainEvent`, throws `\DomainException` (PHP stdlib) for
+  domain failures, and defines repository interfaces extending `Repository`.
 - **Application layer:** Use case interfaces extend `CommandHandler`
   or `QueryHandler` and implement `handle()`. Handlers
   implement those interfaces and depend on domain repository interfaces.

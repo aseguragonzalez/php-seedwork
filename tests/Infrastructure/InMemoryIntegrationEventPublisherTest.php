@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Infrastructure;
 
 use PHPUnit\Framework\TestCase;
-use SeedWork\Infrastructure\InMemoryIntegrationEventPublisher;
+use SeedWork\Testing\InMemoryIntegrationEventPublisher;
 use Tests\Fixtures\FakeIntegrationEvent;
 
 final class InMemoryIntegrationEventPublisherTest extends TestCase
@@ -16,7 +16,8 @@ final class InMemoryIntegrationEventPublisherTest extends TestCase
         $event1 = new FakeIntegrationEvent('evt-1');
         $event2 = new FakeIntegrationEvent('evt-2');
 
-        $publisher->publish([$event1, $event2]);
+        $publisher->publish($event1);
+        $publisher->publish($event2);
 
         $this->assertCount(2, $publisher->published());
         $this->assertSame($event1, $publisher->published()[0]);
@@ -26,8 +27,8 @@ final class InMemoryIntegrationEventPublisherTest extends TestCase
     public function testPublishAccumulatesAcrossMultipleCalls(): void
     {
         $publisher = new InMemoryIntegrationEventPublisher();
-        $publisher->publish([new FakeIntegrationEvent('evt-1')]);
-        $publisher->publish([new FakeIntegrationEvent('evt-2')]);
+        $publisher->publish(new FakeIntegrationEvent('evt-1'));
+        $publisher->publish(new FakeIntegrationEvent('evt-2'));
 
         $this->assertCount(2, $publisher->published());
     }
@@ -35,7 +36,7 @@ final class InMemoryIntegrationEventPublisherTest extends TestCase
     public function testResetClearsPublishedList(): void
     {
         $publisher = new InMemoryIntegrationEventPublisher();
-        $publisher->publish([new FakeIntegrationEvent('evt-1')]);
+        $publisher->publish(new FakeIntegrationEvent('evt-1'));
 
         $publisher->reset();
 

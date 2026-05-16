@@ -11,15 +11,31 @@ Every class is extended/implemented/composed by downstream projects — design d
 - `make format-check` — check only
 - `make lint` — PHP_CodeSniffer (PSR-12)
 - `make static-analyse` — PHPStan level max
-- `make all` — format-check + lint + static analysis + tests. Run before every commit.
+- `make all` — format-check + lint + static analysis + tests. **Run before every commit.**
+
+## Pre-commit workflow
+
+**Always** run both before committing:
+1. `make all` — catches format, lint, static analysis, and test failures.
+2. `pre-commit run --all-files` — enforces JSON/YAML formatting, trailing whitespace,
+   and re-runs PHP checks via the git hook.
+   The conventional commit message hook runs at the `commit-msg` stage only; it is
+   not triggered by `--all-files`. It is enforced automatically when you run `git commit`.
+
+In Docker (no coverage driver), substitute `make test` with:
+`vendor/bin/phpunit -c phpunit.xml --testsuite default --no-coverage`
 
 ## Architecture
 
-- `src/Domain/` — Entity, ValueObject, AggregateRoot, DomainEvent, EntityId, Repository, UnitOfWork,
- exceptions. **Zero external dependencies.**
-- `src/Application/` — Command, Query, handlers, buses, QueryResult. **Depends only on Domain.**
-- `src/Infrastructure/` — ContainerCommandBus, TransactionalCommandBus, DeferredDomainEventBus, etc.
+- `src/Domain/` — Entity, ValueObject, AggregateRoot, DomainEvent, Repository, UnitOfWork.
+ **Zero external dependencies.**
+- `src/Application/` — Command/Query/handlers/buses, DomainEventBus, IntegrationEvent/Publisher,
+ BackgroundTask/TaskScheduler, Result/Maybe, ValidationErrors. **Depends only on Domain.**
+- `src/Infrastructure/` — RegistryCommandBus/QueryBus, TransactionalCommandBus,
+ DomainEventCoordinatorCommandBus, DeferredDomainEventBus, outbox patterns.
  **Only layer that may use PSR or library types.**
+- `src/Testing/` — Spy interfaces and InMemory/fake implementations for use in consumer tests.
+ **Must not be used in production code.**
 
 Never leak Infrastructure or framework types into Domain or Application.
 
@@ -30,7 +46,7 @@ Never leak Infrastructure or framework types into Domain or Application.
 - `readonly` properties and constructor promotion by default.
 - Interfaces for contracts (Repository, CommandBus); abstract classes for shared behaviour (AggregateRoot, Entity).
 - No `mixed` types without justification. Use PHPStan `@template`/`@extends` for generics.
-- Exceptions: extend `DomainException`, `ValueException`, or `NotFoundResource`. Never bare `\Exception`.
+- Exceptions: extend `\DomainException` (PHP stdlib) for domain failures. Never bare `\Exception`.
 - Backward compatibility matters: adding required params, renaming classes, or changing return types are breaking changes.
 
 ## Fixture and examples

@@ -11,12 +11,18 @@ depends on this package.
 
 ## Architecture
 
-- **Domain** (`SeedWork\Domain\*`): Entity, ValueObject, AggregateRoot, DomainEvent, EntityId, EventId,
-  Repository, UnitOfWork, AggregateObtainer, DomainException / ValueException / NotFoundResource.
-- **Application** (`SeedWork\Application\*`): Command, CommandBus, CommandHandler, Query, QueryBus,
-  QueryHandler, QueryResult, DomainEventBus, DomainEventHandler.
-- **Infrastructure** (`SeedWork\Infrastructure\*`): ContainerCommandBus, ContainerQueryBus,
-  TransactionalCommandBus, DeferredDomainEventBus, DomainEventFlushCommandBus.
+- **Domain** (`SeedWork\Domain\*`): Entity, ValueObject, AggregateRoot, DomainEvent, Repository, UnitOfWork.
+- **Application** (`SeedWork\Application\*`): Command/CommandBus/CommandHandler, Query/QueryBus/QueryHandler,
+  DomainEventBus/DomainEventHandler, IntegrationEvent/IntegrationEventPublisher/IntegrationEventHandler,
+  BackgroundTask/TaskScheduler/TaskHandler, Result/Maybe/ResultError, ValidationErrors/ValidationErrorDetail.
+- **Infrastructure** (`SeedWork\Infrastructure\*`): RegistryCommandBus/QueryBus, CommandBusBuilder/QueryBusBuilder,
+  TransactionalCommandBus, ValidationCommandBus/QueryBus, DomainEventCoordinatorCommandBus,
+  DeferredDomainEventBus, DomainEventPublishingRepository, OutboxIntegrationEventPublisher,
+  OutboxTaskScheduler, IntegrationEventOutboxRepository, TaskOutboxRepository.
+- **Testing** (`SeedWork\Testing\*`): Spy interfaces (DomainEventBusSpy, InMemoryRepositorySpy,
+  IntegrationEventPublisherSpy, etc.) and InMemory/fake implementations (InMemoryRepository,
+  DeferredDomainEventBusSpy, InMemoryIntegrationEventPublisher, InMemoryTaskScheduler, etc.).
+  For use in consumer tests only — not in production code.
 
 See [README](../README.md) and [docs/](../docs/) for the full picture.
 
@@ -56,19 +62,16 @@ Because every component is a public contract consumed by other projects:
 - **Conventions:** PHP 8.4+, `declare(strict_types=1);`, PSR-12, readonly where possible.
 - **Typing:** Strict parameter types, return types, no `mixed` unless truly unavoidable.
   Use union types or generics via PHPStan annotations (`@template`, `@extends`) when appropriate.
-- **Exceptions:** Domain-specific exceptions extending `DomainException`, `ValueException`, or
-  `NotFoundResource`. Never throw bare `\Exception` or `\RuntimeException`.
+- **Exceptions:** Extend `\DomainException` (PHP stdlib) for domain-specific exceptions. Never throw bare `\Exception` or `\RuntimeException`. The seedwork does not ship its own `DomainException` wrapper.
 
 ## Examples and fixtures
 
 Update examples and fixtures each time you add or change a pattern.
 
 - **Canonical example:** [docs/examples/BankAccount/](../docs/examples/BankAccount/) — full bounded
-  context: domain (aggregate, entities, value objects, events, repository interface, obtainer),
+  context: domain (aggregate, entities, value objects, events, repository interface),
   application (commands, queries, handlers, event handlers), infrastructure (in-memory repository).
   **Always consult this fixture** before creating new patterns — follow its structure and naming.
-- **Consumer-facing examples:** [docs/examples/copilot-instructions.md](../docs/examples/copilot-instructions.md)
-  (for downstream projects) and [docs/examples/cursor-rules.md](../docs/examples/cursor-rules.md).
 - When adding a new base class or interface, add a concrete implementation in the fixture that
   demonstrates the intended usage.
 
@@ -134,3 +137,15 @@ When reviewing a PR (or self-reviewing before pushing), verify:
 - `make lint` — PHP_CodeSniffer (PSR-12).
 - `make static-analyse` — PHPStan (level max).
 - `make all` — format-check, lint, static analysis, and tests.
+
+## Pre-commit workflow
+
+**Always** run both before committing:
+1. `make all` — validates format, lint, static analysis, and tests.
+2. `pre-commit run --all-files` — enforces JSON/YAML formatting, trailing whitespace,
+   no-commit-to-main, and re-runs PHP checks.
+   The conventional commit message hook runs at the `commit-msg` stage only; it is
+   not triggered by `--all-files`. It is enforced automatically when you run `git commit`.
+
+The project ships a `.pre-commit-config.yaml` that hooks format-check, phpcs, and
+PHPStan into every `git commit`. Running `make all` first avoids surprises at hook time.

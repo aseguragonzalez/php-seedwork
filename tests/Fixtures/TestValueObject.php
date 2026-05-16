@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures;
 
-use SeedWork\Domain\Exceptions\ValueException;
+use Tests\Fixtures\TestDomainException;
 use SeedWork\Domain\ValueObject;
 
 final readonly class TestValueObject extends ValueObject
@@ -22,7 +22,7 @@ final readonly class TestValueObject extends ValueObject
     protected function validate(): void
     {
         if (empty($this->value)) {
-            throw new ValueException('Value cannot be empty.');
+            throw new TestDomainException('Value cannot be empty.');
         }
     }
 }

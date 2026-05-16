@@ -9,13 +9,12 @@ use SeedWork\Application\CommandBus;
 use SeedWork\Application\CommandHandler;
 use SeedWork\Application\Result;
 use SeedWork\Application\ResultError;
-use SeedWork\Domain\Exceptions\DomainException;
 
 /**
  * Registry-based implementation of {@see CommandBus} without PSR-11.
  *
  * @see CommandBus Application port.
- * @see DomainException Caught and wrapped in Result::failed().
+ * @see \DomainException Caught and wrapped in Result::failed().
  */
 final class RegistryCommandBus implements CommandBus
 {
@@ -38,7 +37,7 @@ final class RegistryCommandBus implements CommandBus
         try {
             $handler->handle($command);
             return Result::ok();
-        } catch (DomainException $e) {
+        } catch (\DomainException $e) {
             return Result::failed([new ResultError((string) $e->getCode(), $e->getMessage())]);
         }
     }

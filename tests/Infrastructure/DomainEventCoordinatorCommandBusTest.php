@@ -89,7 +89,7 @@ final class DomainEventCoordinatorCommandBusTest extends TestCase
         $eventBus->subscribe(TestEvent::class, $eventHandler);
         $eventBus->publish([$event]);
 
-        $innerBus = $this->createMock(CommandBus::class);
+        $innerBus = $this->createStub(CommandBus::class);
         $innerBus->method('dispatch')
             ->willThrowException(new \RuntimeException('infra error'));
 
@@ -133,7 +133,7 @@ final class DomainEventCoordinatorCommandBusTest extends TestCase
 
     private function createInnerBusReturning(Result $result): CommandBus
     {
-        $inner = $this->createMock(CommandBus::class);
+        $inner = $this->createStub(CommandBus::class);
         $inner->method('dispatch')->willReturn($result);
         return $inner;
     }

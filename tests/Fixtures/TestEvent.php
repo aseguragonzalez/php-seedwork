@@ -10,21 +10,24 @@ final readonly class TestEvent extends DomainEvent
 {
     private function __construct(
         public string $name,
-        TestEventId $id,
-        \DateTimeImmutable $createdAt,
+        string $id,
+        string $aggregateId,
+        \DateTimeImmutable $occurredAt,
     ) {
-        parent::__construct($id, $createdAt);
+        parent::__construct($id, $aggregateId, $occurredAt);
     }
 
     public static function create(
         string $name = 'test.event',
-        ?TestEventId $id = null,
-        ?\DateTimeImmutable $createdAt = null,
+        ?string $id = null,
+        ?string $aggregateId = null,
+        ?\DateTimeImmutable $occurredAt = null,
     ): self {
         return new self(
             $name,
-            $id ?? TestEventId::create(),
-            $createdAt ?? new \DateTimeImmutable('now', new \DateTimeZone('UTC')),
+            $id ?? 'evt-' . uniqid('', true),
+            $aggregateId ?? 'agg-test',
+            $occurredAt ?? new \DateTimeImmutable('now', new \DateTimeZone('UTC')),
         );
     }
 }

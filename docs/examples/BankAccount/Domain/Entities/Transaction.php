@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Examples\BankAccount\Domain\Entities;
 
 use SeedWork\Domain\Entity;
-use SeedWork\Domain\Exceptions\ValueException;
+use Examples\BankAccount\Domain\Exceptions\BankAccountException;
 use Examples\BankAccount\Domain\ValueObjects\Money;
 use Examples\BankAccount\Domain\ValueObjects\TransactionType;
 
@@ -49,11 +49,11 @@ final readonly class Transaction extends Entity
     protected function validate(): void
     {
         if ($this->amount->amount <= 0) {
-            throw new ValueException('Transaction amount must be greater than 0');
+            throw new BankAccountException('Transaction amount must be greater than 0');
         }
 
         if ($this->createdAt > new \DateTimeImmutable()) {
-            throw new ValueException('Transaction created at cannot be in the future');
+            throw new BankAccountException('Transaction created at cannot be in the future');
         }
     }
 }

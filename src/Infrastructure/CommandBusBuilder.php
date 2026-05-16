@@ -22,7 +22,7 @@ use SeedWork\Domain\UnitOfWork;
  *
  * $bus = (new CommandBusBuilder($registry))
  *     ->withValidation()
- *     ->withTransactional($unitOfWork)
+ *     ->withTransaction($unitOfWork)
  *     ->withDomainEventCoordination($deferredEventBus)
  *     ->build();
  * </code>
@@ -60,7 +60,7 @@ final class CommandBusBuilder
     /**
      * Adds a {@see TransactionalCommandBus} step to the pipeline.
      */
-    public function withTransactional(UnitOfWork $unitOfWork): self
+    public function withTransaction(UnitOfWork $unitOfWork): self
     {
         $unitOfWork_ = $unitOfWork;
         $this->steps[] = fn (CommandBus $inner): CommandBus =>

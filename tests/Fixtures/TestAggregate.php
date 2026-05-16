@@ -38,6 +38,6 @@ final readonly class TestAggregate extends AggregateRoot
 
     public function withEvent(DomainEvent $event): self
     {
-        return new self($this->id, [...$this->collectEvents(), $event]);
+        return new self($this->id, [...$this->getDomainEvents(), $event]);
     }
 }

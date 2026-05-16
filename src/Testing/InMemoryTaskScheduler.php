@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SeedWork\Infrastructure;
+namespace SeedWork\Testing;
 
 use SeedWork\Application\BackgroundTask;
 use SeedWork\Application\TaskHandler;
@@ -14,7 +14,7 @@ use SeedWork\Application\TaskHandler;
  * {@see executeScheduled()}, dispatching each task to its registered handler.
  * Tasks with no handler are silently skipped.
  *
- * @see TaskSchedulerSpy Test-focused extension implemented here.
+ * @see TaskSchedulerSpy Spy interface implemented here.
  */
 final class InMemoryTaskScheduler implements TaskSchedulerSpy
 {

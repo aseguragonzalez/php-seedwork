@@ -14,15 +14,17 @@ namespace SeedWork\Domain;
  *
  * This base adds support for recording domain events. When the root applies a
  * state change, it can append a DomainEvent. The application or infrastructure
- * layer calls {@see collectEvents()} (e.g. after handling a command) to retrieve
+ * layer calls {@see getDomainEvents()} (e.g. after handling a command) to retrieve
  * events for publishing, without mutating the aggregate's internal list.
  *
+ * The identity type TId is unconstrained: use any type your bounded context
+ * prefers — a plain string, an int, a UUID, or a custom value object.
+ *
  * @see DomainEvent Events recorded by the aggregate for downstream consumers.
- * @see EntityId Subclasses use a dedicated ID type (e.g. BankAccountId) as TId.
  * @see https://domainlanguage.com/ddd/ Eric Evans, "Domain-Driven Design" – Aggregates (Ch. 6).
  * @see https://martinfowler.com/bliki/DDD_Aggregate.html Martin Fowler, P of EAA – DDD Aggregate.
  *
- * @template TId of EntityId
+ * @template TId
  */
 abstract readonly class AggregateRoot
 {
@@ -35,20 +37,31 @@ abstract readonly class AggregateRoot
      * @param TId $id Unique identity of this aggregate; also the consistency boundary identifier.
      * @param array<DomainEvent> $domainEvents Events already recorded (e.g. from previous operations in the same flow).
      */
-    protected function __construct(public EntityId $id, private array $domainEvents = [])
+    protected function __construct(public mixed $id, private array $domainEvents = [])
     {
         $this->validate();
     }
 
     /**
-     * Identity-based equality: two aggregate roots are equal iff they have the same ID.
+     * Identity-based equality: two aggregate roots are equal iff they are of the same
+     * concrete type and their IDs produce the same string representation.
+     *
+     * The class guard prevents cross-type false positives (e.g. Order#1 == Product#1).
+     * String-cast strict comparison avoids PHP loose-equality quirks ("0e123" == 0).
+     * TId must be stringable (string, int, or object with __toString()).
      *
      * @param AggregateRoot<TId> $other Another aggregate root (typically same concrete type).
-     * @return bool True if both have the same identity.
+     * @return bool True if both have the same concrete type and identity.
      */
     public function equals(AggregateRoot $other): bool
     {
-        return $this->id->equals($other->id);
+        /** @var string|int|\Stringable $thisId */
+        $thisId = $this->id;
+        /** @var string|int|\Stringable $otherId */
+        $otherId = $other->id;
+
+        return $this::class === $other::class
+            && (string) $thisId === (string) $otherId;
     }
 
     /**
@@ -60,7 +73,7 @@ abstract readonly class AggregateRoot
      *
      * @return array<DomainEvent> Cloned events for publishing; does not clear the aggregate.
      */
-    public function collectEvents(): array
+    public function getDomainEvents(): array
     {
         return array_map(
             fn (DomainEvent $domainEvent) => clone $domainEvent,

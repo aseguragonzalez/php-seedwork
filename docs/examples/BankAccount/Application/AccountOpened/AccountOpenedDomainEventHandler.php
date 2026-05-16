@@ -24,11 +24,11 @@ final readonly class AccountOpenedDomainEventHandler implements AccountOpenedEve
         // that a new account has been opened.
         //
         // assert($event instanceof AccountOpened);
-        // $this->publisher->publish([
+        // $this->publisher->publish(
         //     new AccountOpenedIntegrationEvent(
         //         accountId: $event->accountId->value,
         //         currency:  $event->initialBalance->currency->value,
-        //     ),
-        // ]);
+        //     )
+        // );
     }
 }

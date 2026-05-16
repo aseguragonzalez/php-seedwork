@@ -7,35 +7,36 @@ namespace Examples\BankAccount\Domain\Events;
 use SeedWork\Domain\DomainEvent;
 use Examples\BankAccount\Domain\Entities\BankAccountId;
 use Examples\BankAccount\Domain\Entities\TransactionId;
+use Examples\BankAccount\Domain\ValueObjects\Money;
 
 final readonly class MoneyTransferredOut extends DomainEvent
 {
-    public function __construct(
+    private function __construct(
         public BankAccountId $fromAccountId,
         public BankAccountId $toAccountId,
-        public \Examples\BankAccount\Domain\ValueObjects\Money $amount,
+        public Money $amount,
         public TransactionId $transactionId,
-        BankAccountEventId $id,
-        \DateTimeImmutable $createdAt
+        string $id,
+        \DateTimeImmutable $occurredAt
     ) {
-        parent::__construct($id, $createdAt);
+        parent::__construct($id, (string) $fromAccountId, $occurredAt);
     }
 
     public static function create(
-        \Examples\BankAccount\Domain\ValueObjects\Money $amount,
+        Money $amount,
         BankAccountId $fromAccountId,
         BankAccountId $toAccountId,
         TransactionId $transactionId,
-        ?BankAccountEventId $id = null,
-        ?\DateTimeImmutable $createdAt = null
+        ?string $id = null,
+        ?\DateTimeImmutable $occurredAt = null
     ): self {
         return new self(
             $fromAccountId,
             $toAccountId,
             $amount,
             $transactionId,
-            $id ?? BankAccountEventId::create(),
-            $createdAt ?? new \DateTimeImmutable('now', new \DateTimeZone('UTC'))
+            $id ?? 'evt-' . uniqid('', true),
+            $occurredAt ?? new \DateTimeImmutable('now', new \DateTimeZone('UTC'))
         );
     }
 }
