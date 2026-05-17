@@ -19,12 +19,11 @@ use SeedWork\Application\QueryBus;
  * $registry->register(MyQuery::class, new MyQueryHandler());
  *
  * $bus = (new QueryBusBuilder($registry))
- *     ->withValidation()
+ *     ->use($myMiddleware)
  *     ->build();
  * </code>
  *
- * @see RegistryQueryBus   Base bus; passed via constructor.
- * @see ValidationQueryBus Validation decorator.
+ * @see RegistryQueryBus Base bus; passed via constructor.
  */
 final class QueryBusBuilder
 {
@@ -38,15 +37,6 @@ final class QueryBusBuilder
     public function registry(): RegistryQueryBus
     {
         return $this->registry;
-    }
-
-    /**
-     * Adds a {@see ValidationQueryBus} step to the pipeline.
-     */
-    public function withValidation(): self
-    {
-        $this->steps[] = fn (QueryBus $inner): QueryBus => new ValidationQueryBus($inner);
-        return $this;
     }
 
     /**

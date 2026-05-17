@@ -82,10 +82,23 @@ Source and issue tracker: [php-seedwork](https://github.com/aseguragonzalez/php-
 If you plan to contribute, please read [CONTRIBUTING.md](.github/CONTRIBUTING.md) and
 [CODE_OF_CONDUCT.md](.github/CODE_OF_CONDUCT.md).
 
-**Debugging:** The PHP debug port in this project is **9000** (not 9003). Configure your IDE or Xdebug client to
-connect to port 9000 when debugging tests or scripts.
+### Dev container
 
-From the root directory of the project (where the `Makefile` is located):
+All tooling (PHP, Composer, PHPStan, PHP-CS-Fixer, pre-commit) runs inside the dev container. Start it once from the project root:
+
+```bash
+devcontainer up --workspace-folder .
+```
+
+Then run any make target with:
+
+```bash
+devcontainer exec --workspace-folder . make <target>
+```
+
+**Debugging:** The PHP debug port in this project is **9000** (not the Xdebug default 9003). Configure your IDE or Xdebug client to connect to port 9000.
+
+### Make targets
 
 - `make install` — Install pre-commit hooks and Composer dependencies.
 - `make all` — Run format-check, lint, static analysis, and tests.

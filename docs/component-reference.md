@@ -50,7 +50,7 @@ All components live under the `SeedWork\` namespace (Domain, Application, Infras
 ### Command (`SeedWork\Application\Command`)
 
 - **Role:** Immutable DTO for a write use case. One class per use case.
-- **Usage:** Extend; implement `validate(): void` to enforce preconditions.
+- **Usage:** Extend; call `parent::__construct()` so validation runs at instantiation. Override `validate(): void` to enforce field-level preconditions (no-op by default). An invalid command cannot be constructed — `ValidationErrors` is thrown immediately.
 
 ### CommandBus (`SeedWork\Application\CommandBus`)
 
@@ -76,7 +76,7 @@ All components live under the `SeedWork\` namespace (Domain, Application, Infras
 ### Query (`SeedWork\Application\Query`)
 
 - **Role:** Immutable DTO for a read use case. No side effects.
-- **Usage:** Extend; implement `validate(): void`.
+- **Usage:** Extend; call `parent::__construct()` so validation runs at instantiation. Override `validate(): void` to enforce field-level preconditions (no-op by default). An invalid query cannot be constructed — `ValidationErrors` is thrown immediately.
 
 ### QueryBus (`SeedWork\Application\QueryBus`)
 
@@ -165,18 +165,14 @@ All components live under the `SeedWork\` namespace (Domain, Application, Infras
 ### CommandBusBuilder (`SeedWork\Infrastructure\CommandBusBuilder`)
 
 - **Role:** Fluent builder for composing a `CommandBus` decorator pipeline.
-- **Usage:** `new CommandBusBuilder($registry)`, then chain `withValidation()`, `withTransaction($uow)`, `withDomainEventCoordination($eventBus)`, `use($closure)`, then `build()`. The first step added becomes the outermost decorator.
+- **Usage:** `new CommandBusBuilder($registry)`, then chain `withTransaction($uow)`, `withDomainEventCoordination($eventBus)`, `use($closure)`, then `build()`. The first step added becomes the outermost decorator.
 - **Methods:** `registry(): RegistryCommandBus`, `build(): CommandBus`.
 
 ### QueryBusBuilder (`SeedWork\Infrastructure\QueryBusBuilder`)
 
 - **Role:** Fluent builder for composing a `QueryBus` decorator pipeline.
-- **Usage:** `new QueryBusBuilder($registry)`, then chain `withValidation()`, `use($closure)`, then `build()`.
+- **Usage:** `new QueryBusBuilder($registry)`, then chain `use($closure)`, then `build()`.
 - **Methods:** `registry(): RegistryQueryBus`, `build(): QueryBus`.
-
-### ValidationCommandBus / ValidationQueryBus
-
-- **Role:** Decorator that calls `validate()` on the Command/Query before forwarding. Throws `ValidationErrors` on failure.
 
 ### TransactionalCommandBus (`SeedWork\Infrastructure\TransactionalCommandBus`)
 
@@ -272,7 +268,6 @@ $registry->register(OpenAccountCommand::class,  new OpenAccountCommandHandler($p
 $registry->register(DepositMoneyCommand::class, new DepositMoneyCommandHandler($publishingRepository));
 
 $commandBus = (new CommandBusBuilder($registry))
-    ->withValidation()
     ->withTransaction($unitOfWork)
     ->withDomainEventCoordination($domainBus)
     ->build();

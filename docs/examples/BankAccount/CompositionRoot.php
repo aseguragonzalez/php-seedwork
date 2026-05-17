@@ -64,7 +64,6 @@ final class CompositionRoot
         $commandRegistry->register(WithdrawMoneyCommand::class, new WithdrawMoneyCommandHandler($publishingRepository));
 
         $this->commandBus = (new CommandBusBuilder($commandRegistry))
-            ->withValidation()
             ->withDomainEventCoordination($this->domainEventBus)
             ->build();
 
@@ -75,7 +74,6 @@ final class CompositionRoot
         );
 
         $this->queryBus = (new QueryBusBuilder($queryRegistry))
-            ->withValidation()
             ->build();
     }
 

@@ -13,9 +13,9 @@ namespace SeedWork\Application;
  * such as IDs or money). Avoid passing full domain entities; handlers can load
  * and reconstruct rich domain objects when handling the command.
  *
- * Subclasses must implement {@see validate()} to enforce field-level rules.
- * A validation decorator on the bus calls validate() before dispatching and
- * propagates {@see ValidationErrors} as an exception if validation fails.
+ * Override {@see validate()} to enforce field-level rules; the base constructor
+ * calls it at instantiation so an invalid Command cannot be constructed.
+ * No bus decorator is needed — validation is guaranteed by the object lifecycle.
  *
  * @see CommandHandler Handlers that execute the use case for this command.
  * @see CommandBus Application port that dispatches commands to the right handler.
@@ -23,18 +23,23 @@ namespace SeedWork\Application;
 abstract readonly class Command
 {
     /**
-     * Subclasses must call parent::__construct(); use a public constructor or
-     * a named static factory for instantiation.
-     */
-    protected function __construct()
-    {
-    }
-
-    /**
-     * Validates the command's field-level rules.
-     * Throw {@see ValidationErrors} when one or more validations fail.
+     * Subclasses must call parent::__construct() so that validate() is invoked
+     * at construction time. Use a public constructor or a named static factory.
      *
      * @throws ValidationErrors When one or more field-level validations fail.
      */
-    abstract public function validate(): void;
+    protected function __construct()
+    {
+        $this->validate();
+    }
+
+    /**
+     * Override to enforce field-level rules; throw {@see ValidationErrors} on failure.
+     * The base implementation is a no-op: subclasses that need validation must override.
+     *
+     * @throws ValidationErrors When one or more field-level validations fail.
+     */
+    public function validate(): void
+    {
+    }
 }

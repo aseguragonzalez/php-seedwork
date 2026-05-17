@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures;
 
-use SeedWork\Application\Command;
+use SeedWork\Application\Query;
 
-final readonly class AnotherTestCommand extends Command
+final readonly class AnotherTestQuery extends Query
 {
     public function __construct()
     {

@@ -28,7 +28,6 @@ final class OpenAccountHandlerTest extends TestCase
             new OpenAccountCommandHandler($publishingRepo)
         );
         $bus = (new CommandBusBuilder($registry))
-            ->withValidation()
             ->withDomainEventCoordination($domainEventBus)
             ->build();
 
@@ -38,23 +37,10 @@ final class OpenAccountHandlerTest extends TestCase
         $this->assertCount(1, $repository->findAll());
     }
 
-    public function testEmptyCurrencyFailsValidationBeforeHandlerIsInvoked(): void
+    public function testEmptyCurrencyFailsValidationOnInstantiation(): void
     {
-        $repository = new InMemoryBankAccountRepository();
-        $domainEventBus = new DeferredDomainEventBus();
-        $publishingRepo = new PublishingBankAccountRepository($repository, $domainEventBus);
-
-        $registry = new RegistryCommandBus();
-        $registry->register(
-            OpenAccountCommand::class,
-            new OpenAccountCommandHandler($publishingRepo)
-        );
-        $bus = (new CommandBusBuilder($registry))
-            ->withValidation()
-            ->withDomainEventCoordination($domainEventBus)
-            ->build();
-
         $this->expectException(ValidationErrors::class);
-        $bus->dispatch(new OpenAccountCommand(''));
+
+        new OpenAccountCommand('');
     }
 }

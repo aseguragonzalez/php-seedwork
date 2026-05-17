@@ -15,13 +15,12 @@ use SeedWork\Domain\UnitOfWork;
  * Steps are accumulated and applied in reverse order during {@see build()}, so the
  * first step added becomes the outermost decorator (the first to receive a command).
  *
- * Example — Validation outermost, events dispatched inside the transaction:
+ * Example — transaction outermost, events dispatched inside:
  * <code>
  * $registry = new RegistryCommandBus();
  * $registry->register(MyCommand::class, new MyCommandHandler());
  *
  * $bus = (new CommandBusBuilder($registry))
- *     ->withValidation()
  *     ->withTransaction($unitOfWork)
  *     ->withDomainEventCoordination($deferredEventBus)
  *     ->build();
@@ -30,7 +29,6 @@ use SeedWork\Domain\UnitOfWork;
  * @see RegistryCommandBus                  Base bus; passed via constructor.
  * @see DomainEventCoordinatorCommandBus    Event-coordination decorator.
  * @see TransactionalCommandBus             Transaction decorator.
- * @see ValidationCommandBus               Validation decorator.
  */
 final class CommandBusBuilder
 {
@@ -65,15 +63,6 @@ final class CommandBusBuilder
         $unitOfWork_ = $unitOfWork;
         $this->steps[] = fn (CommandBus $inner): CommandBus =>
             new TransactionalCommandBus($inner, $unitOfWork_);
-        return $this;
-    }
-
-    /**
-     * Adds a {@see ValidationCommandBus} step to the pipeline.
-     */
-    public function withValidation(): self
-    {
-        $this->steps[] = fn (CommandBus $inner): CommandBus => new ValidationCommandBus($inner);
         return $this;
     }
 
