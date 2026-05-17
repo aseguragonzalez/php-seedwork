@@ -6,6 +6,7 @@ namespace Tests\Application;
 
 use PHPUnit\Framework\TestCase;
 use SeedWork\Application\ValidationErrors;
+use Tests\Fixtures\AnotherTestQuery;
 use Tests\Fixtures\TestQuery;
 
 final class QueryTest extends TestCase
@@ -22,5 +23,12 @@ final class QueryTest extends TestCase
         $this->expectException(ValidationErrors::class);
 
         new TestQuery('');
+    }
+
+    public function testDefaultValidateIsNoOp(): void
+    {
+        $query = new AnotherTestQuery();
+
+        self::assertInstanceOf(AnotherTestQuery::class, $query);
     }
 }
