@@ -269,7 +269,6 @@ $registry = new RegistryCommandBus();
 $registry->register(DepositMoneyCommand::class, new DepositMoneyCommandHandler($publishingRepository));
 
 $commandBus = (new CommandBusBuilder($registry))
-    ->withValidation()                               // outermost: validates before anything
     ->withTransaction($unitOfWork)                 // wraps in DB transaction
     ->withDomainEventCoordination($domainEventBus)   // dispatches or discards events after command
     ->build();
@@ -286,7 +285,7 @@ if ($result->isOk()) {
 
 The full stack (outermost → innermost):
 ```
-ValidationCommandBus → TransactionalCommandBus → DomainEventCoordinatorCommandBus → RegistryCommandBus
+TransactionalCommandBus → DomainEventCoordinatorCommandBus → RegistryCommandBus
 ```
 
 > **Note:** `withTransaction()` requires a `UnitOfWork` implementation (e.g. a Doctrine wrapper). Omit it when there is no database transaction boundary (e.g. in tests).
@@ -355,7 +354,6 @@ $registry = new RegistryCommandBus();
 $registry->register(DepositMoneyCommand::class, new DepositMoneyCommandHandler($publishingRepo));
 
 $commandBus = (new CommandBusBuilder($registry))
-    ->withValidation()
     ->withDomainEventCoordination($domainEventBus)
     ->build();
 

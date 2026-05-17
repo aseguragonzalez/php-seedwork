@@ -96,7 +96,7 @@ Then run any make target with:
 devcontainer exec --workspace-folder . make <target>
 ```
 
-**Debugging:** The Xdebug port is **9003**. Configure your IDE to connect to that port.
+**Debugging:** The PHP debug port in this project is **9000** (not the Xdebug default 9003). Configure your IDE or Xdebug client to connect to port 9000.
 
 ### Make targets
 

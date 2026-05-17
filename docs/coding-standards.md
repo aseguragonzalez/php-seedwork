@@ -155,7 +155,7 @@ them as the default for new code and when refactoring.
 - **Do:**
   - Implement `Repository` and `UnitOfWork` in infrastructure
   - Use `RegistryCommandBus` and `RegistryQueryBus` (no PSR-11 container required)
-  - Stack buses in order: `ValidationCommandBus` → `TransactionalCommandBus` →
+  - Stack buses in order: `TransactionalCommandBus` →
     `DomainEventCoordinatorCommandBus` → `RegistryCommandBus`, so the transaction
     wraps both command execution and domain event dispatch
   - Use `DomainEventPublishingRepository` to publish `aggregate->getDomainEvents()` after `save()`

@@ -13,9 +13,9 @@ namespace SeedWork\Application;
  * such as IDs or money). Avoid passing full domain entities; handlers can load
  * and reconstruct rich domain objects when handling the command.
  *
- * Subclasses must implement {@see validate()} to enforce field-level rules.
- * A validation decorator on the bus calls validate() before dispatching and
- * propagates {@see ValidationErrors} as an exception if validation fails.
+ * Override {@see validate()} to enforce field-level rules; the base constructor
+ * calls it at instantiation so an invalid Command cannot be constructed.
+ * No bus decorator is needed — validation is guaranteed by the object lifecycle.
  *
  * @see CommandHandler Handlers that execute the use case for this command.
  * @see CommandBus Application port that dispatches commands to the right handler.
