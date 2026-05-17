@@ -33,7 +33,6 @@ final class WithdrawMoneyHandlerTest extends TestCase
             new WithdrawMoneyCommandHandler($publishingRepo)
         );
         $bus = (new CommandBusBuilder($registry))
-            ->withValidation()
             ->withDomainEventCoordination($domainEventBus)
             ->build();
 
@@ -58,7 +57,6 @@ final class WithdrawMoneyHandlerTest extends TestCase
             new WithdrawMoneyCommandHandler($publishingRepo)
         );
         $bus = (new CommandBusBuilder($registry))
-            ->withValidation()
             ->withDomainEventCoordination($domainEventBus)
             ->build();
 
@@ -82,7 +80,6 @@ final class WithdrawMoneyHandlerTest extends TestCase
             new WithdrawMoneyCommandHandler($publishingRepo)
         );
         $bus = (new CommandBusBuilder($registry))
-            ->withValidation()
             ->withDomainEventCoordination($domainEventBus)
             ->build();
 

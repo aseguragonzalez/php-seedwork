@@ -28,7 +28,7 @@ final class GetBankAccountStatusHandlerTest extends TestCase
             GetBankAccountStatusQuery::class,
             new GetBankAccountStatusQueryHandler($repository)
         );
-        $bus = (new QueryBusBuilder($registry))->withValidation()->build();
+        $bus = (new QueryBusBuilder($registry))->build();
 
         $maybe = $bus->ask(new GetBankAccountStatusQuery($account->id->value));
 
@@ -48,7 +48,7 @@ final class GetBankAccountStatusHandlerTest extends TestCase
             GetBankAccountStatusQuery::class,
             new GetBankAccountStatusQueryHandler($repository)
         );
-        $bus = (new QueryBusBuilder($registry))->withValidation()->build();
+        $bus = (new QueryBusBuilder($registry))->build();
 
         $maybe = $bus->ask(new GetBankAccountStatusQuery('acc-nonexistent.0'));
 

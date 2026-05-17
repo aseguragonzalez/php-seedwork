@@ -31,7 +31,6 @@ final class TransferMoneyHandlerTest extends TestCase
         );
 
         return (new CommandBusBuilder($registry))
-            ->withValidation()
             ->withDomainEventCoordination($domainEventBus)
             ->build();
     }

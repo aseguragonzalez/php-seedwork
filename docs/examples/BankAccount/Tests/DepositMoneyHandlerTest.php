@@ -33,7 +33,6 @@ final class DepositMoneyHandlerTest extends TestCase
             new DepositMoneyCommandHandler($publishingRepo)
         );
         $bus = (new CommandBusBuilder($registry))
-            ->withValidation()
             ->withDomainEventCoordination($domainEventBus)
             ->build();
 
