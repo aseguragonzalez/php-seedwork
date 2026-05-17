@@ -1,3 +1,10 @@
+# [0.7.0](https://github.com/aseguragonzalez/php-seedwork/compare/v0.6.0...v0.7.0) (2026-05-17)
+
+
+### Features
+
+* validate Command and Query on instantiation, remove validation bus decorators ([#32](https://github.com/aseguragonzalez/php-seedwork/issues/32)) ([1698c71](https://github.com/aseguragonzalez/php-seedwork/commit/1698c71ef522faed562d6e08f2dcb94733d3ca88))
+
 # [0.6.0](https://github.com/aseguragonzalez/php-seedwork/compare/v0.5.0...v0.6.0) (2026-05-16)
 
 
