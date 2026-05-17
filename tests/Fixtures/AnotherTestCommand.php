@@ -12,8 +12,4 @@ final readonly class AnotherTestCommand extends Command
     {
         parent::__construct();
     }
-
-    public function validate(): void
-    {
-    }
 }

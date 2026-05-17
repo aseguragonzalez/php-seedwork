@@ -14,7 +14,6 @@ use SeedWork\Infrastructure\DeferredDomainEventBus;
 use SeedWork\Infrastructure\DomainEventCoordinatorCommandBus;
 use SeedWork\Infrastructure\RegistryCommandBus;
 use SeedWork\Infrastructure\TransactionalCommandBus;
-use SeedWork\Infrastructure\ValidationCommandBus;
 
 final class CommandBusBuilderTest extends TestCase
 {
@@ -45,8 +44,7 @@ final class CommandBusBuilderTest extends TestCase
 
         $builder
             ->withDomainEventCoordination($deferredEventBus)
-            ->withTransaction($unitOfWork)
-            ->withValidation();
+            ->withTransaction($unitOfWork);
 
         self::assertSame($registry, $builder->registry());
     }
@@ -60,15 +58,6 @@ final class CommandBusBuilderTest extends TestCase
             ->build();
 
         self::assertInstanceOf(TransactionalCommandBus::class, $result);
-    }
-
-    public function testWithValidationProducesValidationCommandBus(): void
-    {
-        $result = (new CommandBusBuilder(new RegistryCommandBus()))
-            ->withValidation()
-            ->build();
-
-        self::assertInstanceOf(ValidationCommandBus::class, $result);
     }
 
     public function testWithDomainEventCoordinationProducesDomainEventCoordinatorCommandBus(): void
@@ -97,12 +86,11 @@ final class CommandBusBuilderTest extends TestCase
         $deferredEventBus = new DeferredDomainEventBus();
 
         $result = (new CommandBusBuilder(new RegistryCommandBus()))
-            ->withValidation()
             ->withTransaction($unitOfWork)
             ->withDomainEventCoordination($deferredEventBus)
             ->build();
 
-        self::assertInstanceOf(ValidationCommandBus::class, $result);
+        self::assertInstanceOf(TransactionalCommandBus::class, $result);
     }
 
     public function testUseAppliesCustomMiddleware(): void
@@ -124,11 +112,10 @@ final class CommandBusBuilderTest extends TestCase
         $customWrapper->method('dispatch')->willReturn(Result::ok());
 
         $result = (new CommandBusBuilder(new RegistryCommandBus()))
-            ->withValidation()
             ->withTransaction($unitOfWork)
             ->use(fn (CommandBus $inner): CommandBus => $customWrapper)
             ->build();
 
-        self::assertInstanceOf(ValidationCommandBus::class, $result);
+        self::assertInstanceOf(TransactionalCommandBus::class, $result);
     }
 }

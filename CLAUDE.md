@@ -6,6 +6,18 @@ Every class is extended/implemented/composed by downstream projects — design d
 
 ## Commands
 
+All commands run inside the devcontainer. Start it once with:
+
+```bash
+devcontainer up --workspace-folder .
+```
+
+Then run any make target via:
+
+```bash
+devcontainer exec --workspace-folder . make <target>
+```
+
 - `make test` — PHPUnit (coverage in `coverage/`)
 - `make format` — PHP-CS-Fixer (PSR-12)
 - `make format-check` — check only
@@ -15,14 +27,14 @@ Every class is extended/implemented/composed by downstream projects — design d
 
 ## Pre-commit workflow
 
-**Always** run both before committing:
-1. `make all` — catches format, lint, static analysis, and test failures.
-2. `pre-commit run --all-files` — enforces JSON/YAML formatting, trailing whitespace,
+**Always** run both before committing (inside the devcontainer):
+1. `devcontainer exec --workspace-folder . make all` — catches format, lint, static analysis, and test failures.
+2. `devcontainer exec --workspace-folder . pre-commit run --all-files` — enforces JSON/YAML formatting, trailing whitespace,
    and re-runs PHP checks via the git hook.
    The conventional commit message hook runs at the `commit-msg` stage only; it is
    not triggered by `--all-files`. It is enforced automatically when you run `git commit`.
 
-In Docker (no coverage driver), substitute `make test` with:
+Inside the devcontainer, substitute `make test` with the no-coverage variant when the coverage driver is unavailable:
 `vendor/bin/phpunit -c phpunit.xml --testsuite default --no-coverage`
 
 ## Architecture

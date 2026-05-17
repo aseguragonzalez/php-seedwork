@@ -23,18 +23,23 @@ namespace SeedWork\Application;
 abstract readonly class Command
 {
     /**
-     * Subclasses must call parent::__construct(); use a public constructor or
-     * a named static factory for instantiation.
-     */
-    protected function __construct()
-    {
-    }
-
-    /**
-     * Validates the command's field-level rules.
-     * Throw {@see ValidationErrors} when one or more validations fail.
+     * Subclasses must call parent::__construct() so that validate() is invoked
+     * at construction time. Use a public constructor or a named static factory.
      *
      * @throws ValidationErrors When one or more field-level validations fail.
      */
-    abstract public function validate(): void;
+    protected function __construct()
+    {
+        $this->validate();
+    }
+
+    /**
+     * Override to enforce field-level rules; throw {@see ValidationErrors} on failure.
+     * The base implementation is a no-op: subclasses that need validation must override.
+     *
+     * @throws ValidationErrors When one or more field-level validations fail.
+     */
+    public function validate(): void
+    {
+    }
 }

@@ -9,7 +9,6 @@ use SeedWork\Application\Maybe;
 use SeedWork\Application\QueryBus;
 use SeedWork\Infrastructure\QueryBusBuilder;
 use SeedWork\Infrastructure\RegistryQueryBus;
-use SeedWork\Infrastructure\ValidationQueryBus;
 
 final class QueryBusBuilderTest extends TestCase
 {
@@ -35,32 +34,11 @@ final class QueryBusBuilderTest extends TestCase
     {
         $registry = new RegistryQueryBus();
         $builder = new QueryBusBuilder($registry);
+        $customBus = $this->createStub(QueryBus::class);
 
-        $builder->withValidation();
+        $builder->use(fn (QueryBus $inner): QueryBus => $customBus);
 
         self::assertSame($registry, $builder->registry());
-    }
-
-    public function testWithValidationProducesValidationQueryBus(): void
-    {
-        $result = (new QueryBusBuilder(new RegistryQueryBus()))
-            ->withValidation()
-            ->build();
-
-        self::assertInstanceOf(ValidationQueryBus::class, $result);
-    }
-
-    public function testFirstStepAddedBecomesOutermostDecorator(): void
-    {
-        $inner = $this->createStub(QueryBus::class);
-        $inner->method('ask')->willReturn(Maybe::nothing());
-
-        $result = (new QueryBusBuilder(new RegistryQueryBus()))
-            ->withValidation()
-            ->use(fn (QueryBus $bus): QueryBus => $inner)
-            ->build();
-
-        self::assertInstanceOf(ValidationQueryBus::class, $result);
     }
 
     public function testUseAppliesCustomMiddleware(): void
@@ -75,11 +53,25 @@ final class QueryBusBuilderTest extends TestCase
         self::assertSame($customBus, $result);
     }
 
+    public function testFirstStepAddedBecomesOutermostDecorator(): void
+    {
+        $outerBus = $this->createStub(QueryBus::class);
+        $innerBus = $this->createStub(QueryBus::class);
+
+        $result = (new QueryBusBuilder(new RegistryQueryBus()))
+            ->use(fn (QueryBus $bus): QueryBus => $outerBus)
+            ->use(fn (QueryBus $bus): QueryBus => $innerBus)
+            ->build();
+
+        self::assertSame($outerBus, $result);
+    }
+
     public function testChainReturnsSameBuilderInstance(): void
     {
         $builder = new QueryBusBuilder(new RegistryQueryBus());
+        $customBus = $this->createStub(QueryBus::class);
 
-        $same = $builder->withValidation();
+        $same = $builder->use(fn (QueryBus $inner): QueryBus => $customBus);
 
         self::assertSame($builder, $same);
     }
