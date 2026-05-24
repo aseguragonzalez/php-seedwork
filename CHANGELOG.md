@@ -1,3 +1,10 @@
+# [0.8.0](https://github.com/aseguragonzalez/php-seedwork/compare/v0.7.0...v0.8.0) (2026-05-24)
+
+
+### Features
+
+* Update coding standards documentation ([#33](https://github.com/aseguragonzalez/php-seedwork/issues/33)) ([b6b5def](https://github.com/aseguragonzalez/php-seedwork/commit/b6b5defc820e679211aeddd7cbbfebbcdddf8bcc))
+
 # [0.7.0](https://github.com/aseguragonzalez/php-seedwork/compare/v0.6.0...v0.7.0) (2026-05-17)
 
 
