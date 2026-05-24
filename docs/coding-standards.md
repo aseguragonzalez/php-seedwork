@@ -522,7 +522,7 @@ final class GetBalanceHandler implements QueryHandler
 
 ### Integration Events
 
-`IntegrationEvent` is an abstract `readonly` class in the application layer. Subclasses define typed payload fields and the `type`/`version` constants.
+An Integration Event communicates a meaningful business fact from this bounded context to the outside world — other services or bounded contexts that need to react to it. Unlike domain events (internal, synchronous), integration events cross service boundaries and are delivered asynchronously via a message broker. They carry a stable, versioned contract: once published, their schema must not break consumers.
 
 ```php
 <?php
@@ -602,7 +602,7 @@ final class AccountOpenedIntegrationEventHandler implements IntegrationEventHand
 
 ### Background Tasks
 
-`BackgroundTask` is an abstract `readonly` class. Each task type defines a static `TYPE` constant used as the discriminator by the worker.
+A Background Task defers work that must happen eventually but does not need to complete within the current transaction — sending emails, triggering webhooks, calling external APIs. Tasks are written to an outbox before the transaction commits, guaranteeing at-least-once execution by an async worker even if the process crashes mid-flight.
 
 ```php
 <?php
