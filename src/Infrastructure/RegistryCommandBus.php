@@ -38,7 +38,9 @@ final class RegistryCommandBus implements CommandBus
             $handler->handle($command);
             return Result::ok();
         } catch (\DomainException $e) {
-            return Result::failed([new ResultError((string) $e->getCode(), $e->getMessage())]);
+            $shortName = (new \ReflectionClass($e))->getShortName();
+            $code = strtolower((string) preg_replace('/(?<!^)[A-Z]/', '_$0', $shortName));
+            return Result::failed([new ResultError($code, $e->getMessage())]);
         }
     }
 }
