@@ -34,7 +34,7 @@ readonly class Email extends ValueObject
     protected function validate(): void
     {
         if (! filter_var($this->value, FILTER_VALIDATE_EMAIL)) {
-            throw new \DomainException('Invalid email address.');
+            throw new InvalidEmail($this->value);
         }
     }
 
@@ -73,7 +73,9 @@ readonly class Email extends ValueObject
 
 ## Domain Layer
 
-### Entity
+### Entity and AggregateRoot
+
+`Entity` is the base for any domain object with a durable identity. `AggregateRoot` extends `Entity` and acts as the consistency boundary of the aggregate cluster — all external writes must go through it.
 
 ```php
 <?php
@@ -98,6 +100,8 @@ abstract readonly class Account extends AggregateRoot
         parent::__construct($id, $domainEvents);
     }
 
+    protected function validate(): void {}
+
     public static function open(AccountId $id, string $ownerId, Money $initialDeposit): static
     {
         return new static(
@@ -114,6 +118,10 @@ abstract readonly class Account extends AggregateRoot
 
     public function deposit(Money $amount): static
     {
+        if ($amount->amount <= 0) {
+            throw new InvalidDepositAmount((string) $this->id);
+        }
+
         return new static(
             id: $this->id,
             ownerId: $this->ownerId,
@@ -146,6 +154,8 @@ abstract readonly class Account extends AggregateRoot
 
 ### Value Object
 
+A Value Object models a domain concept with no identity — two instances with the same data are interchangeable. Immutability is enforced at the language level via `readonly`; validity is enforced at construction via `validate()`.
+
 ```php
 <?php
 
@@ -167,17 +177,17 @@ readonly class Money extends ValueObject
     protected function validate(): void
     {
         if ($this->amount < 0) {
-            throw new \DomainException('Amount cannot be negative.');
+            throw new NegativeAmount($this->amount);
         }
         if (empty($this->currency)) {
-            throw new \DomainException('Currency is required.');
+            throw new EmptyCurrency();
         }
     }
 
     public function add(Money $other): self
     {
         if ($this->currency !== $other->currency) {
-            throw new \DomainException('Cannot add amounts in different currencies.');
+            throw new CurrencyMismatch($this->currency, $other->currency);
         }
         return new self($this->amount + $other->amount, $this->currency);
     }
@@ -203,6 +213,8 @@ readonly class Money extends ValueObject
 ---
 
 ### Aggregate and Domain Events
+
+A Domain Event represents something that happened in the domain that is relevant to the business — a meaningful fact, not a technical operation. Events are always recorded by the aggregate root itself; no external code creates or injects them.
 
 ```php
 <?php
@@ -246,10 +258,12 @@ final readonly class AccountOpened extends DomainEvent
 **Key points**
 - Domain events are named in past tense, business language: `AccountOpened`, `MoneyDeposited`.
 - `readonly class` — events are immutable facts.
+- Only the aggregate root records domain events — handlers and repositories never create or inject them.
 - `aggregateId` (the emitting aggregate's ID) is required on every domain event — pass it from the aggregate root.
 - `id` and `occurredAt` are provided by the `DomainEvent` base; pass them through `parent::__construct`.
 - Payload uses primitives or PHP value objects that can be serialized; no aggregate references.
 - Processed **synchronously within the same transaction** by `DomainEventHandler` implementations.
+- **Deletion is not automatically a domain event.** Use `deleteById` for technical removal with no business significance. If deletion is a meaningful domain occurrence (e.g. closing an account), model it as an aggregate behaviour (`account->close()`) that records the event — the handler then calls `save()` or `deleteById()` as appropriate. Never use `deleteById` when a domain event must be raised.
 
 **Do**
 - Keep payloads minimal and primitive.
@@ -259,10 +273,13 @@ final readonly class AccountOpened extends DomainEvent
 - Embed aggregate instances or value object hierarchies in event payloads.
 - Use domain events to communicate to other services — use Integration Events for that.
 - Add `type`, `version`, or `correlationId` to domain events — those belong on `IntegrationEvent`.
+- Create domain events outside the aggregate — handlers, repositories, and services must never instantiate events directly.
 
 ---
 
 ### Repository (Domain Port)
+
+A Repository is a domain port — defined in the domain layer, implemented in infrastructure. Its sole concern is the persistence of aggregates: it abstracts storage behind a collection-like interface so the domain never depends on a specific technology. Only aggregate roots have repositories; child entities and value objects are persisted as part of their aggregate, never independently.
 
 ```php
 <?php
@@ -296,6 +313,8 @@ interface AccountRepository extends Repository
 
 ### Domain Exceptions
 
+Domain exceptions represent business rule violations — named, typed, and defined in the domain layer. Each distinct invariant gets its own class extending PHP's `\DomainException`.
+
 ```php
 <?php
 
@@ -303,13 +322,21 @@ declare(strict_types=1);
 
 namespace MyService\Domain;
 
-final class AccountNotFound extends \DomainException {}
-
-final class InsufficientFunds extends \DomainException
+final class AccountNotFound extends \DomainException
 {
     public function __construct(string $accountId)
     {
-        parent::__construct("Account {$accountId} has insufficient funds.");
+        parent::__construct("Account '{$accountId}' was not found.");
+    }
+}
+
+final class InsufficientFunds extends \DomainException
+{
+    public function __construct(string $accountId, int $available, int $requested)
+    {
+        parent::__construct(
+            "Account '{$accountId}' has insufficient funds: {$available} available, {$requested} requested."
+        );
     }
 }
 ```
@@ -317,6 +344,8 @@ final class InsufficientFunds extends \DomainException
 **Key points**
 - Extend PHP's stdlib `\DomainException` — the seedwork does not provide a custom base class.
 - `\DomainException` subclasses are the only correct way to signal business rule violations.
+- The **class name is the machine-readable code**: `InsufficientFunds` becomes `insufficient_funds` automatically — no need to declare a code manually.
+- The **constructor message is the human-readable description**: include the relevant context (IDs, amounts) so logs and API responses are self-explanatory without having to look up the code.
 - Caught by `RegistryCommandBus` and converted to `Result::failed(...)` automatically — handlers never catch them.
 - Infrastructure exceptions (`\PDOException`, etc.) propagate as-is — do not wrap in `\DomainException`.
 - Define one subclass per distinct business rule violation — keep them in the domain layer of your service.
@@ -326,6 +355,8 @@ final class InsufficientFunds extends \DomainException
 ## Application Layer
 
 ### Command and CommandHandler
+
+A `Command` expresses an intent to change state — it carries the input data and is validated on construction. A `CommandHandler` receives a guaranteed-valid command, loads or creates an aggregate, calls the domain method, and saves. No business logic lives in the handler.
 
 ```php
 <?php
@@ -415,6 +446,8 @@ final class OpenAccountHandler implements CommandHandler
 ---
 
 ### Query and QueryHandler
+
+A `Query` expresses an intent to read data — validated on construction, always read-only. A `QueryHandler` returns a `Maybe` wrapping the result; it never loads full aggregates nor triggers side effects.
 
 ```php
 <?php
@@ -692,6 +725,8 @@ Inject `RequestContext` into any `DomainEventHandler` or infrastructure componen
 
 ### DomainEventHandler (wiring Integration Events and Tasks)
 
+A `DomainEventHandler` reacts to a domain event inside the same transaction. It is the only place where integration events are published and background tasks are scheduled — never from the aggregate or the command handler.
+
 ```php
 <?php
 
@@ -748,6 +783,8 @@ final class AccountOpenedDomainEventHandler implements DomainEventHandler
 ---
 
 ### Result and Maybe
+
+`Result` is the return type of every command dispatch: `ok` on success, `failed` with typed errors on a business rule violation. `Maybe` is the return type of every query: `just(value)` when found, `nothing()` when absent. Both eliminate null returns and unchecked exceptions from the application boundary.
 
 ```php
 // Command bus returns Result — inspect at the entry point (controller)
@@ -867,6 +904,8 @@ $commandBus = (new CommandBusBuilder($registry))
 ---
 
 ### QueryBusBuilder
+
+`QueryBusBuilder` composes the query pipeline. Unlike the command bus, it requires no transaction or domain event coordination — query handlers are strictly read-only.
 
 ```php
 use SeedWork\Infrastructure\QueryBusBuilder;
