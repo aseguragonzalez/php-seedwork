@@ -42,6 +42,7 @@ final class RegistryCommandBusTest extends TestCase
 
         $this->assertTrue($result->isFailed());
         $this->assertNotEmpty($result->errors());
+        $this->assertSame('test_domain_exception', $result->errors()[0]->code);
         $this->assertStringContainsString('Insufficient', $result->errors()[0]->description);
     }
 
