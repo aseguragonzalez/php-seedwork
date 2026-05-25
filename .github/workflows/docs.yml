@@ -1,0 +1,56 @@
+name: PHP SeedWork Docs
+
+# Before the first deploy:
+#   1. Create the gh-pages branch (or let mike create it on first run).
+#   2. Enable GitHub Pages in Settings → Pages → Source: Deploy from branch gh-pages.
+
+on:
+  push:
+    tags:
+    - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version to deploy (e.g. 0.8.0)
+        required: true
+        type: string
+
+permissions: {}
+
+jobs:
+  deploy:
+    name: Deploy Docs
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+
+    - name: Configure git identity
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+
+    - name: Determine version
+      id: version
+      run: |
+        if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          echo "version=${{ inputs.version }}" >> "$GITHUB_OUTPUT"
+        else
+          echo "version=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+        fi
+
+    - name: Deploy docs
+      run: mike deploy --push --update-aliases ${{ steps.version.outputs.version }} latest
