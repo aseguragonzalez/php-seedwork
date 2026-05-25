@@ -1,0 +1,47 @@
+site_name: PHP SeedWork
+site_url: https://aseguragonzalez.github.io/php-seedwork/
+repo_url: https://github.com/aseguragonzalez/php-seedwork
+repo_name: aseguragonzalez/php-seedwork
+
+theme:
+  name: material
+  features:
+  - navigation.tabs
+  - navigation.top
+  - content.code.annotate
+  - content.code.copy
+
+plugins:
+- search
+- mike:
+    version_selector: true
+
+extra:
+  version:
+    provider: mike
+
+markdown_extensions:
+- pymdownx.superfences:
+    custom_fences:
+    - name: mermaid
+      class: mermaid
+      format: !!python/name:pymdownx.superfences.fence_code_format
+
+extra_javascript:
+- https://unpkg.com/mermaid@11/dist/mermaid.esm.min.mjs
+
+exclude_docs: |
+  README.md
+
+validation:
+  links:
+    unrecognized_links: ignore
+    anchors: ignore
+
+nav:
+- Home: index.md
+- Getting Started: getting-started.md
+- Architecture: architecture.md
+- Best Practices: best-practices.md
+- Component Reference: component-reference.md
+- Coding Standards: coding-standards.md
