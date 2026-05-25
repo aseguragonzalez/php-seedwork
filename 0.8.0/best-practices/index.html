@@ -1,0 +1,1795 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://aseguragonzalez.github.io/php-seedwork/0.8.0/best-practices/">
+      
+      
+        <link rel="prev" href="../architecture/">
+      
+      
+        <link rel="next" href="../component-reference/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Best Practices - PHP SeedWork</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#best-practices-ddd-hexagonal-architecture" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="PHP SeedWork" class="md-header__button md-logo" aria-label="PHP SeedWork" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PHP SeedWork
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Best Practices
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/aseguragonzalez/php-seedwork" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aseguragonzalez/php-seedwork
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../getting-started/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Best Practices
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../component-reference/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Component Reference
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../coding-standards/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Coding Standards
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="PHP SeedWork" class="md-nav__button md-logo" aria-label="PHP SeedWork" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    PHP SeedWork
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/aseguragonzalez/php-seedwork" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aseguragonzalez/php-seedwork
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Best Practices
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Best Practices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-hexagonal-architecture-fundamental-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Hexagonal Architecture — Fundamental Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-domain-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Domain Components
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Domain Components">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-entity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Entity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-value-object" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Value Object
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-aggregate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Aggregate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-domain-event" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Domain Event
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-domain-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Domain Service
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Repository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27-domain-ports-outbound" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 Domain Ports (Outbound)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-application-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Application Components
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Application Components">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-command-and-commandhandler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Command and CommandHandler
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-query-and-queryhandler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Query and QueryHandler
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-unit-of-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Unit of Work
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-application-ports-outbound" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Application Ports (Outbound)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-result" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Result
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-maybe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Maybe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Error Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-operation-flows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 Operation Flows
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.8 Operation Flows">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#write-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Write operation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#read-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Read operation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-domain-events-integration-events-background-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Domain Events · Integration Events · Background Tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Domain Events · Integration Events · Background Tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-domain-event" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Domain Event
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-integration-event" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Integration Event
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-background-task" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Background Task
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-decision-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Decision Guide
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-cross-cutting-concerns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Cross-cutting Concerns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../component-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Component Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../coding-standards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Coding Standards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-hexagonal-architecture-fundamental-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Hexagonal Architecture — Fundamental Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-domain-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Domain Components
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Domain Components">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-entity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Entity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-value-object" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Value Object
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-aggregate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Aggregate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-domain-event" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Domain Event
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-domain-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Domain Service
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Repository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27-domain-ports-outbound" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 Domain Ports (Outbound)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-application-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Application Components
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Application Components">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-command-and-commandhandler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Command and CommandHandler
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-query-and-queryhandler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Query and QueryHandler
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-unit-of-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Unit of Work
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-application-ports-outbound" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Application Ports (Outbound)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-result" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Result
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-maybe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Maybe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Error Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-operation-flows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 Operation Flows
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.8 Operation Flows">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#write-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Write operation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#read-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Read operation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-domain-events-integration-events-background-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Domain Events · Integration Events · Background Tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Domain Events · Integration Events · Background Tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-domain-event" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Domain Event
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-integration-event" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Integration Event
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-background-task" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Background Task
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-decision-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Decision Guide
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-cross-cutting-concerns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Cross-cutting Concerns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="best-practices-ddd-hexagonal-architecture">Best Practices — DDD &amp; Hexagonal Architecture</h1>
+<blockquote>
+<p><strong>Key points reference.</strong> This document summarises the design rules and principles behind the seedwork packages. It is intentionally concise — each section captures the essential constraints. For deeper context, see the <a href="#references">references</a> at the end.</p>
+</blockquote>
+<hr />
+<h2 id="1-hexagonal-architecture-fundamental-rules">1. Hexagonal Architecture — Fundamental Rules</h2>
+<p>The dependency rule is the single constraint that everything else follows from:</p>
+<div class="highlight"><pre><span></span><code>Domain ← Application ← Infrastructure
+</code></pre></div>
+<ul>
+<li><strong>Domain layer</strong> — pure business logic. No framework, no database, no HTTP. Depends on nothing outside itself.</li>
+<li><strong>Application layer</strong> — orchestration and use cases. Depends on domain types and abstract ports (interfaces/protocols). No concrete infrastructure.</li>
+<li><strong>Infrastructure layer</strong> — implements ports. Depends inward. Never imported by domain or application.</li>
+</ul>
+<p><strong>Ports are owned by the inner layer.</strong> A port is an interface or protocol defined in domain or application. The adapter that implements it lives in infrastructure. The inner layer dictates the contract; the outer layer conforms.</p>
+<p><strong>Do</strong>
+- Keep the dependency arrow always pointing inward.
+- Define ports in the layer that needs them, not the layer that implements them.</p>
+<p><strong>Don't</strong>
+- Import infrastructure types from application or domain.
+- Let framework annotations or database types leak into domain objects.</p>
+<hr />
+<h2 id="2-domain-components">2. Domain Components</h2>
+<h3 id="21-entity">2.1 Entity</h3>
+<p>An entity has <strong>identity</strong>. Two entity instances with the same ID are the same entity regardless of their other fields. Equality is identity-based, not structural.</p>
+<p><strong>Key points</strong>
+- Identity is established at construction and never changes.
+- State changes only through explicit behaviour methods — no public setters.
+- Behaviour methods return new instances (immutability). They never mutate <code>this</code>/<code>self</code>.
+- Invariants are enforced in the constructor and behaviour methods. Invalid state must be impossible to construct.</p>
+<p><strong>Do</strong>
+- Model meaningful domain operations as named methods (<code>confirm()</code>, <code>suspend()</code>, <code>assign()</code>).
+- Throw a domain-specific exception extending <code>\DomainException</code> when an invariant is violated.</p>
+<p><strong>Don't</strong>
+- Expose setters or public mutable fields.
+- Put orchestration or persistence logic inside an entity.</p>
+<hr />
+<h3 id="22-value-object">2.2 Value Object</h3>
+<p>A value object has <strong>no identity</strong>. Two instances with the same field values are equal. They are always immutable.</p>
+<p><strong>Key points</strong>
+- Equality is structural (all fields must match).
+- Validated at construction — a value object is either valid or it cannot exist.
+- Replaces primitive obsession: prefer <code>Money</code>, <code>Email</code>, <code>DateRange</code> over raw scalars.
+- Self-contained: carries its own validation and behaviour (e.g. <code>Money.add(other)</code>).</p>
+<p><strong>Do</strong>
+- Use value objects for any concept defined entirely by its attributes.
+- Validate inside the constructor — throw a domain-specific exception extending <code>\DomainException</code> on invalid input.</p>
+<p><strong>Don't</strong>
+- Use a value object for a concept that needs to be tracked over time — that is an entity.
+- Share mutable state between value objects.</p>
+<hr />
+<h3 id="23-aggregate">2.3 Aggregate</h3>
+<p>An aggregate is a <strong>consistency boundary</strong>. It groups one or more entities and value objects under a single root (the aggregate root) that enforces all invariants that span the group.</p>
+<p><strong>Key points</strong>
+- The aggregate root is the only entry point. External code never modifies inner entities directly.
+- All state changes go through behaviour methods on the root.
+- Reference other aggregates by ID only — never hold object references across aggregate boundaries.
+- Behaviour methods return new instances and append domain events.
+- Keep aggregates small. A large aggregate with many inner entities is almost always a sign of a missing bounded context boundary.</p>
+<p><strong>Do</strong>
+- Design the aggregate around the business invariants it must enforce.
+- Use <code>reconstitute</code> (or equivalent) static factory when loading from persistence — no events.</p>
+<p><strong>Don't</strong>
+- Put infrastructure or application logic inside the aggregate.
+- Let an aggregate grow to cover unrelated concepts — split it.</p>
+<hr />
+<h3 id="24-domain-event">2.4 Domain Event</h3>
+<p>A domain event is an <strong>immutable fact</strong> that something meaningful happened within the domain.</p>
+<p><strong>Key points</strong>
+- Named in past tense, using business language: <code>OrderConfirmed</code>, <code>PaymentProcessed</code>, <code>CustomerUpgradedToPremium</code>.
+- Emitted by the aggregate root after a state change.
+- Payload may include immutable domain types such as value objects and identifiers, but should not expose live aggregates or entities.
+- Processed <strong>synchronously within the same transaction</strong>. Domain event handlers run before the transaction commits.
+- Scope: in-process, same bounded context.</p>
+<p><strong>Do</strong>
+- Apply the business-language test: would a non-technical stakeholder understand this event name without explanation?
+- Keep payloads minimal and focused on the domain fact that occurred.</p>
+<p><strong>Don't</strong>
+- Name events after technical operations (<code>UserUpdated</code>, <code>RecordCreated</code>).
+- Use domain events to communicate across bounded context boundaries — use integration events for that.
+- Embed mutable entities or aggregate references in the payload.</p>
+<hr />
+<h3 id="25-domain-service">2.5 Domain Service</h3>
+<p>A domain service encapsulates <strong>domain logic that does not naturally belong to a single aggregate or value object</strong>.</p>
+<p><strong>Key points</strong>
+- Stateless — no mutable fields, no persistence.
+- Operates on domain objects passed to it as arguments.
+- Justified when: the logic involves multiple aggregates, or requires a read from a domain port to make a domain decision.
+- Should be rare. If most of your logic lives in services rather than aggregates, you have an anemic domain model.</p>
+<p><strong>Do</strong>
+- Keep domain services slim and focused on a single coordination concern.
+- Name them after the domain concept they represent, not the operation (<code>PricingPolicy</code>, <code>TransferAuthority</code>).</p>
+<p><strong>Don't</strong>
+- Use domain services as a dumping ground for logic that belongs in aggregates.
+- Inject infrastructure adapters into a domain service — use ports.
+- Make domain services stateful.</p>
+<hr />
+<h3 id="26-repository">2.6 Repository</h3>
+<p>A repository is the <strong>outbound domain port for aggregate persistence</strong>. It abstracts the storage mechanism behind a collection-like interface.</p>
+<p><strong>Key points</strong>
+- Only identity-based operations: <code>findById</code>, <code>save</code>, <code>deleteById</code>.
+- Returns full domain aggregates — not DTOs, not raw rows.
+- One repository per aggregate root.
+- The interface is defined in the domain layer; the implementation lives in infrastructure.</p>
+<p><strong>Do</strong>
+- Keep the repository interface minimal — only what the domain actually needs.
+- Return <code>null</code> from <code>findById</code> when the aggregate is not found — let the caller decide how to handle the missing result.</p>
+<p><strong>Don't</strong>
+- Add query methods to the domain repository (<code>findByEmail</code>, <code>findByStatus</code>). Use a separate read repository in the application layer.
+- Implement business logic inside the repository.
+- Let the repository return partial aggregates or raw data structures.</p>
+<hr />
+<h3 id="27-domain-ports-outbound">2.7 Domain Ports (Outbound)</h3>
+<p>Domain ports are <strong>abstract interfaces owned by the domain or application layer</strong> that allow inner layers to interact with the outside world without depending on it.</p>
+<p><strong>Key points</strong>
+- Defined in the layer that needs them (domain or application). Implemented in infrastructure.
+- <strong>Read ports</strong> — no side effects. Can be called outside of a transaction. Examples: ACL adapters that query external services, read repositories.
+- <strong>Write ports</strong> — have side effects. Must participate in the transaction if they mutate state. Examples: <code>Repository.save</code>, <code>IntegrationEventPublisher</code> (via outbox), <code>TaskScheduler</code> (via outbox).
+- The Anti-Corruption Layer (ACL) pattern translates external models into domain models at the port boundary. The adapter calls the external service; a parser maps the response to domain types.</p>
+<p><strong>Do</strong>
+- Define ports at the granularity of a single concern.
+- Use ACL parsers to isolate external model changes from the domain.</p>
+<p><strong>Don't</strong>
+- Mix read and write responsibilities in a single port.
+- Let external data structures cross the port boundary into the domain.</p>
+<hr />
+<h2 id="3-application-components">3. Application Components</h2>
+<h3 id="31-command-and-commandhandler">3.1 Command and CommandHandler</h3>
+<p>A command expresses <strong>intent to change state</strong>. The handler orchestrates the operation.</p>
+<p><strong>Key points</strong>
+- One command per write use case.
+- Commands carry the data needed to perform the operation and validate their own input.
+- The handler's responsibility is orchestration only: load aggregate → call domain method → save. No business logic in handlers.
+- The handler returns nothing — outcome is communicated via <code>Result</code> by the command bus.</p>
+<p><strong>Do</strong>
+- Keep handlers thin. If a handler contains conditionals over domain state, that logic probably belongs in the aggregate.</p>
+<p><strong>Don't</strong>
+- Put business rules in the handler.
+- Return data from a command handler — use a query for that.</p>
+<hr />
+<h3 id="32-query-and-queryhandler">3.2 Query and QueryHandler</h3>
+<p>A query is a <strong>request for data with no side effects</strong>.</p>
+<p><strong>Key points</strong>
+- Returns <code>Maybe&lt;TResult&gt;</code> — either a result or nothing.
+- Query handlers are strictly read-only. No state changes, no command dispatching.
+- Use <strong>read repositories</strong> (ad-hoc ports defined in the application layer), not the domain repository. The domain repository loads full aggregates; queries often need projections.
+- Returns DTOs (plain data objects with primitive fields) — never domain entities.</p>
+<p><strong>Do</strong>
+- Define a dedicated read port per query when the projection differs from the aggregate.
+- Return <code>nothing()</code> for both not-found and unauthorized — do not reveal resource existence to unauthorized callers.</p>
+<p><strong>Don't</strong>
+- Load a full aggregate in a query handler just to extract two fields.
+- Dispatch commands or trigger side effects from a query handler.
+- Return domain aggregates as query results.</p>
+<hr />
+<h3 id="33-unit-of-work">3.3 Unit of Work</h3>
+<p>The Unit of Work defines the <strong>transaction boundary</strong> for a command execution.</p>
+<p><strong>Key points</strong>
+- Wraps the entire command handler execution: aggregate load, domain method call, save, and domain event dispatch — all inside one transaction.
+- Domain event handlers run <strong>before the commit</strong>, inside the same transaction. If a handler throws, the transaction rolls back.
+- If the command handler throws <code>\DomainException</code>, the bus converts it to <code>Result::failed()</code>, domain events are discarded, and the transaction commits (there is nothing to roll back).
+- The transaction boundary is the command. Never let a transaction span multiple commands.</p>
+<p><strong>Do</strong>
+- Use <code>TransactionalCommandBus</code> to apply the Unit of Work transparently — handlers never see it.
+- Ensure domain event handlers run inside the same transaction.</p>
+<p><strong>Don't</strong>
+- Open a transaction manually in a handler.
+- Span a transaction across multiple aggregate roots or multiple commands.</p>
+<hr />
+<h3 id="34-application-ports-outbound">3.4 Application Ports (Outbound)</h3>
+<p>Two outbound ports at the application layer manage <strong>eventual side effects</strong>:</p>
+<p><strong><code>IntegrationEventPublisher</code></strong>
+- Publishes integration events to external consumers via the outbox pattern.
+- The publish call writes to the outbox <strong>inside the current transaction</strong>. Actual delivery to the broker happens after commit, asynchronously.
+- The application layer depends on the interface; infrastructure provides the outbox-backed implementation.</p>
+<p><strong><code>TaskScheduler</code></strong>
+- Schedules background tasks for the same service via the outbox pattern.
+- Same transactional guarantee: scheduling writes to the outbox inside the transaction.</p>
+<p><strong>Key points</strong>
+- Both ports are write ports but their delivery is eventual — they do not block the command response.
+- Transactional atomicity is guaranteed by the outbox: either the aggregate saves and the outbox record is written, or neither happens.
+- The application layer is agnostic to the delivery mechanism (broker, worker queue, etc.).</p>
+<p><strong>Do</strong>
+- Call <code>IntegrationEventPublisher.publish</code> and <code>TaskScheduler.schedule</code> from command handlers or domain event handlers — never from the domain layer.</p>
+<p><strong>Don't</strong>
+- Assume synchronous delivery.
+- Publish directly to a broker from a handler — always go through the port.</p>
+<hr />
+<h3 id="35-result">3.5 Result</h3>
+<p><code>Result</code> is the <strong>value-based error contract for commands</strong>.</p>
+<p><strong>Key points</strong>
+- Two states: <code>ok()</code> (success) and <code>failed(errors)</code> (failure with a list of <code>ResultError</code>).
+- <code>ResultError</code> carries a <code>code</code> (machine-readable) and a <code>description</code> (human-readable).
+- The command bus catches <code>\DomainException</code> thrown by handlers and converts them to <code>Result::failed()</code>. Handlers never return <code>Result</code> directly.
+- Infrastructure failures (timeouts, connection drops) propagate as exceptions — they are not wrapped in <code>Result</code>.</p>
+<p><strong>Do</strong>
+- Inspect <code>Result</code> at the entry point (controller, API handler) to decide the HTTP response.
+- Use error <code>code</code> values for programmatic branching; use <code>description</code> for logging and user messages.</p>
+<p><strong>Don't</strong>
+- Throw <code>\DomainException</code> and catch it in the handler — let the bus handle the conversion.
+- Wrap infrastructure exceptions in <code>Result</code>.</p>
+<hr />
+<h3 id="36-maybe">3.6 Maybe</h3>
+<p><code>Maybe</code> is the <strong>value-based absence contract for queries</strong>.</p>
+<p><strong>Key points</strong>
+- Two states: <code>just(value)</code> (found) and <code>nothing()</code> (absent).
+- Replaces <code>null</code>/<code>None</code> returns with an explicit type that forces the caller to handle absence.
+- Use <code>nothing()</code> for both not-found and unauthorized — identical response, no information leak.</p>
+<p><strong>Do</strong>
+- Check <code>hasValue()</code> at the entry point before calling <code>value()</code>.</p>
+<p><strong>Don't</strong>
+- Use <code>Maybe</code> for command results — that is <code>Result</code>'s responsibility.
+- Use <code>just(null)</code> — if the value is absent, return <code>nothing()</code>.</p>
+<hr />
+<h3 id="37-error-handling">3.7 Error Handling</h3>
+<table>
+<thead>
+<tr>
+<th>Error type</th>
+<th>Origin</th>
+<th>Handling</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>\DomainException</code></td>
+<td>Aggregate / domain service</td>
+<td>Caught by command bus → <code>Result::failed()</code></td>
+</tr>
+<tr>
+<td><code>ValidationErrors</code></td>
+<td>Command / Query <code>validate()</code></td>
+<td>Thrown before the handler executes</td>
+</tr>
+<tr>
+<td>Infrastructure exception</td>
+<td>Repository, external adapter</td>
+<td>Propagates — do not catch or wrap</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key points</strong>
+- The entry point (controller) handles <code>Result</code> for domain failures from the command handler, and <code>ValidationErrors</code> for input failures. It never catches <code>\DomainException</code> from command handlers — those are wrapped by <code>RegistryCommandBus</code>. Exceptions thrown by domain event handlers propagate as infrastructure failures and are handled by the global error handler (5xx).
+- Infrastructure exceptions bubble up to a global error handler.
+- Never use exceptions for flow control within the domain — that is what <code>\DomainException</code> → <code>Result::failed()</code> is for.</p>
+<p><strong>Do</strong>
+- Define a <code>\DomainException</code> subclass for each distinct business rule violation with a stable class name (the bus derives the error <code>code</code> from the class name automatically).</p>
+<p><strong>Don't</strong>
+- Catch <code>\DomainException</code> in handlers.
+- Return <code>Result::failed()</code> for infrastructure failures.
+- Use generic exception types for domain errors.</p>
+<hr />
+<h3 id="38-operation-flows">3.8 Operation Flows</h3>
+<h4 id="write-operation">Write operation</h4>
+<pre class="mermaid"><code>sequenceDiagram
+    participant API
+    participant Bus as CommandBus stack&lt;br/&gt;(transaction → coordinator → registry)
+    participant Handler as CommandHandler
+    participant Agg as Aggregate
+    participant PubRepo as DomainEventPublishingRepository
+    participant DeferredBus as DeferredDomainEventBus
+    participant EH as DomainEventHandler
+    participant IEP as IntegrationEventPublisher
+    participant TS as TaskScheduler
+
+    Note over API: validate input (Command constructor)
+    API-&gt;&gt;Bus: dispatch(command)
+    Note over Bus: 1. begin transaction
+    Bus-&gt;&gt;Handler: handle(command)
+    Handler-&gt;&gt;PubRepo: findById(id)
+    PubRepo--&gt;&gt;Handler: aggregate
+    Handler-&gt;&gt;Agg: behaviourMethod(...)
+    Agg--&gt;&gt;Handler: new aggregate + domain events
+    Handler-&gt;&gt;PubRepo: save(aggregate)
+    PubRepo-&gt;&gt;DeferredBus: publish(domainEvents)
+    Note over DeferredBus: events buffered — not dispatched yet
+    Handler--&gt;&gt;Bus: (returns)
+    Note over Bus: 2. dispatch deferred events&lt;br/&gt;(DomainEventCoordinatorCommandBus)
+    Bus-&gt;&gt;DeferredBus: dispatch()
+    DeferredBus-&gt;&gt;EH: handle(event)
+    EH-&gt;&gt;IEP: publish(integrationEvent)
+    Note over IEP: written to outbox (same TX)
+    EH-&gt;&gt;TS: schedule(task)
+    Note over TS: written to outbox (same TX)
+    EH--&gt;&gt;Bus: (returns)
+    Note over Bus: 3. commit transaction
+    Bus--&gt;&gt;API: Result</code></pre>
+<h4 id="read-operation">Read operation</h4>
+<pre class="mermaid"><code>sequenceDiagram
+    participant API
+    participant Bus as QueryBus
+    participant Handler as QueryHandler
+    participant ReadRepo as ReadRepository
+
+    Note over API: validate input (Query constructor)
+    API-&gt;&gt;Bus: ask(query)
+    Bus-&gt;&gt;Handler: handle(query)
+    Handler-&gt;&gt;ReadRepo: find projection
+    ReadRepo--&gt;&gt;Handler: DTO | null
+    Handler--&gt;&gt;Bus: Maybe&lt;DTO&gt;
+    Bus--&gt;&gt;API: Maybe&lt;DTO&gt;</code></pre>
+<hr />
+<h2 id="4-domain-events-integration-events-background-tasks">4. Domain Events · Integration Events · Background Tasks</h2>
+<p>This is the most consequential design decision in a service. Using the wrong mechanism introduces either excessive coupling or unnecessary complexity.</p>
+<h3 id="41-domain-event">4.1 Domain Event</h3>
+<p>A domain event is an <strong>in-process fact within the same bounded context</strong>.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Scope</strong></td>
+<td>In-process, same bounded context</td>
+</tr>
+<tr>
+<td><strong>Consistency</strong></td>
+<td>Strong — synchronous, within the same transaction</td>
+</tr>
+<tr>
+<td><strong>Delivery</strong></td>
+<td>Guaranteed — in-process method call</td>
+</tr>
+<tr>
+<td><strong>Audience</strong></td>
+<td>Other aggregates within the same bounded context</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key points</strong>
+- Processed by <code>DomainEventHandler</code> implementations registered on the <code>DomainEventBus</code>.
+- Handlers run within the same transaction as the command — if the transaction rolls back, their transactional effects are rolled back.
+- The <code>DomainEventPublishingRepository</code> decorator publishes recorded events automatically after <code>save</code> to the configured <code>DomainEventBus</code>. When that bus is deferred, this means the events are buffered on <code>save</code> and the handlers execute later, after the command handler completes but before the transaction commits. Handlers are unaware of the publishing mechanism.
+- The deferred bus (<code>DeferredDomainEventBus</code>) buffers events and dispatches them after the command handler completes but before the transaction commits. Handlers may therefore execute and still trigger rollback if they throw; keep side effects limited to transactional writes such as outbox inserts. Idempotent by event ID — saving the same aggregate twice in one transaction does not duplicate events.</p>
+<p><strong>Do</strong>
+- Use domain events for intra-bounded-context reactions: updating a read model, enforcing a cross-aggregate invariant reactively, triggering a follow-up operation within the same service.</p>
+<p><strong>Don't</strong>
+- Use domain events to notify other services or bounded contexts.
+- Perform I/O with side effects outside the transaction in a domain event handler.</p>
+<hr />
+<h3 id="42-integration-event">4.2 Integration Event</h3>
+<p>An integration event is a <strong>public notification that something relevant happened</strong>, intended for consumers outside the bounded context.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Scope</strong></td>
+<td>Cross-service, cross-bounded-context</td>
+</tr>
+<tr>
+<td><strong>Consistency</strong></td>
+<td>Eventual — outbox + message broker</td>
+</tr>
+<tr>
+<td><strong>Delivery</strong></td>
+<td>At-least-once (idempotent consumers required)</td>
+</tr>
+<tr>
+<td><strong>Audience</strong></td>
+<td>Other services / bounded contexts</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key points</strong>
+- Published via <code>IntegrationEventPublisher</code>. The outbox pattern guarantees atomicity: the event record is written in the same transaction as the aggregate.
+- Carries <code>type</code>, <code>version</code>, <code>correlationId</code>, and optionally <code>causationId</code>. These fields are mandatory because integration events are a <strong>public, versioned contract</strong>.
+- Schema evolution: add optional fields (backwards-compatible). Never rename, remove, or change the type of existing fields.
+- Consumers must be idempotent — at-least-once delivery is the default guarantee of any message broker.</p>
+<p><strong>Do</strong>
+- Publish integration events from domain event handlers (reacting to a domain fact).
+- Version integration events from day one. Even <code>v1</code> is a version.
+- Read <code>correlationId</code> from <code>RequestContext</code> (set at the entry point) and set <code>causationId</code> to the triggering domain event's <code>id</code> — neither <code>Command</code> nor <code>DomainEvent</code> carry these fields.</p>
+<p><strong>Don't</strong>
+- Assume that publishing an integration event means the consumer received it immediately.
+- Change the schema of a published integration event without introducing a new version.
+- Use integration events for work that stays within the same service — use a background task instead.</p>
+<hr />
+<h3 id="43-background-task">4.3 Background Task</h3>
+<p>A background task is <strong>deferred work within the same service</strong>.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Scope</strong></td>
+<td>Same service</td>
+</tr>
+<tr>
+<td><strong>Consistency</strong></td>
+<td>Eventual — outbox + internal worker</td>
+</tr>
+<tr>
+<td><strong>Delivery</strong></td>
+<td>At-least-once (idempotent handlers required)</td>
+</tr>
+<tr>
+<td><strong>Audience</strong></td>
+<td>A <code>TaskHandler</code> within the same service</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key points</strong>
+- Scheduled via <code>TaskScheduler</code>. Like <code>IntegrationEventPublisher</code>, it writes to the outbox inside the transaction.
+- Use for: long-running operations, retryable work, resource-intensive processing, or anything that should not block the command response.
+- The key distinction from integration events: a background task stays within the service and is processed by a <code>TaskHandler</code> in the same codebase. No external consumer.
+- Handlers must be idempotent — the worker may deliver the task more than once.</p>
+<p><strong>Do</strong>
+- Include <code>correlationId</code> (read from <code>RequestContext</code>) and <code>causationId</code> (the triggering domain event's <code>id</code>) in every task.
+- Design <code>TaskHandler</code> implementations to be idempotent by task ID.</p>
+<p><strong>Don't</strong>
+- Use background tasks to communicate with other services — that is an integration event.
+- Perform fire-and-forget work without the outbox guarantee — if the service crashes between scheduling and execution, the task would be lost.</p>
+<hr />
+<h3 id="44-decision-guide">4.4 Decision Guide</h3>
+<div class="highlight"><pre><span></span><code>Did something meaningful happen in the domain?
+└── YES → Emit a Domain Event
+    │
+    ├── Does another bounded context need to know?
+    │   └── YES → Also publish an Integration Event
+    │              (from a DomainEventHandler)
+    │
+    └── Does work need to happen asynchronously within this service?
+        └── YES → Schedule a Background Task
+                   (from a DomainEventHandler)
+</code></pre></div>
+<p><strong>Concrete examples</strong></p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Mechanism</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Order confirmed → update order read model</td>
+<td>Domain Event</td>
+</tr>
+<tr>
+<td>Order confirmed → notify shipping service</td>
+<td>Integration Event</td>
+</tr>
+<tr>
+<td>Order confirmed → generate PDF invoice (slow)</td>
+<td>Background Task</td>
+</tr>
+<tr>
+<td>Payment processed → update account balance</td>
+<td>Domain Event</td>
+</tr>
+<tr>
+<td>Payment processed → notify customer service</td>
+<td>Integration Event</td>
+</tr>
+<tr>
+<td>User registered → send welcome email (retryable)</td>
+<td>Background Task</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="45-cross-cutting-concerns">4.5 Cross-cutting Concerns</h3>
+<p><strong>Naming</strong> — domain events and integration events use past tense and business language; background tasks typically use imperative, action-oriented business language. Every name must be meaningful to a non-technical stakeholder without explanation.</p>
+<p><strong>Idempotency</strong> — at-least-once delivery is the default. Every domain event handler, integration event consumer, and task handler must handle duplicates. Use the event/task <code>id</code> as the deduplication key.</p>
+<p><strong>Traceability</strong> — <code>correlationId</code> does not live on <code>Command</code> or <code>DomainEvent</code>; it is held in a service-defined <code>RequestContext</code>, set at the entry point and read when constructing <code>IntegrationEvent</code> or <code>BackgroundTask</code>. Set <code>causationId</code> to the triggering domain event's <code>id</code>. These two fields, consistently propagated, make the causal chain reconstructable.</p>
+<hr />
+<h2 id="5-references">5. References</h2>
+<ul>
+<li>Evans, E. (2003). <em>Domain-Driven Design: Tackling Complexity in the Heart of Software</em>. Addison-Wesley. <a href="https://www.amazon.es/Domain-Driven-Design-Tackling-Complexity-Software/dp/0321125215">1</a></li>
+<li>Vernon, V. (2013). <em>Implementing Domain-Driven Design</em>. Addison-Wesley. <a href="https://www.amazon.es/Implementing-Domain-Driven-Design-Vaughn-Vernon/dp/0321834577">2</a></li>
+<li>Robert C. Martin, <em>Clean Architecture: A Craftsman's Guide to Software Structure and Design</em> <a href="https://www.amazon.es/Clean-Architecture-Craftsmans-Software-Structure/dp/0134494164">3</a></li>
+<li>.NET Microservices: <em>Architecture for Containerized .NET Applications</em> <a href="https://learn.microsoft.com/en-us/dotnet/architecture/microservices/">4</a></li>
+<li>Harry Percival &amp; Bob Gregory, <em>Architecture Patterns with Python</em> <a href="https://www.oreilly.com/library/view/architecture-patterns-with/9781492052197/">5</a></li>
+<li>Cockburn, A. (2005). <em>Hexagonal Architecture</em>. <a href="https://alistair.cockburn.us/hexagonal-architecture/">6</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.top", "content.code.annotate", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@11/dist/mermaid.esm.min.mjs" type="module"></script>
+      
+    
+  </body>
+</html>

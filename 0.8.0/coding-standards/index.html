@@ -1,0 +1,2214 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://aseguragonzalez.github.io/php-seedwork/0.8.0/coding-standards/">
+      
+      
+        <link rel="prev" href="../component-reference/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Coding Standards - PHP SeedWork</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#coding-standards" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="PHP SeedWork" class="md-header__button md-logo" aria-label="PHP SeedWork" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PHP SeedWork
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Coding Standards
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/aseguragonzalez/php-seedwork" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aseguragonzalez/php-seedwork
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../getting-started/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../best-practices/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Best Practices
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../component-reference/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Component Reference
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Coding Standards
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="PHP SeedWork" class="md-nav__button md-logo" aria-label="PHP SeedWork" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    PHP SeedWork
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/aseguragonzalez/php-seedwork" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aseguragonzalez/php-seedwork
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best-practices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Best Practices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../component-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Component Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Coding Standards
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Coding Standards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#general-php-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        General PHP Baseline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#do-dont-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Do / Don't Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#domain-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Domain Layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Domain Layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#entity-and-aggregateroot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entity and AggregateRoot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#value-object" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Value Object
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aggregate-and-domain-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aggregate and Domain Events
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#repository-domain-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Repository (Domain Port)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#domain-exceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Domain Exceptions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#application-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Application Layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Application Layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#command-and-commandhandler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command and CommandHandler
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#query-and-queryhandler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query and QueryHandler
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Events
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#background-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Background Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execution-context-correlationid-propagation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution context — correlationId propagation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#domaineventhandler-wiring-integration-events-and-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DomainEventHandler (wiring Integration Events and Tasks)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#result-and-maybe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Result and Maybe
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#infrastructure-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Infrastructure Layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Infrastructure Layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#domaineventbus-wiring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DomainEventBus Wiring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commandbusbuilder-full-wiring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CommandBusBuilder — Full Wiring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#querybusbuilder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        QueryBusBuilder
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inmemoryrepository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        InMemoryRepository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deferreddomaineventbusspy-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DeferredDomainEventBusSpy (Testing)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#naming-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming Conventions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phpstan-annotations-for-generics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PHPStan Annotations for Generics
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#general-php-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        General PHP Baseline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#do-dont-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Do / Don't Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#domain-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Domain Layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Domain Layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#entity-and-aggregateroot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entity and AggregateRoot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#value-object" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Value Object
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aggregate-and-domain-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aggregate and Domain Events
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#repository-domain-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Repository (Domain Port)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#domain-exceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Domain Exceptions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#application-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Application Layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Application Layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#command-and-commandhandler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command and CommandHandler
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#query-and-queryhandler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query and QueryHandler
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Events
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#background-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Background Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execution-context-correlationid-propagation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution context — correlationId propagation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#domaineventhandler-wiring-integration-events-and-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DomainEventHandler (wiring Integration Events and Tasks)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#result-and-maybe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Result and Maybe
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#infrastructure-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Infrastructure Layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Infrastructure Layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#domaineventbus-wiring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DomainEventBus Wiring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commandbusbuilder-full-wiring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CommandBusBuilder — Full Wiring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#querybusbuilder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        QueryBusBuilder
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inmemoryrepository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        InMemoryRepository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deferreddomaineventbusspy-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DeferredDomainEventBusSpy (Testing)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#naming-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming Conventions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phpstan-annotations-for-generics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PHPStan Annotations for Generics
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="coding-standards">Coding Standards</h1>
+<blockquote>
+<p><strong>Key points reference.</strong> PHP 8.4. Strict types everywhere. PSR-12 formatting.</p>
+</blockquote>
+<hr />
+<h2 id="general-php-baseline">General PHP Baseline</h2>
+<ul>
+<li>Always declare <code>declare(strict_types=1)</code> at the top of every file.</li>
+<li>Follow PSR-12 for formatting and file structure.</li>
+<li>Use <code>readonly</code> classes and constructor property promotion for immutable types (Value Objects, Commands, Queries, Events).</li>
+<li>Use PHP enums (<code>enum Foo: string</code>) instead of constants or string literals for fixed sets of values.</li>
+<li>Use <code>@template</code> PHPStan annotations for compile-time generics (PHP has no runtime generics).</li>
+<li>Use named arguments when calling constructors with many parameters.</li>
+<li>No <code>public</code> mutable properties — use <code>readonly</code> or accessor methods.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="k">declare</span><span class="p">(</span><span class="nx">strict_types</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="k">namespace</span> <span class="nx">MyService\Domain</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">SeedWork\Domain\ValueObject</span><span class="p">;</span>
+
+<span class="k">readonly</span> <span class="k">class</span> <span class="nc">Email</span> <span class="k">extends</span> <span class="nx">ValueObject</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span>
+        <span class="k">public</span> <span class="k">readonly</span> <span class="nx">string</span> <span class="nv">$value</span><span class="p">,</span>
+    <span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">protected</span> <span class="k">function</span> <span class="nf">validate</span><span class="p">()</span><span class="o">:</span> <span class="nx">void</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="nb">filter_var</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">,</span> <span class="nx">FILTER_VALIDATE_EMAIL</span><span class="p">))</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nx">InvalidEmail</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">equals</span><span class="p">(</span><span class="nx">ValueObject</span> <span class="nv">$other</span><span class="p">)</span><span class="o">:</span> <span class="nx">bool</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nv">$other</span> <span class="nx">instanceof</span> <span class="nx">self</span> <span class="o">&amp;&amp;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span> <span class="o">===</span> <span class="nv">$other</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Do</strong>
+- Declare <code>strict_types=1</code> in every file, no exceptions.
+- Use constructor property promotion to eliminate boilerplate.
+- Use <code>readonly</code> on all properties that must not change after construction.</p>
+<p><strong>Don't</strong>
+- Use <code>array</code> where a typed collection or DTO is appropriate.
+- Leave validation outside the constructor for value types.</p>
+<hr />
+<h2 id="do-dont-overview">Do / Don't Overview</h2>
+<table>
+<thead>
+<tr>
+<th>Do</th>
+<th>Don't</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>readonly class</code> for immutable types</td>
+<td>Public mutable properties</td>
+</tr>
+<tr>
+<td>Constructor property promotion</td>
+<td>Verbose <code>__construct</code> + <code>$this-&gt;x = $x</code></td>
+</tr>
+<tr>
+<td><code>@template T</code> PHPStan annotations</td>
+<td>Assume PHP has runtime generics</td>
+</tr>
+<tr>
+<td><code>Maybe</code> for query results</td>
+<td><code>null</code> returns from query handlers</td>
+</tr>
+<tr>
+<td><code>Result</code> for command outcomes</td>
+<td>Throwing <code>\DomainException</code> past the bus boundary</td>
+</tr>
+<tr>
+<td><code>RegistryCommandBus</code> + <code>CommandBusBuilder</code></td>
+<td>PSR-11 container</td>
+</tr>
+<tr>
+<td><code>DomainEventPublishingRepository</code> decorator</td>
+<td>Manual domain event publication in handlers or repositories</td>
+</tr>
+<tr>
+<td>PHP enums for status/type discriminators</td>
+<td>String constants or magic values</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="domain-layer">Domain Layer</h2>
+<h3 id="entity-and-aggregateroot">Entity and AggregateRoot</h3>
+<p><code>Entity</code> is the base for any domain object with a durable identity. <code>AggregateRoot</code> extends <code>Entity</code> and acts as the consistency boundary of the aggregate cluster — all external writes must go through it.</p>
+<div class="highlight"><pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="k">declare</span><span class="p">(</span><span class="nx">strict_types</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="k">namespace</span> <span class="nx">MyService\Domain</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">SeedWork\Domain\AggregateRoot</span><span class="p">;</span>
+
+<span class="k">abstract</span> <span class="k">readonly</span> <span class="k">class</span> <span class="nc">Account</span> <span class="k">extends</span> <span class="nx">AggregateRoot</span>
+<span class="p">{</span>
+    <span class="sd">/**</span>
+<span class="sd">     * @param array&lt;\SeedWork\Domain\DomainEvent&gt; $domainEvents</span>
+<span class="sd">     */</span>
+    <span class="k">protected</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span>
+        <span class="nx">AccountId</span> <span class="nv">$id</span><span class="p">,</span>
+        <span class="k">public</span> <span class="k">readonly</span> <span class="nx">string</span> <span class="nv">$ownerId</span><span class="p">,</span>
+        <span class="k">public</span> <span class="k">readonly</span> <span class="nx">Money</span> <span class="nv">$balance</span><span class="p">,</span>
+        <span class="k">array</span> <span class="nv">$domainEvents</span> <span class="o">=</span> <span class="p">[],</span>
+    <span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$id</span><span class="p">,</span> <span class="nv">$domainEvents</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">protected</span> <span class="k">function</span> <span class="nf">validate</span><span class="p">()</span><span class="o">:</span> <span class="nx">void</span> <span class="p">{}</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">open</span><span class="p">(</span><span class="nx">AccountId</span> <span class="nv">$id</span><span class="p">,</span> <span class="nx">string</span> <span class="nv">$ownerId</span><span class="p">,</span> <span class="nx">Money</span> <span class="nv">$initialDeposit</span><span class="p">)</span><span class="o">:</span> <span class="k">static</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="k">static</span><span class="p">(</span>
+            <span class="nx">id</span><span class="o">:</span> <span class="nv">$id</span><span class="p">,</span>
+            <span class="nx">ownerId</span><span class="o">:</span> <span class="nv">$ownerId</span><span class="p">,</span>
+            <span class="nx">balance</span><span class="o">:</span> <span class="nv">$initialDeposit</span><span class="p">,</span>
+            <span class="nx">domainEvents</span><span class="o">:</span> <span class="p">[</span><span class="nx">AccountOpened</span><span class="o">::</span><span class="na">create</span><span class="p">(</span>
+                <span class="nx">ownerId</span><span class="o">:</span> <span class="nv">$ownerId</span><span class="p">,</span>
+                <span class="nx">initialBalance</span><span class="o">:</span> <span class="nv">$initialDeposit</span><span class="p">,</span>
+                <span class="nx">aggregateId</span><span class="o">:</span> <span class="p">(</span><span class="nx">string</span><span class="p">)</span> <span class="nv">$id</span><span class="p">,</span>
+            <span class="p">)],</span>
+        <span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">deposit</span><span class="p">(</span><span class="nx">Money</span> <span class="nv">$amount</span><span class="p">)</span><span class="o">:</span> <span class="k">static</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$amount</span><span class="o">-&gt;</span><span class="na">amount</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nx">InvalidDepositAmount</span><span class="p">((</span><span class="nx">string</span><span class="p">)</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">id</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="k">new</span> <span class="k">static</span><span class="p">(</span>
+            <span class="nx">id</span><span class="o">:</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">id</span><span class="p">,</span>
+            <span class="nx">ownerId</span><span class="o">:</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ownerId</span><span class="p">,</span>
+            <span class="nx">balance</span><span class="o">:</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">balance</span><span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="nv">$amount</span><span class="p">),</span>
+            <span class="nx">domainEvents</span><span class="o">:</span> <span class="p">[</span><span class="o">...</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getDomainEvents</span><span class="p">(),</span> <span class="nx">MoneyDeposited</span><span class="o">::</span><span class="na">create</span><span class="p">(</span>
+                <span class="nx">amount</span><span class="o">:</span> <span class="nv">$amount</span><span class="p">,</span>
+                <span class="nx">aggregateId</span><span class="o">:</span> <span class="p">(</span><span class="nx">string</span><span class="p">)</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">id</span><span class="p">,</span>
+            <span class="p">)],</span>
+        <span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key points</strong>
+- Identity is established at construction; never reassigned.
+- Behaviour methods return new instances — the PHP <code>readonly</code> class guarantees no mutation.
+- Domain logic (invariants, rules) lives in the entity, not in handlers.
+- Use <code>static</code> factory methods (<code>open</code>, <code>reconstitute</code>) — never expose the constructor directly to application code.
+- <code>reconstitute</code> creates an entity from persisted state without emitting domain events.</p>
+<p><strong>Do</strong>
+- Throw a <code>\DomainException</code> subclass when an invariant is violated.
+- Pass new events in the <code>domainEvents</code> constructor argument when returning a new instance from a behaviour method.</p>
+<p><strong>Don't</strong>
+- Put orchestration, I/O, or repository calls inside an entity.
+- Expose raw state-mutation methods — model named behaviours instead.</p>
+<hr />
+<h3 id="value-object">Value Object</h3>
+<p>A Value Object models a domain concept with no identity — two instances with the same data are interchangeable. Immutability is enforced at the language level via <code>readonly</code>; validity is enforced at construction via <code>validate()</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="k">declare</span><span class="p">(</span><span class="nx">strict_types</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="k">namespace</span> <span class="nx">MyService\Domain</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">SeedWork\Domain\ValueObject</span><span class="p">;</span>
+
+<span class="k">readonly</span> <span class="k">class</span> <span class="nc">Money</span> <span class="k">extends</span> <span class="nx">ValueObject</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span>
+        <span class="k">public</span> <span class="k">readonly</span> <span class="nx">int</span> <span class="nv">$amount</span><span class="p">,</span>
+        <span class="k">public</span> <span class="k">readonly</span> <span class="nx">string</span> <span class="nv">$currency</span><span class="p">,</span>
+    <span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">protected</span> <span class="k">function</span> <span class="nf">validate</span><span class="p">()</span><span class="o">:</span> <span class="nx">void</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">amount</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nx">NegativeAmount</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">amount</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">empty</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">currency</span><span class="p">))</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nx">EmptyCurrency</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">add</span><span class="p">(</span><span class="nx">Money</span> <span class="nv">$other</span><span class="p">)</span><span class="o">:</span> <span class="nx">self</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">currency</span> <span class="o">!==</span> <span class="nv">$other</span><span class="o">-&gt;</span><span class="na">currency</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nx">CurrencyMismatch</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">currency</span><span class="p">,</span> <span class="nv">$other</span><span class="o">-&gt;</span><span class="na">currency</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nx">self</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">amount</span> <span class="o">+</span> <span class="nv">$other</span><span class="o">-&gt;</span><span class="na">amount</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">currency</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">equals</span><span class="p">(</span><span class="nx">ValueObject</span> <span class="nv">$other</span><span class="p">)</span><span class="o">:</span> <span class="nx">bool</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nv">$other</span> <span class="nx">instanceof</span> <span class="nx">self</span>
+            <span class="o">&amp;&amp;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">amount</span> <span class="o">===</span> <span class="nv">$other</span><span class="o">-&gt;</span><span class="na">amount</span>
+            <span class="o">&amp;&amp;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">currency</span> <span class="o">===</span> <span class="nv">$other</span><span class="o">-&gt;</span><span class="na">currency</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key points</strong>
+- <code>readonly class</code> — PHP enforces immutability at the language level.
+- <code>equals()</code> is structural: all fields must match.
+- Validated at construction — invalid instances cannot exist.
+- <code>validate()</code> is <code>protected</code> and called in the constructor; subclasses may extend it.</p>
+<p><strong>Don't</strong>
+- Use a Value Object for a concept that needs to be tracked individually over time — that is an Entity.</p>
+<hr />
+<h3 id="aggregate-and-domain-events">Aggregate and Domain Events</h3>
+<p>A Domain Event represents something that happened in the domain that is relevant to the business — a meaningful fact, not a technical operation. Events are always recorded by the aggregate root itself; no external code creates or injects them.</p>
+<div class="highlight"><pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="k">declare</span><span class="p">(</span><span class="nx">strict_types</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="k">namespace</span> <span class="nx">MyService\Domain</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">SeedWork\Domain\DomainEvent</span><span class="p">;</span>
+
+<span class="k">final</span> <span class="k">readonly</span> <span class="k">class</span> <span class="nc">AccountOpened</span> <span class="k">extends</span> <span class="nx">DomainEvent</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span>
+        <span class="k">public</span> <span class="k">readonly</span> <span class="nx">string</span> <span class="nv">$ownerId</span><span class="p">,</span>
+        <span class="k">public</span> <span class="k">readonly</span> <span class="nx">Money</span> <span class="nv">$initialBalance</span><span class="p">,</span>
+        <span class="nx">string</span> <span class="nv">$id</span><span class="p">,</span>
+        <span class="nx">string</span> <span class="nv">$aggregateId</span><span class="p">,</span>
+        <span class="nx">\DateTimeImmutable</span> <span class="nv">$occurredAt</span><span class="p">,</span>
+    <span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$id</span><span class="p">,</span> <span class="nv">$aggregateId</span><span class="p">,</span> <span class="nv">$occurredAt</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">create</span><span class="p">(</span>
+        <span class="nx">string</span> <span class="nv">$ownerId</span><span class="p">,</span>
+        <span class="nx">Money</span> <span class="nv">$initialBalance</span><span class="p">,</span>
+        <span class="nx">string</span> <span class="nv">$aggregateId</span><span class="p">,</span>
+        <span class="o">?</span><span class="nx">string</span> <span class="nv">$id</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span>
+        <span class="o">?</span><span class="nx">\DateTimeImmutable</span> <span class="nv">$occurredAt</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">:</span> <span class="nx">self</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nx">self</span><span class="p">(</span>
+            <span class="nv">$ownerId</span><span class="p">,</span>
+            <span class="nv">$initialBalance</span><span class="p">,</span>
+            <span class="nv">$id</span> <span class="o">??</span> <span class="s1">&#39;evt-&#39;</span> <span class="o">.</span> <span class="nb">uniqid</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="k">true</span><span class="p">),</span>
+            <span class="nv">$aggregateId</span><span class="p">,</span>
+            <span class="nv">$occurredAt</span> <span class="o">??</span> <span class="k">new</span> <span class="nx">\DateTimeImmutable</span><span class="p">(</span><span class="s1">&#39;now&#39;</span><span class="p">,</span> <span class="k">new</span> <span class="nx">\DateTimeZone</span><span class="p">(</span><span class="s1">&#39;UTC&#39;</span><span class="p">)),</span>
+        <span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key points</strong>
+- Domain events are named in past tense, business language: <code>AccountOpened</code>, <code>MoneyDeposited</code>.
+- <code>readonly class</code> — events are immutable facts.
+- Only the aggregate root records domain events — handlers and repositories never create or inject them.
+- <code>aggregateId</code> (the emitting aggregate's ID) is required on every domain event — pass it from the aggregate root.
+- <code>id</code> and <code>occurredAt</code> are provided by the <code>DomainEvent</code> base; pass them through <code>parent::__construct</code>.
+- Payload uses primitives or PHP value objects that can be serialized; no aggregate references.
+- Processed <strong>synchronously within the same transaction</strong> by <code>DomainEventHandler</code> implementations.
+- <strong>Deletion is not automatically a domain event.</strong> Use <code>deleteById</code> for technical removal with no business significance. If deletion is a meaningful domain occurrence (e.g. closing an account), model it as an aggregate behaviour (<code>account-&gt;close()</code>) that records the event — the handler then calls <code>save()</code> or <code>deleteById()</code> as appropriate. Never use <code>deleteById</code> when a domain event must be raised.</p>
+<p><strong>Do</strong>
+- Keep payloads minimal and primitive.
+- Use a <code>static create()</code> factory on the event class — pass event instances into the aggregate constructor's <code>domainEvents</code> argument.</p>
+<p><strong>Don't</strong>
+- Embed aggregate instances or value object hierarchies in event payloads.
+- Use domain events to communicate to other services — use Integration Events for that.
+- Add <code>type</code>, <code>version</code>, or <code>correlationId</code> to domain events — those belong on <code>IntegrationEvent</code>.
+- Create domain events outside the aggregate — handlers, repositories, and services must never instantiate events directly.</p>
+<hr />
+<h3 id="repository-domain-port">Repository (Domain Port)</h3>
+<p>A Repository is a domain port — defined in the domain layer, implemented in infrastructure. Its sole concern is the persistence of aggregates: it abstracts storage behind a collection-like interface so the domain never depends on a specific technology. Only aggregate roots have repositories; child entities and value objects are persisted as part of their aggregate, never independently.</p>
+<div class="highlight"><pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="k">declare</span><span class="p">(</span><span class="nx">strict_types</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="k">namespace</span> <span class="nx">MyService\Domain</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">SeedWork\Domain\Repository</span><span class="p">;</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * @extends Repository&lt;AccountId, Account&gt;</span>
+<span class="sd"> */</span>
+<span class="k">interface</span> <span class="nx">AccountRepository</span> <span class="k">extends</span> <span class="nx">Repository</span>
+<span class="p">{</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key points</strong>
+- The interface is defined in the domain layer; the concrete implementation lives in infrastructure.
+- Only identity-based operations: <code>findById</code>, <code>save</code>, <code>deleteById</code>.
+- Returns full aggregates, never DTOs or raw arrays.
+- <code>findById</code> returns <code>?Aggregate</code> (null when not found) — let the caller decide how to handle absence.
+- Use <code>@extends</code> PHPStan annotation to carry type information at analysis time.</p>
+<p><strong>Don't</strong>
+- Add query methods (<code>findByEmail</code>, <code>findByStatus</code>) to the domain repository — define a read port in the application layer.
+- Return partial aggregates or associative arrays from the repository.</p>
+<hr />
+<h3 id="domain-exceptions">Domain Exceptions</h3>
+<p>Domain exceptions represent business rule violations — named, typed, and defined in the domain layer. Each distinct invariant gets its own class extending PHP's <code>\DomainException</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="k">declare</span><span class="p">(</span><span class="nx">strict_types</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="k">namespace</span> <span class="nx">MyService\Domain</span><span class="p">;</span>
+
+<span class="k">final</span> <span class="k">class</span> <span class="nc">AccountNotFound</span> <span class="k">extends</span> <span class="nx">\DomainException</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">string</span> <span class="nv">$accountId</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="s2">&quot;Account &#39;</span><span class="si">{</span><span class="nv">$accountId</span><span class="si">}</span><span class="s2">&#39; was not found.&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">final</span> <span class="k">class</span> <span class="nc">InsufficientFunds</span> <span class="k">extends</span> <span class="nx">\DomainException</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">string</span> <span class="nv">$accountId</span><span class="p">,</span> <span class="nx">int</span> <span class="nv">$available</span><span class="p">,</span> <span class="nx">int</span> <span class="nv">$requested</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span>
+            <span class="s2">&quot;Account &#39;</span><span class="si">{</span><span class="nv">$accountId</span><span class="si">}</span><span class="s2">&#39; has insufficient funds: </span><span class="si">{</span><span class="nv">$available</span><span class="si">}</span><span class="s2"> available, </span><span class="si">{</span><span class="nv">$requested</span><span class="si">}</span><span class="s2"> requested.&quot;</span>
+        <span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key points</strong>
+- Extend PHP's stdlib <code>\DomainException</code> — the seedwork does not provide a custom base class.
+- <code>\DomainException</code> subclasses are the only correct way to signal business rule violations.
+- The <strong>class name is the machine-readable code</strong>: <code>InsufficientFunds</code> becomes <code>insufficient_funds</code> automatically — no need to declare a code manually.
+- The <strong>constructor message is the human-readable description</strong>: include the relevant context (IDs, amounts) so logs and API responses are self-explanatory without having to look up the code.
+- Caught by <code>RegistryCommandBus</code> and converted to <code>Result::failed(...)</code> automatically — handlers never catch them.
+- Infrastructure exceptions (<code>\PDOException</code>, etc.) propagate as-is — do not wrap in <code>\DomainException</code>.
+- Define one subclass per distinct business rule violation — keep them in the domain layer of your service.</p>
+<hr />
+<h2 id="application-layer">Application Layer</h2>
+<h3 id="command-and-commandhandler">Command and CommandHandler</h3>
+<p>A <code>Command</code> expresses an intent to change state — it carries the input data and is validated on construction. A <code>CommandHandler</code> receives a guaranteed-valid command, loads or creates an aggregate, calls the domain method, and saves. No business logic lives in the handler.</p>
+<div class="highlight"><pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="k">declare</span><span class="p">(</span><span class="nx">strict_types</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="k">namespace</span> <span class="nx">MyService\Application\OpenAccount</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">SeedWork\Application\Command</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">SeedWork\Application\ValidationErrors</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">SeedWork\Application\ValidationErrorDetail</span><span class="p">;</span>
+
+<span class="k">readonly</span> <span class="k">class</span> <span class="nc">OpenAccountCommand</span> <span class="k">extends</span> <span class="nx">Command</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span>
+        <span class="k">public</span> <span class="k">readonly</span> <span class="nx">string</span> <span class="nv">$accountId</span><span class="p">,</span>
+        <span class="k">public</span> <span class="k">readonly</span> <span class="nx">string</span> <span class="nv">$ownerId</span><span class="p">,</span>
+        <span class="k">public</span> <span class="k">readonly</span> <span class="nx">int</span> <span class="nv">$initialAmount</span><span class="p">,</span>
+        <span class="k">public</span> <span class="k">readonly</span> <span class="nx">string</span> <span class="nv">$currency</span><span class="p">,</span>
+    <span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">();</span>   <span class="c1">// triggers validate() — required</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">validate</span><span class="p">()</span><span class="o">:</span> <span class="nx">void</span>
+    <span class="p">{</span>
+        <span class="nv">$errors</span> <span class="o">=</span> <span class="p">[];</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="k">empty</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">accountId</span><span class="p">))</span> <span class="p">{</span>
+            <span class="nv">$errors</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ValidationErrorDetail</span><span class="p">(</span><span class="s1">&#39;accountId&#39;</span><span class="p">,</span> <span class="s1">&#39;Account ID is required.&#39;</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">initialAmount</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$errors</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ValidationErrorDetail</span><span class="p">(</span><span class="s1">&#39;initialAmount&#39;</span><span class="p">,</span> <span class="s1">&#39;Initial amount cannot be negative.&#39;</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">empty</span><span class="p">(</span><span class="nv">$errors</span><span class="p">))</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nx">ValidationErrors</span><span class="p">(</span><span class="nv">$errors</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="k">declare</span><span class="p">(</span><span class="nx">strict_types</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="k">namespace</span> <span class="nx">MyService\Application\OpenAccount</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">SeedWork\Application\CommandHandler</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">MyService\Domain\Account</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">MyService\Domain\AccountId</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">MyService\Domain\AccountRepository</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">MyService\Domain\Money</span><span class="p">;</span>
+
+<span class="k">final</span> <span class="k">class</span> <span class="nc">OpenAccountHandler</span> <span class="k">implements</span> <span class="nx">CommandHandler</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span>
+        <span class="k">private</span> <span class="k">readonly</span> <span class="nx">AccountRepository</span> <span class="nv">$accounts</span><span class="p">,</span>
+    <span class="p">)</span> <span class="p">{}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">handle</span><span class="p">(</span><span class="nx">OpenAccountCommand</span> <span class="nv">$command</span><span class="p">)</span><span class="o">:</span> <span class="nx">void</span>
+    <span class="p">{</span>
+        <span class="nv">$account</span> <span class="o">=</span> <span class="nx">Account</span><span class="o">::</span><span class="na">open</span><span class="p">(</span>
+            <span class="k">new</span> <span class="nx">AccountId</span><span class="p">(</span><span class="nv">$command</span><span class="o">-&gt;</span><span class="na">accountId</span><span class="p">),</span>
+            <span class="nv">$command</span><span class="o">-&gt;</span><span class="na">ownerId</span><span class="p">,</span>
+            <span class="k">new</span> <span class="nx">Money</span><span class="p">(</span><span class="nv">$command</span><span class="o">-&gt;</span><span class="na">initialAmount</span><span class="p">,</span> <span class="nv">$command</span><span class="o">-&gt;</span><span class="na">currency</span><span class="p">),</span>
+        <span class="p">);</span>
+
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">accounts</span><span class="o">-&gt;</span><span class="na">save</span><span class="p">(</span><span class="nv">$account</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key points</strong>
+- The handler's sole responsibility: obtain aggregate (or create new) → call domain method → save. No business logic.
+- <strong>Do not call <code>publish($aggregate-&gt;getDomainEvents())</code></strong> — <code>DomainEventPublishingRepository</code> does this automatically after <code>save()</code>.
+- <code>validate()</code> is called automatically in the <code>Command</code> constructor — the handler receives a guaranteed-valid command.
+- The handler returns <code>void</code>. The command bus wraps the result in <code>Result::ok()</code> on success or <code>Result::failed(...)</code> on <code>\DomainException</code>.
+- <code>ValidationErrors</code> propagates as an exception — it is not converted to <code>Result::failed()</code>. Capture it in a global handler at the entry point.</p>
+<p><strong>Don't</strong>
+- Put conditions over domain state in the handler.
+- Manually publish domain events after saving.
+- Return values from <code>handle()</code>.
+- Catch <code>ValidationErrors</code> in the controller — use a global exception handler.</p>
+<hr />
+<h3 id="query-and-queryhandler">Query and QueryHandler</h3>
+<p>A <code>Query</code> expresses an intent to read data — validated on construction, always read-only. A <code>QueryHandler</code> returns a <code>Maybe</code> wrapping the result; it never loads full aggregates nor triggers side effects.</p>
+<div class="highlight"><pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="k">declare</span><span class="p">(</span><span class="nx">strict_types</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="k">namespace</span> <span class="nx">MyService\Application\GetBalance</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">SeedWork\Application\Query</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">SeedWork\Application\ValidationErrors</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">SeedWork\Application\ValidationErrorDetail</span><span class="p">;</span>
+
+<span class="k">readonly</span> <span class="k">class</span> <span class="nc">GetBalanceQuery</span> <span class="k">extends</span> <span class="nx">Query</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span>
+        <span class="k">public</span> <span class="k">readonly</span> <span class="nx">string</span> <span class="nv">$accountId</span><span class="p">,</span>
+    <span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">();</span>   <span class="c1">// triggers validate() — required</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">validate</span><span class="p">()</span><span class="o">:</span> <span class="nx">void</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">empty</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">accountId</span><span class="p">))</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nx">ValidationErrors</span><span class="p">([</span>
+                <span class="k">new</span> <span class="nx">ValidationErrorDetail</span><span class="p">(</span><span class="s1">&#39;accountId&#39;</span><span class="p">,</span> <span class="s1">&#39;Account ID is required.&#39;</span><span class="p">),</span>
+            <span class="p">]);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="k">declare</span><span class="p">(</span><span class="nx">strict_types</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="k">namespace</span> <span class="nx">MyService\Application\GetBalance</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">SeedWork\Application\Maybe</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">SeedWork\Application\QueryHandler</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">MyService\Application\ReadRepositories\AccountReadRepository</span><span class="p">;</span>
+
+<span class="k">final</span> <span class="k">class</span> <span class="nc">GetBalanceHandler</span> <span class="k">implements</span> <span class="nx">QueryHandler</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span>
+        <span class="k">private</span> <span class="k">readonly</span> <span class="nx">AccountReadRepository</span> <span class="nv">$readRepository</span><span class="p">,</span>
+    <span class="p">)</span> <span class="p">{}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">handle</span><span class="p">(</span><span class="nx">GetBalanceQuery</span> <span class="nv">$query</span><span class="p">)</span><span class="o">:</span> <span class="nx">Maybe</span>
+    <span class="p">{</span>
+        <span class="nv">$balance</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">readRepository</span><span class="o">-&gt;</span><span class="na">findBalance</span><span class="p">(</span><span class="nv">$query</span><span class="o">-&gt;</span><span class="na">accountId</span><span class="p">);</span>
+
+        <span class="k">return</span> <span class="nv">$balance</span> <span class="o">!==</span> <span class="k">null</span>
+            <span class="o">?</span> <span class="nx">Maybe</span><span class="o">::</span><span class="na">just</span><span class="p">(</span><span class="nv">$balance</span><span class="p">)</span>
+            <span class="o">:</span> <span class="nx">Maybe</span><span class="o">::</span><span class="na">nothing</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key points</strong>
+- <code>handle()</code> returns <code>Maybe</code> — never <code>null</code>, never a raw value.
+- Query handlers are strictly read-only. No <code>save()</code>, no command dispatching.
+- Use a <strong>read repository</strong> (application-layer port) that returns projections/DTOs, not the domain repository.
+- Return <code>Maybe::nothing()</code> for both not-found and unauthorized — do not leak resource existence.</p>
+<p><strong>Don't</strong>
+- Load a full aggregate just to extract two fields.
+- Trigger side effects from a query handler.
+- Return domain aggregates as query results.</p>
+<hr />
+<h3 id="integration-events">Integration Events</h3>
+<p>An Integration Event communicates a meaningful business fact from this bounded context to the outside world — other services or bounded contexts that need to react to it. Unlike domain events (internal, synchronous), integration events cross service boundaries and are delivered asynchronously via a message broker. They carry a stable, versioned contract: once published, their schema must not break consumers.</p>
+<div class="highlight"><pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="k">declare</span><span class="p">(</span><span class="nx">strict_types</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="k">namespace</span> <span class="nx">MyService\Application</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">SeedWork\Application\IntegrationEvent</span><span class="p">;</span>
+
+<span class="k">final</span> <span class="k">readonly</span> <span class="k">class</span> <span class="nc">AccountOpenedIntegrationEvent</span> <span class="k">extends</span> <span class="nx">IntegrationEvent</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">const</span> <span class="no">string</span> <span class="nx">TYPE</span> <span class="o">=</span> <span class="s1">&#39;account.opened&#39;</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">const</span> <span class="no">string</span> <span class="nx">VERSION</span> <span class="o">=</span> <span class="s1">&#39;1&#39;</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span>
+        <span class="k">public</span> <span class="k">readonly</span> <span class="nx">string</span> <span class="nv">$ownerId</span><span class="p">,</span>
+        <span class="k">public</span> <span class="k">readonly</span> <span class="nx">int</span> <span class="nv">$balance</span><span class="p">,</span>
+        <span class="k">public</span> <span class="k">readonly</span> <span class="nx">string</span> <span class="nv">$currency</span><span class="p">,</span>
+        <span class="nx">string</span> <span class="nv">$aggregateId</span><span class="p">,</span>
+        <span class="nx">string</span> <span class="nv">$correlationId</span><span class="p">,</span>
+        <span class="o">?</span><span class="nx">string</span> <span class="nv">$causationId</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span>
+    <span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span>
+            <span class="nx">type</span><span class="o">:</span> <span class="nx">self</span><span class="o">::</span><span class="na">TYPE</span><span class="p">,</span>
+            <span class="nx">version</span><span class="o">:</span> <span class="nx">self</span><span class="o">::</span><span class="na">VERSION</span><span class="p">,</span>
+            <span class="nx">aggregateId</span><span class="o">:</span> <span class="nv">$aggregateId</span><span class="p">,</span>
+            <span class="nx">payload</span><span class="o">:</span> <span class="p">[</span>
+                <span class="s1">&#39;ownerId&#39;</span> <span class="o">=&gt;</span> <span class="nv">$ownerId</span><span class="p">,</span>
+                <span class="s1">&#39;balance&#39;</span> <span class="o">=&gt;</span> <span class="nv">$balance</span><span class="p">,</span>
+                <span class="s1">&#39;currency&#39;</span> <span class="o">=&gt;</span> <span class="nv">$currency</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="nx">correlationId</span><span class="o">:</span> <span class="nv">$correlationId</span><span class="p">,</span>
+            <span class="nx">causationId</span><span class="o">:</span> <span class="nv">$causationId</span><span class="p">,</span>
+            <span class="nx">metadata</span><span class="o">:</span> <span class="k">null</span><span class="p">,</span>
+        <span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Published from a <code>DomainEventHandler</code> (see below), not from the aggregate and not from the command handler.</p>
+<p><strong><code>IntegrationEventHandler</code></strong> is used on the consumer side (Subscriber entry point):</p>
+<div class="highlight"><pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="k">declare</span><span class="p">(</span><span class="nx">strict_types</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="k">namespace</span> <span class="nx">MyService\Application</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">SeedWork\Application\IntegrationEventHandler</span><span class="p">;</span>
+
+<span class="k">final</span> <span class="k">class</span> <span class="nc">AccountOpenedIntegrationEventHandler</span> <span class="k">implements</span> <span class="nx">IntegrationEventHandler</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">handle</span><span class="p">(</span><span class="nx">AccountOpenedIntegrationEvent</span> <span class="nv">$event</span><span class="p">)</span><span class="o">:</span> <span class="nx">void</span>
+    <span class="p">{</span>
+        <span class="c1">// React to an integration event from another bounded context</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key points</strong>
+- <code>type</code> and <code>version</code> are constants on the concrete class, passed to <code>parent::__construct</code>.
+- <code>aggregateId</code> identifies the source aggregate — pass it from the domain event.
+- <code>correlationId</code> is mandatory on every integration event — propagate it from the execution context.
+- <code>causationId</code> is the ID of the domain event that triggered this integration event.
+- Version from day one: <code>'1'</code> is a version. Schema evolution adds optional fields; never rename or remove existing ones.
+- Publish via <code>IntegrationEventPublisher</code> from a <code>DomainEventHandler</code> — never from the aggregate, never from the command handler.</p>
+<p><strong>Don't</strong>
+- Publish integration events directly to the broker from a handler — always go through <code>IntegrationEventPublisher</code>.
+- Omit <code>correlationId</code>.
+- Mutate an existing integration event schema — introduce a new version instead.</p>
+<hr />
+<h3 id="background-tasks">Background Tasks</h3>
+<p>A Background Task defers work that must happen eventually but does not need to complete within the current transaction — sending emails, triggering webhooks, calling external APIs. Tasks are written to an outbox before the transaction commits, guaranteeing at-least-once execution by an async worker even if the process crashes mid-flight.</p>
+<div class="highlight"><pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="k">declare</span><span class="p">(</span><span class="nx">strict_types</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="k">namespace</span> <span class="nx">MyService\Application</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">SeedWork\Application\BackgroundTask</span><span class="p">;</span>
+
+<span class="k">final</span> <span class="k">readonly</span> <span class="k">class</span> <span class="nc">SendWelcomeEmailTask</span> <span class="k">extends</span> <span class="nx">BackgroundTask</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">const</span> <span class="no">string</span> <span class="nx">TYPE</span> <span class="o">=</span> <span class="s1">&#39;send_welcome_email&#39;</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span>
+        <span class="k">public</span> <span class="k">readonly</span> <span class="nx">string</span> <span class="nv">$accountId</span><span class="p">,</span>
+        <span class="k">public</span> <span class="k">readonly</span> <span class="nx">string</span> <span class="nv">$email</span><span class="p">,</span>
+        <span class="nx">string</span> <span class="nv">$correlationId</span><span class="p">,</span>
+        <span class="o">?</span><span class="nx">string</span> <span class="nv">$causationId</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span>
+        <span class="nx">string</span> <span class="nv">$id</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="o">?</span><span class="k">array</span> <span class="nv">$metadata</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span>
+    <span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span>
+            <span class="nx">id</span><span class="o">:</span> <span class="nv">$id</span> <span class="o">?:</span> <span class="nx">\Ramsey\Uuid\Uuid</span><span class="o">::</span><span class="na">uuid4</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">toString</span><span class="p">(),</span>
+            <span class="nx">type</span><span class="o">:</span> <span class="nx">self</span><span class="o">::</span><span class="na">TYPE</span><span class="p">,</span>
+            <span class="nx">payload</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;accountId&#39;</span> <span class="o">=&gt;</span> <span class="nv">$accountId</span><span class="p">,</span> <span class="s1">&#39;email&#39;</span> <span class="o">=&gt;</span> <span class="nv">$email</span><span class="p">],</span>
+            <span class="nx">correlationId</span><span class="o">:</span> <span class="nv">$correlationId</span><span class="p">,</span>
+            <span class="nx">causationId</span><span class="o">:</span> <span class="nv">$causationId</span><span class="p">,</span>
+            <span class="nx">metadata</span><span class="o">:</span> <span class="nv">$metadata</span><span class="p">,</span>
+        <span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="k">declare</span><span class="p">(</span><span class="nx">strict_types</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="k">namespace</span> <span class="nx">MyService\Application</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">SeedWork\Application\TaskHandler</span><span class="p">;</span>
+
+<span class="k">final</span> <span class="k">class</span> <span class="nc">SendWelcomeEmailTaskHandler</span> <span class="k">implements</span> <span class="nx">TaskHandler</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">handle</span><span class="p">(</span><span class="nx">SendWelcomeEmailTask</span> <span class="nv">$task</span><span class="p">)</span><span class="o">:</span> <span class="nx">void</span>
+    <span class="p">{</span>
+        <span class="c1">// Send welcome email to $task-&gt;email</span>
+        <span class="c1">// Must be idempotent — may be called more than once for the same task ID</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Scheduled from a <code>DomainEventHandler</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="x">$this-&gt;taskScheduler-&gt;schedule(new SendWelcomeEmailTask(</span>
+<span class="x">    accountId: $event-&gt;aggregateId,</span>
+<span class="x">    email: $event-&gt;ownerEmail,</span>
+<span class="x">    correlationId: $this-&gt;requestContext-&gt;correlationId(),</span>
+<span class="x">    causationId: $event-&gt;id,</span>
+<span class="x">));</span>
+</code></pre></div>
+<p><strong>Key points</strong>
+- <code>TYPE</code> is a static string constant — used by the worker to route the task to the correct <code>TaskHandler</code>.
+- Schedule from a <code>DomainEventHandler</code> via <code>$taskScheduler-&gt;schedule($task)</code> — never from the aggregate.
+- <code>TaskHandler</code> implementations must be <strong>idempotent</strong> by task ID — at-least-once execution is the delivery guarantee.
+- <code>correlationId</code> is mandatory — read it from the execution context (<code>RequestContext</code>), not from the domain event.
+- Set <code>causationId</code> to the domain event ID that triggered the task.</p>
+<p><strong>Don't</strong>
+- Perform fire-and-forget work without going through <code>TaskScheduler</code> — tasks not in the outbox are lost on crash.
+- Use background tasks to communicate with other services — use integration events for that.</p>
+<hr />
+<h3 id="execution-context-correlationid-propagation">Execution context — correlationId propagation</h3>
+<p><code>correlationId</code> is a cross-cutting tracing concern. It is set at the entry point and read by any component that needs it — without threading it through function signatures. The <code>Command</code> and <code>DomainEvent</code> do <strong>not</strong> carry <code>correlationId</code>.</p>
+<p>In traditional synchronous PHP (one process per request), a request-scoped service is the idiomatic mechanism:</p>
+<div class="highlight"><pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="k">declare</span><span class="p">(</span><span class="nx">strict_types</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="k">namespace</span> <span class="nx">MyService\Infrastructure</span><span class="p">;</span>
+
+<span class="k">final</span> <span class="k">class</span> <span class="nc">RequestContext</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="nx">string</span> <span class="nv">$correlationId</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">initialize</span><span class="p">(</span><span class="nx">string</span> <span class="nv">$correlationId</span><span class="p">)</span><span class="o">:</span> <span class="nx">void</span>
+    <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">correlationId</span> <span class="o">=</span> <span class="nv">$correlationId</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">correlationId</span><span class="p">()</span><span class="o">:</span> <span class="nx">string</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">correlationId</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>At the entry point (controller, subscriber):</p>
+<div class="highlight"><pre><span></span><code><span class="x">// Read from HTTP header or generate a new one</span>
+<span class="x">$correlationId = $request-&gt;headers-&gt;get(&#39;X-Correlation-ID&#39;) ?? (string) Uuid::uuid4();</span>
+<span class="x">$requestContext-&gt;initialize($correlationId);</span>
+</code></pre></div>
+<p>Inject <code>RequestContext</code> into any <code>DomainEventHandler</code> or infrastructure component that needs to propagate <code>correlationId</code>. The seedwork does not provide this abstraction — define it in your service.</p>
+<blockquote>
+<p>In async PHP (Swoole, FrankenPHP workers), use fiber-local storage or an equivalent mechanism to avoid cross-request leakage.</p>
+</blockquote>
+<hr />
+<h3 id="domaineventhandler-wiring-integration-events-and-tasks">DomainEventHandler (wiring Integration Events and Tasks)</h3>
+<p>A <code>DomainEventHandler</code> reacts to a domain event inside the same transaction. It is the only place where integration events are published and background tasks are scheduled — never from the aggregate or the command handler.</p>
+<div class="highlight"><pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="k">declare</span><span class="p">(</span><span class="nx">strict_types</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="k">namespace</span> <span class="nx">MyService\Application</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">SeedWork\Application\DomainEventHandler</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">SeedWork\Application\IntegrationEventPublisher</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">SeedWork\Application\TaskScheduler</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">MyService\Infrastructure\RequestContext</span><span class="p">;</span>
+
+<span class="k">final</span> <span class="k">class</span> <span class="nc">AccountOpenedDomainEventHandler</span> <span class="k">implements</span> <span class="nx">DomainEventHandler</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span>
+        <span class="k">private</span> <span class="k">readonly</span> <span class="nx">IntegrationEventPublisher</span> <span class="nv">$integrationEventPublisher</span><span class="p">,</span>
+        <span class="k">private</span> <span class="k">readonly</span> <span class="nx">TaskScheduler</span> <span class="nv">$taskScheduler</span><span class="p">,</span>
+        <span class="k">private</span> <span class="k">readonly</span> <span class="nx">RequestContext</span> <span class="nv">$requestContext</span><span class="p">,</span>
+    <span class="p">)</span> <span class="p">{}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">handle</span><span class="p">(</span><span class="nx">AccountOpened</span> <span class="nv">$event</span><span class="p">)</span><span class="o">:</span> <span class="nx">void</span>
+    <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">integrationEventPublisher</span><span class="o">-&gt;</span><span class="na">publish</span><span class="p">(</span>
+            <span class="k">new</span> <span class="nx">AccountOpenedIntegrationEvent</span><span class="p">(</span>
+                <span class="nx">ownerId</span><span class="o">:</span> <span class="nv">$event</span><span class="o">-&gt;</span><span class="na">ownerId</span><span class="p">,</span>
+                <span class="nx">balance</span><span class="o">:</span> <span class="nv">$event</span><span class="o">-&gt;</span><span class="na">initialBalance</span><span class="o">-&gt;</span><span class="na">amount</span><span class="p">,</span>
+                <span class="nx">currency</span><span class="o">:</span> <span class="nv">$event</span><span class="o">-&gt;</span><span class="na">initialBalance</span><span class="o">-&gt;</span><span class="na">currency</span><span class="p">,</span>
+                <span class="nx">aggregateId</span><span class="o">:</span> <span class="nv">$event</span><span class="o">-&gt;</span><span class="na">aggregateId</span><span class="p">,</span>
+                <span class="nx">correlationId</span><span class="o">:</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">requestContext</span><span class="o">-&gt;</span><span class="na">correlationId</span><span class="p">(),</span>
+                <span class="nx">causationId</span><span class="o">:</span> <span class="nv">$event</span><span class="o">-&gt;</span><span class="na">id</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">);</span>
+
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">taskScheduler</span><span class="o">-&gt;</span><span class="na">schedule</span><span class="p">(</span>
+            <span class="k">new</span> <span class="nx">SendWelcomeEmailTask</span><span class="p">(</span>
+                <span class="nx">accountId</span><span class="o">:</span> <span class="nv">$event</span><span class="o">-&gt;</span><span class="na">aggregateId</span><span class="p">,</span>
+                <span class="nx">email</span><span class="o">:</span> <span class="nv">$event</span><span class="o">-&gt;</span><span class="na">ownerEmail</span><span class="p">,</span>
+                <span class="nx">correlationId</span><span class="o">:</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">requestContext</span><span class="o">-&gt;</span><span class="na">correlationId</span><span class="p">(),</span>
+                <span class="nx">causationId</span><span class="o">:</span> <span class="nv">$event</span><span class="o">-&gt;</span><span class="na">id</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key points</strong>
+- Inject <code>IntegrationEventPublisher</code> and <code>TaskScheduler</code> — never instantiate them in the handler.
+- Both <code>publish()</code> and <code>schedule()</code> write to the outbox <strong>inside the current transaction</strong>. Actual delivery is eventual.
+- <code>IntegrationEventPublisher::publish()</code> takes a <strong>single</strong> <code>IntegrationEvent</code> — call it once per event.
+- Read <code>correlationId</code> from <code>RequestContext</code> — <code>DomainEvent</code> does not carry it.
+- Set <code>causationId</code> to the domain event's <code>id</code>.
+- Use <code>$event-&gt;aggregateId</code> (available on the <code>DomainEvent</code> base) — no need to duplicate it as a field on the event.</p>
+<hr />
+<h3 id="result-and-maybe">Result and Maybe</h3>
+<p><code>Result</code> is the return type of every command dispatch: <code>ok</code> on success, <code>failed</code> with typed errors on a business rule violation. <code>Maybe</code> is the return type of every query: <code>just(value)</code> when found, <code>nothing()</code> when absent. Both eliminate null returns and unchecked exceptions from the application boundary.</p>
+<div class="highlight"><pre><span></span><code><span class="x">// Command bus returns Result — inspect at the entry point (controller)</span>
+<span class="x">$result = $commandBus-&gt;dispatch($command);</span>
+
+<span class="x">if ($result-&gt;isFailed()) {</span>
+<span class="x">    // $result-&gt;errors() returns array&lt;ResultError&gt;</span>
+<span class="x">    return $this-&gt;errorResponse($result-&gt;errors());</span>
+<span class="x">}</span>
+
+<span class="x">// Query bus returns Maybe — inspect at the entry point</span>
+<span class="x">$maybe = $queryBus-&gt;ask($query);</span>
+
+<span class="x">if (!$maybe-&gt;hasValue()) {</span>
+<span class="x">    return $this-&gt;notFoundResponse();</span>
+<span class="x">}</span>
+
+<span class="x">$data = $maybe-&gt;value();</span>
+</code></pre></div>
+<p><strong>Key points</strong>
+- <code>Result::ok()</code> — success. <code>Result::failed(array&lt;ResultError&gt; $errors)</code> — domain failure.
+- <code>Maybe::just($value)</code> — found. <code>Maybe::nothing()</code> — absent.
+- <code>Maybe::hasValue()</code> checks presence; <code>Maybe::value()</code> retrieves the value (throws if nothing).
+- The command bus catches <code>\DomainException</code> and converts it to <code>Result::failed(...)</code>. Handlers never return <code>Result</code> directly.
+- <code>ValidationErrors</code> propagates as an exception — not converted to <code>Result::failed()</code>. Capture it globally at the entry point.
+- Infrastructure exceptions propagate as-is — not wrapped in <code>Result</code>.</p>
+<hr />
+<h2 id="infrastructure-layer">Infrastructure Layer</h2>
+<h3 id="domaineventbus-wiring">DomainEventBus Wiring</h3>
+<p>The <code>DeferredDomainEventBus</code> is the standard implementation of <code>DomainEventBus</code>. Instantiate it once, wire subscriptions, then pass it to <code>DomainEventPublishingRepository</code> and <code>CommandBusBuilder</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="k">declare</span><span class="p">(</span><span class="nx">strict_types</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="k">use</span> <span class="nx">SeedWork\Infrastructure\DeferredDomainEventBus</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">SeedWork\Infrastructure\DomainEventPublishingRepository</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">MyService\Domain\AccountOpened</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">MyService\Application\AccountOpenedDomainEventHandler</span><span class="p">;</span>
+
+<span class="c1">// 1. Instantiate the bus</span>
+<span class="nv">$domainEventBus</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DeferredDomainEventBus</span><span class="p">();</span>
+
+<span class="c1">// 2. Register subscriptions (composition root)</span>
+<span class="nv">$domainEventBus</span><span class="o">-&gt;</span><span class="na">subscribe</span><span class="p">(</span>
+    <span class="nx">AccountOpened</span><span class="o">::</span><span class="na">class</span><span class="p">,</span>
+    <span class="k">new</span> <span class="nx">AccountOpenedDomainEventHandler</span><span class="p">(</span>
+        <span class="nv">$integrationEventPublisher</span><span class="p">,</span>
+        <span class="nv">$taskScheduler</span><span class="p">,</span>
+        <span class="nv">$requestContext</span><span class="p">,</span>
+    <span class="p">),</span>
+<span class="p">);</span>
+
+<span class="c1">// 3. Wrap the domain repository with the publishing decorator.</span>
+<span class="c1">//    Extend DomainEventPublishingRepository and implement your domain repository</span>
+<span class="c1">//    interface so command handlers are typed against the domain port, not the decorator.</span>
+<span class="nv">$publishingRepository</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ConcretePostgresAccountRepository</span><span class="p">(</span>
+    <span class="nv">$pdo</span><span class="p">,</span>
+    <span class="nv">$domainEventBus</span><span class="p">,</span>   <span class="c1">// satisfies DomainEventBusPublisher</span>
+<span class="p">);</span>
+</code></pre></div>
+<p><strong>Key points</strong>
+- <code>DeferredDomainEventBus</code> buffers events by ID (idempotent) and dispatches them after the handler completes but before commit.
+- Subscribe with the fully-qualified class name of the domain event (<code>AccountOpened::class</code>).
+- Pass the bus as <code>DomainEventBusPublisher</code> to the repository constructor — the handler never sees it.
+- Pass the bus as <code>DomainEventBus</code> to <code>CommandBusBuilder::withDomainEventCoordination()</code>.
+- <code>DomainEventPublishingRepository</code> is a <strong>concrete decorator</strong> — extend it in your typed infrastructure class and call <code>parent::__construct($repository, $eventBus)</code>. Extending it (rather than using it directly) preserves the typed domain repository interface for command handlers.</p>
+<hr />
+<h3 id="commandbusbuilder-full-wiring">CommandBusBuilder — Full Wiring</h3>
+<p>The correct bus stack for a write operation is:</p>
+<div class="highlight"><pre><span></span><code>TransactionalCommandBus → DomainEventCoordinatorCommandBus → RegistryCommandBus
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="k">declare</span><span class="p">(</span><span class="nx">strict_types</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="k">use</span> <span class="nx">SeedWork\Infrastructure\CommandBusBuilder</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">SeedWork\Infrastructure\RegistryCommandBus</span><span class="p">;</span>
+
+<span class="c1">// 1. Build the registry and register handlers</span>
+<span class="nv">$registry</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RegistryCommandBus</span><span class="p">();</span>
+<span class="nv">$registry</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="nx">OpenAccountCommand</span><span class="o">::</span><span class="na">class</span><span class="p">,</span> <span class="k">new</span> <span class="nx">OpenAccountHandler</span><span class="p">(</span><span class="nv">$publishingRepository</span><span class="p">));</span>
+<span class="nv">$registry</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="nx">DepositMoneyCommand</span><span class="o">::</span><span class="na">class</span><span class="p">,</span> <span class="k">new</span> <span class="nx">DepositMoneyHandler</span><span class="p">(</span><span class="nv">$publishingRepository</span><span class="p">));</span>
+
+<span class="c1">// 2. Compose the bus pipeline</span>
+<span class="nv">$commandBus</span> <span class="o">=</span> <span class="p">(</span><span class="k">new</span> <span class="nx">CommandBusBuilder</span><span class="p">(</span><span class="nv">$registry</span><span class="p">))</span>
+    <span class="o">-&gt;</span><span class="na">withTransaction</span><span class="p">(</span><span class="nv">$unitOfWork</span><span class="p">)</span>                     <span class="c1">// TransactionalCommandBus (outermost)</span>
+    <span class="o">-&gt;</span><span class="na">withDomainEventCoordination</span><span class="p">(</span><span class="nv">$domainEventBus</span><span class="p">)</span>     <span class="c1">// DomainEventCoordinatorCommandBus</span>
+    <span class="o">-&gt;</span><span class="na">build</span><span class="p">();</span>                                         <span class="c1">// RegistryCommandBus (innermost)</span>
+</code></pre></div>
+<p><strong>Key points</strong>
+- Always use <code>CommandBusBuilder</code> — never instantiate bus decorators manually.
+- No PSR-11 container. Handlers are registered by command class name with concrete instances via <code>RegistryCommandBus::register()</code>.
+- <code>withTransaction($unitOfWork)</code> must come before <code>withDomainEventCoordination()</code> — events are dispatched inside the transaction.
+- <code>withDomainEventCoordination($domainEventBus)</code> calls <code>dispatch()</code> on success and <code>discard()</code> on failure.
+- Command validation happens automatically in the <code>Command</code> constructor — no additional validation layer is needed.</p>
+<p><strong>Don't</strong>
+- Register handlers with a PSR-11 container string — pass instances directly.
+- Place <code>withDomainEventCoordination()</code> outside <code>withTransaction()</code> — events must be dispatched within the open transaction.</p>
+<hr />
+<h3 id="querybusbuilder">QueryBusBuilder</h3>
+<p><code>QueryBusBuilder</code> composes the query pipeline. Unlike the command bus, it requires no transaction or domain event coordination — query handlers are strictly read-only.</p>
+<div class="highlight"><pre><span></span><code><span class="x">use SeedWork\Infrastructure\QueryBusBuilder;</span>
+<span class="x">use SeedWork\Infrastructure\RegistryQueryBus;</span>
+
+<span class="x">$registry = new RegistryQueryBus();</span>
+<span class="x">$registry-&gt;register(GetBalanceQuery::class, new GetBalanceHandler($readRepository));</span>
+
+<span class="x">$queryBus = (new QueryBusBuilder($registry))-&gt;build();</span>
+</code></pre></div>
+<p><strong>Key points</strong>
+- Query handlers must not open transactions — no <code>withTransaction()</code> on the query bus.
+- Query validation happens automatically in the <code>Query</code> constructor.</p>
+<hr />
+<h3 id="inmemoryrepository">InMemoryRepository</h3>
+<p>Use <code>InMemoryRepository</code> from the <code>Testing</code> namespace in tests — it is a concrete class implementing the <code>InMemoryRepositorySpy</code> interface.</p>
+<div class="highlight"><pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="k">declare</span><span class="p">(</span><span class="nx">strict_types</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="k">namespace</span> <span class="nx">MyService\Tests\Infrastructure</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">SeedWork\Testing\InMemoryRepository</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">MyService\Domain\Account</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">MyService\Domain\AccountId</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">MyService\Domain\AccountRepository</span><span class="p">;</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * @extends InMemoryRepository&lt;AccountId, Account&gt;</span>
+<span class="sd"> */</span>
+<span class="k">final</span> <span class="k">class</span> <span class="nc">InMemoryAccountRepository</span> <span class="k">extends</span> <span class="nx">InMemoryRepository</span> <span class="k">implements</span> <span class="nx">AccountRepository</span>
+<span class="p">{</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key points</strong>
+- Located at <code>SeedWork\Testing\InMemoryRepository</code> — not in Infrastructure.
+- Implements <code>InMemoryRepositorySpy</code>: exposes <code>all()</code> and <code>reset()</code> for test assertions.
+- Do not override <code>findById()</code> or <code>deleteById()</code> with narrower parameter types — the base signatures use <code>mixed $id</code>. Rely on the <code>@extends</code> PHPStan annotation for compile-time type checking.</p>
+<h3 id="deferreddomaineventbusspy-testing">DeferredDomainEventBusSpy (Testing)</h3>
+<p>For tests that need to assert on buffered domain events or reset the bus between scenarios, use <code>DeferredDomainEventBusSpy</code> instead of <code>DeferredDomainEventBus</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="x">use SeedWork\Testing\DeferredDomainEventBusSpy;</span>
+
+<span class="x">$domainEventBus = new DeferredDomainEventBusSpy();</span>
+
+<span class="x">// after dispatching a command:</span>
+<span class="x">$this-&gt;assertCount(1, $domainEventBus-&gt;pending());</span>
+<span class="x">$this-&gt;assertInstanceOf(AccountOpened::class, $domainEventBus-&gt;pending()[0]);</span>
+
+<span class="x">// reset between test scenarios (preserves handler subscriptions):</span>
+<span class="x">$domainEventBus-&gt;reset();</span>
+</code></pre></div>
+<ul>
+<li><code>pending(): list&lt;DomainEvent&gt;</code> — events buffered but not yet dispatched.</li>
+<li><code>reset()</code> clears the buffer without dispatching. Different from <code>discard()</code> (production lifecycle call).</li>
+<li>Use <code>DeferredDomainEventBus</code> in production wiring; <code>DeferredDomainEventBusSpy</code> in tests only.</li>
+</ul>
+<hr />
+<h2 id="naming-conventions">Naming Conventions</h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Convention</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Classes, interfaces, enums</td>
+<td><code>PascalCase</code></td>
+<td><code>AccountRepository</code>, <code>OpenAccountCommand</code></td>
+</tr>
+<tr>
+<td>Methods</td>
+<td><code>camelCase</code></td>
+<td><code>findById</code>, <code>getDomainEvents</code>, <code>handle</code></td>
+</tr>
+<tr>
+<td>Properties</td>
+<td><code>camelCase</code></td>
+<td><code>$accountId</code>, <code>$occurredAt</code></td>
+</tr>
+<tr>
+<td>Files</td>
+<td><code>PascalCase.php</code></td>
+<td><code>OpenAccountHandler.php</code></td>
+</tr>
+<tr>
+<td>Namespaces</td>
+<td><code>PascalCase</code>, mirror directory structure</td>
+<td><code>MyService\Application\OpenAccount</code></td>
+</tr>
+<tr>
+<td>Constants</td>
+<td><code>UPPER_SNAKE_CASE</code></td>
+<td><code>TYPE</code>, <code>VERSION</code></td>
+</tr>
+<tr>
+<td>Commands</td>
+<td><code>{Verb}{Noun}Command</code></td>
+<td><code>OpenAccountCommand</code>, <code>DepositMoneyCommand</code></td>
+</tr>
+<tr>
+<td>Queries</td>
+<td><code>{Get/Find}{Noun}Query</code></td>
+<td><code>GetBalanceQuery</code>, <code>FindTransactionQuery</code></td>
+</tr>
+<tr>
+<td>Handlers</td>
+<td><code>{CommandOrQuery}Handler</code></td>
+<td><code>OpenAccountHandler</code>, <code>GetBalanceHandler</code></td>
+</tr>
+<tr>
+<td>Domain Events</td>
+<td>Past tense, <code>PascalCase</code></td>
+<td><code>AccountOpened</code>, <code>MoneyDeposited</code></td>
+</tr>
+<tr>
+<td>Integration Events</td>
+<td>Past tense + suffix</td>
+<td><code>AccountOpenedIntegrationEvent</code></td>
+</tr>
+<tr>
+<td>Background Tasks</td>
+<td>Imperative + suffix</td>
+<td><code>SendWelcomeEmailTask</code></td>
+</tr>
+<tr>
+<td>Repositories</td>
+<td><code>{Aggregate}Repository</code></td>
+<td><code>AccountRepository</code></td>
+</tr>
+<tr>
+<td>Read Repositories</td>
+<td><code>{Aggregate}ReadRepository</code></td>
+<td><code>AccountReadRepository</code></td>
+</tr>
+<tr>
+<td>InMemory test doubles</td>
+<td><code>InMemory{Aggregate}Repository</code></td>
+<td><code>InMemoryAccountRepository</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="phpstan-annotations-for-generics">PHPStan Annotations for Generics</h2>
+<p>PHP 8.4 has no runtime generics. Use PHPStan <code>@template</code> annotations to carry type information at static analysis time.</p>
+<div class="highlight"><pre><span></span><code><span class="x">/**</span>
+<span class="x"> * @template TId</span>
+<span class="x"> * @template TAgg of AggregateRoot&lt;TId&gt;</span>
+<span class="x"> * @extends Repository&lt;TId, TAgg&gt;</span>
+<span class="x"> */</span>
+<span class="x">interface AccountRepository extends Repository</span>
+<span class="x">{</span>
+<span class="x">    /** @param TId $id */</span>
+<span class="x">    public function findById(mixed $id): ?Account;</span>
+<span class="x">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="x">/**</span>
+<span class="x"> * @template TId</span>
+<span class="x"> * @template TAgg of AggregateRoot&lt;TId&gt;</span>
+<span class="x"> * @implements InMemoryRepositorySpy&lt;TId, TAgg&gt;</span>
+<span class="x"> */</span>
+<span class="x">final class InMemoryAccountRepository extends InMemoryRepository implements AccountRepository</span>
+<span class="x">{</span>
+<span class="x">    /** @var array&lt;string, TAgg&gt; */</span>
+<span class="x">    // inherited store from InMemoryRepository</span>
+<span class="x">}</span>
+</code></pre></div>
+<p><strong>Key points</strong>
+- Always annotate generic interfaces and base classes with <code>@template</code>.
+- Use <code>@extends</code> and <code>@implements</code> to propagate type parameters in subclasses.
+- PHPStan enforces these at analysis time — they have no runtime effect.
+- IDs are <code>mixed</code> — use <code>(string) $id</code> to normalize before storage.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.top", "content.code.annotate", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@11/dist/mermaid.esm.min.mjs" type="module"></script>
+      
+    
+  </body>
+</html>

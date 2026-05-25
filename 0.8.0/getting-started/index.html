@@ -1,0 +1,1188 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://aseguragonzalez.github.io/php-seedwork/0.8.0/getting-started/">
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../architecture/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Getting Started - PHP SeedWork</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#getting-started-php-seedwork" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="PHP SeedWork" class="md-header__button md-logo" aria-label="PHP SeedWork" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PHP SeedWork
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Getting Started
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/aseguragonzalez/php-seedwork" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aseguragonzalez/php-seedwork
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../best-practices/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Best Practices
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../component-reference/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Component Reference
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../coding-standards/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Coding Standards
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="PHP SeedWork" class="md-nav__button md-logo" aria-label="PHP SeedWork" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    PHP SeedWork
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/aseguragonzalez/php-seedwork" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    aseguragonzalez/php-seedwork
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-creating-a-value-object" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Creating a Value Object
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-creating-a-domain-event" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Creating a Domain Event
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-creating-an-aggregate-root" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Creating an Aggregate Root
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-defining-the-repository-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Defining the Repository (interface)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-creating-a-command-and-handler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Creating a Command and Handler
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-creating-a-query-and-handler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Creating a Query and Handler
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-wiring-the-bus-with-commandbusbuilder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Wiring the Bus with CommandBusBuilder
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-publishing-domain-events-with-domaineventpublishingrepository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Publishing Domain Events with DomainEventPublishingRepository
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-running-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Running it
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best-practices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Best Practices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../component-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Component Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../coding-standards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Coding Standards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-creating-a-value-object" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Creating a Value Object
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-creating-a-domain-event" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Creating a Domain Event
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-creating-an-aggregate-root" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Creating an Aggregate Root
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-defining-the-repository-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Defining the Repository (interface)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-creating-a-command-and-handler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Creating a Command and Handler
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-creating-a-query-and-handler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Creating a Query and Handler
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-wiring-the-bus-with-commandbusbuilder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Wiring the Bus with CommandBusBuilder
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-publishing-domain-events-with-domaineventpublishingrepository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Publishing Domain Events with DomainEventPublishingRepository
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-running-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Running it
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="getting-started-php-seedwork">Getting Started — php-seedwork</h1>
+<p>This guide walks you through the core building blocks of <code>php-seedwork</code>, using a simplified bank-account scenario. A complete working example is in <a href="examples/BankAccount/"><code>docs/examples/BankAccount/</code></a>.</p>
+<h2 id="installation">Installation</h2>
+<div class="highlight"><pre><span></span><code>composer<span class="w"> </span>require<span class="w"> </span>aseguragonzalez/php-seedwork
+</code></pre></div>
+<p>Requires <strong>PHP 8.4</strong> or later.</p>
+<hr />
+<h2 id="1-creating-a-value-object">1. Creating a Value Object</h2>
+<p>Value objects are immutable and equal by value, not identity. Extend <code>ValueObject</code>, add <code>readonly</code> properties, and implement <code>equals()</code> and <code>validate()</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="x">use SeedWork\Domain\ValueObject;</span>
+
+<span class="x">final readonly class Money extends ValueObject</span>
+<span class="x">{</span>
+<span class="x">    public function __construct(</span>
+<span class="x">        public int $amount,</span>
+<span class="x">        public string $currency,</span>
+<span class="x">    ) {</span>
+<span class="x">        parent::__construct(); // triggers validate()</span>
+<span class="x">    }</span>
+
+<span class="x">    public function equals(ValueObject $other): bool</span>
+<span class="x">    {</span>
+<span class="x">        return $other instanceof self</span>
+<span class="x">            &amp;&amp; $this-&gt;amount === $other-&gt;amount</span>
+<span class="x">            &amp;&amp; $this-&gt;currency === $other-&gt;currency;</span>
+<span class="x">    }</span>
+
+<span class="x">    protected function validate(): void</span>
+<span class="x">    {</span>
+<span class="x">        if ($this-&gt;amount &lt;= 0) {</span>
+<span class="x">            throw new \DomainException(&#39;Amount must be greater than 0&#39;);</span>
+<span class="x">        }</span>
+<span class="x">    }</span>
+<span class="x">}</span>
+</code></pre></div>
+<hr />
+<h2 id="2-creating-a-domain-event">2. Creating a Domain Event</h2>
+<p>Domain events are immutable records of something that happened. Extend <code>DomainEvent</code> and add readonly properties for the domain-specific facts. Use a private constructor and a static factory (<code>create()</code>).</p>
+<div class="highlight"><pre><span></span><code><span class="x">use SeedWork\Domain\DomainEvent;</span>
+
+<span class="x">final readonly class MoneyDeposited extends DomainEvent</span>
+<span class="x">{</span>
+<span class="x">    private function __construct(</span>
+<span class="x">        public int $amount,</span>
+<span class="x">        string $id,</span>
+<span class="x">        string $aggregateId,</span>
+<span class="x">        \DateTimeImmutable $occurredAt,</span>
+<span class="x">    ) {</span>
+<span class="x">        parent::__construct($id, $aggregateId, $occurredAt);</span>
+<span class="x">    }</span>
+
+<span class="x">    public static function create(</span>
+<span class="x">        string $aggregateId,</span>
+<span class="x">        int $amount,</span>
+<span class="x">        ?string $id = null,</span>
+<span class="x">        ?\DateTimeImmutable $occurredAt = null,</span>
+<span class="x">    ): self {</span>
+<span class="x">        return new self(</span>
+<span class="x">            $amount,</span>
+<span class="x">            $id ?? &#39;evt-&#39; . uniqid(&#39;&#39;, true),</span>
+<span class="x">            $aggregateId,</span>
+<span class="x">            $occurredAt ?? new \DateTimeImmutable(&#39;now&#39;, new \DateTimeZone(&#39;UTC&#39;)),</span>
+<span class="x">        );</span>
+<span class="x">    }</span>
+<span class="x">}</span>
+</code></pre></div>
+<p>Key rules:
+- Name events in past tense (<code>MoneyDeposited</code>, not <code>DepositMoney</code>).
+- Use UTC for <code>occurredAt</code>.
+- <code>equals()</code> is inherited and compares by string <code>id</code>.</p>
+<hr />
+<h2 id="3-creating-an-aggregate-root">3. Creating an Aggregate Root</h2>
+<p>Aggregates enforce invariants and raise domain events. Extend <code>AggregateRoot</code>, keep state immutable (return a new instance from every state-change method), and record events by passing them to the constructor.</p>
+<div class="highlight"><pre><span></span><code><span class="x">use SeedWork\Domain\AggregateRoot;</span>
+
+<span class="x">final readonly class BankAccount extends AggregateRoot</span>
+<span class="x">{</span>
+<span class="x">    private function __construct(</span>
+<span class="x">        BankAccountId $id,</span>
+<span class="x">        private int $balance,</span>
+<span class="x">        array $domainEvents = [],</span>
+<span class="x">    ) {</span>
+<span class="x">        parent::__construct($id, $domainEvents);</span>
+<span class="x">    }</span>
+
+<span class="x">    public static function open(BankAccountId $id, int $initialBalance = 0): self</span>
+<span class="x">    {</span>
+<span class="x">        return new self($id, $initialBalance, [AccountOpened::create($id, $initialBalance)]);</span>
+<span class="x">    }</span>
+
+<span class="x">    public function deposit(int $amount): self</span>
+<span class="x">    {</span>
+<span class="x">        $event = MoneyDeposited::create($this-&gt;id-&gt;value, $amount);</span>
+<span class="x">        return new self($this-&gt;id, $this-&gt;balance + $amount, [...$this-&gt;getDomainEvents(), $event]);</span>
+<span class="x">    }</span>
+
+<span class="x">    public function getBalance(): int</span>
+<span class="x">    {</span>
+<span class="x">        return $this-&gt;balance;</span>
+<span class="x">    }</span>
+
+<span class="x">    protected function validate(): void {}</span>
+<span class="x">}</span>
+</code></pre></div>
+<hr />
+<h2 id="4-defining-the-repository-interface">4. Defining the Repository (interface)</h2>
+<p>Repositories belong to the domain layer. Define an interface per aggregate that extends <code>Repository&lt;TId, T&gt;</code>. Implementations live in the infrastructure layer.</p>
+<div class="highlight"><pre><span></span><code><span class="x">use SeedWork\Domain\Repository;</span>
+
+<span class="x">/**</span>
+<span class="x"> * @extends Repository&lt;BankAccountId, BankAccount&gt;</span>
+<span class="x"> */</span>
+<span class="x">interface BankAccountRepository extends Repository {}</span>
+</code></pre></div>
+<p>The <code>Repository&lt;TId, T&gt;</code> interface declares:
+- <code>save(AggregateRoot $aggregateRoot): void</code>
+- <code>findById(mixed $id): ?AggregateRoot</code>
+- <code>deleteById(mixed $id): void</code></p>
+<hr />
+<h2 id="5-creating-a-command-and-handler">5. Creating a Command and Handler</h2>
+<p>Commands are immutable DTOs for write use cases. Handlers orchestrate the domain and return <code>void</code>; the bus wraps them in <code>Result</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="x">use SeedWork\Application\Command;</span>
+<span class="x">use SeedWork\Application\ValidationErrorDetail;</span>
+<span class="x">use SeedWork\Application\ValidationErrors;</span>
+
+<span class="x">final readonly class DepositMoneyCommand extends Command</span>
+<span class="x">{</span>
+<span class="x">    public function __construct(</span>
+<span class="x">        public string $accountId,</span>
+<span class="x">        public int $amount,</span>
+<span class="x">        public string $currency,</span>
+<span class="x">    ) {</span>
+<span class="x">        parent::__construct();</span>
+<span class="x">    }</span>
+
+<span class="x">    public function validate(): void</span>
+<span class="x">    {</span>
+<span class="x">        $errors = [];</span>
+<span class="x">        if (empty($this-&gt;accountId)) {</span>
+<span class="x">            $errors[] = new ValidationErrorDetail(&#39;account_id_required&#39;, &#39;Account ID is required.&#39;);</span>
+<span class="x">        }</span>
+<span class="x">        if ($this-&gt;amount &lt;= 0) {</span>
+<span class="x">            $errors[] = new ValidationErrorDetail(&#39;amount_must_be_positive&#39;, &#39;Amount must be positive.&#39;);</span>
+<span class="x">        }</span>
+<span class="x">        if (count($errors) &gt; 0) {</span>
+<span class="x">            throw new ValidationErrors($errors);</span>
+<span class="x">        }</span>
+<span class="x">    }</span>
+<span class="x">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="x">use SeedWork\Application\Command;</span>
+<span class="x">use SeedWork\Application\CommandHandler;</span>
+
+<span class="x">final readonly class DepositMoneyCommandHandler implements CommandHandler</span>
+<span class="x">{</span>
+<span class="x">    public function __construct(</span>
+<span class="x">        private Repository $repository,</span>
+<span class="x">    ) {}</span>
+
+<span class="x">    public function handle(Command $command): void</span>
+<span class="x">    {</span>
+<span class="x">        /** @var DepositMoneyCommand $command */</span>
+<span class="x">        $accountId = BankAccountId::fromString($command-&gt;accountId);</span>
+<span class="x">        $account = $this-&gt;repository-&gt;findById($accountId)</span>
+<span class="x">            ?? throw new \DomainException(&quot;BankAccount &#39;{$accountId}&#39; not found&quot;);</span>
+
+<span class="x">        $updated = $account-&gt;deposit($command-&gt;amount);</span>
+<span class="x">        $this-&gt;repository-&gt;save($updated);</span>
+<span class="x">    }</span>
+<span class="x">}</span>
+</code></pre></div>
+<hr />
+<h2 id="6-creating-a-query-and-handler">6. Creating a Query and Handler</h2>
+<p>Queries are immutable DTOs for read use cases. Handlers return <code>Maybe&lt;T&gt;</code> — either a value (<code>Maybe::just($result)</code>) or nothing (<code>Maybe::nothing()</code>).</p>
+<div class="highlight"><pre><span></span><code><span class="x">use SeedWork\Application\Query;</span>
+<span class="x">use SeedWork\Application\ValidationErrorDetail;</span>
+<span class="x">use SeedWork\Application\ValidationErrors;</span>
+
+<span class="x">final readonly class GetAccountBalanceQuery extends Query</span>
+<span class="x">{</span>
+<span class="x">    public function __construct(public string $accountId)</span>
+<span class="x">    {</span>
+<span class="x">        parent::__construct();</span>
+<span class="x">    }</span>
+
+<span class="x">    public function validate(): void</span>
+<span class="x">    {</span>
+<span class="x">        if (empty($this-&gt;accountId)) {</span>
+<span class="x">            throw new ValidationErrors([new ValidationErrorDetail(&#39;account_id_required&#39;, &#39;Account ID is required.&#39;)]);</span>
+<span class="x">        }</span>
+<span class="x">    }</span>
+<span class="x">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="x">use SeedWork\Application\Maybe;</span>
+<span class="x">use SeedWork\Application\Query;</span>
+<span class="x">use SeedWork\Application\QueryHandler;</span>
+
+<span class="x">final readonly class GetAccountBalanceQueryHandler implements QueryHandler</span>
+<span class="x">{</span>
+<span class="x">    public function __construct(private BankAccountRepository $repository) {}</span>
+
+<span class="x">    public function handle(Query $query): Maybe</span>
+<span class="x">    {</span>
+<span class="x">        /** @var GetAccountBalanceQuery $query */</span>
+<span class="x">        $account = $this-&gt;repository-&gt;findById(BankAccountId::fromString($query-&gt;accountId));</span>
+<span class="x">        if ($account === null) {</span>
+<span class="x">            return Maybe::nothing();</span>
+<span class="x">        }</span>
+<span class="x">        return Maybe::just(new AccountBalanceResult($account-&gt;id-&gt;value, $account-&gt;getBalance()));</span>
+<span class="x">    }</span>
+<span class="x">}</span>
+</code></pre></div>
+<hr />
+<h2 id="7-wiring-the-bus-with-commandbusbuilder">7. Wiring the Bus with CommandBusBuilder</h2>
+<p>Use <code>CommandBusBuilder</code> to compose a <code>CommandBus</code> pipeline without any DI container (no PSR-11). Decorators are applied outermost-first: validation runs before the transaction, which runs before event coordination.</p>
+<div class="highlight"><pre><span></span><code><span class="x">use SeedWork\Infrastructure\CommandBusBuilder;</span>
+<span class="x">use SeedWork\Infrastructure\DeferredDomainEventBus;</span>
+<span class="x">use SeedWork\Infrastructure\RegistryCommandBus;</span>
+
+<span class="x">$domainEventBus = new DeferredDomainEventBus();</span>
+
+<span class="x">$registry = new RegistryCommandBus();</span>
+<span class="x">$registry-&gt;register(DepositMoneyCommand::class, new DepositMoneyCommandHandler($publishingRepository));</span>
+
+<span class="x">$commandBus = (new CommandBusBuilder($registry))</span>
+<span class="x">    -&gt;withTransaction($unitOfWork)                 // wraps in DB transaction</span>
+<span class="x">    -&gt;withDomainEventCoordination($domainEventBus)   // dispatches or discards events after command</span>
+<span class="x">    -&gt;build();</span>
+
+<span class="x">$result = $commandBus-&gt;dispatch(new DepositMoneyCommand($accountId, 100, &#39;USD&#39;));</span>
+<span class="x">if ($result-&gt;isOk()) {</span>
+<span class="x">    // success</span>
+<span class="x">} elseif ($result-&gt;isFailed()) {</span>
+<span class="x">    foreach ($result-&gt;errors() as $error) {</span>
+<span class="x">        echo $error-&gt;code . &#39;: &#39; . $error-&gt;description;</span>
+<span class="x">    }</span>
+<span class="x">}</span>
+</code></pre></div>
+<p>The full stack (outermost → innermost):
+<div class="highlight"><pre><span></span><code>TransactionalCommandBus → DomainEventCoordinatorCommandBus → RegistryCommandBus
+</code></pre></div></p>
+<blockquote>
+<p><strong>Note:</strong> <code>withTransaction()</code> requires a <code>UnitOfWork</code> implementation (e.g. a Doctrine wrapper). Omit it when there is no database transaction boundary (e.g. in tests).</p>
+</blockquote>
+<hr />
+<h2 id="8-publishing-domain-events-with-domaineventpublishingrepository">8. Publishing Domain Events with DomainEventPublishingRepository</h2>
+<p>Extend <code>DomainEventPublishingRepository</code> with a thin typed wrapper that also implements your domain repository interface. This is required because PHP has no runtime generics: the base class only implements the seedwork <code>Repository</code> interface, so passing it directly where a <code>BankAccountRepository</code> is expected causes a <code>TypeError</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="x">use SeedWork\Application\DomainEventBusPublisher;</span>
+<span class="x">use SeedWork\Infrastructure\DomainEventPublishingRepository;</span>
+
+<span class="x">final class PublishingBankAccountRepository</span>
+<span class="x">    extends DomainEventPublishingRepository</span>
+<span class="x">    implements BankAccountRepository</span>
+<span class="x">{</span>
+<span class="x">    public function __construct(</span>
+<span class="x">        BankAccountRepository $repository,</span>
+<span class="x">        DomainEventBusPublisher $eventBus,</span>
+<span class="x">    ) {</span>
+<span class="x">        parent::__construct($repository, $eventBus);</span>
+<span class="x">    }</span>
+<span class="x">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="x">use SeedWork\Infrastructure\DeferredDomainEventBus;</span>
+
+<span class="x">$domainEventBus = new DeferredDomainEventBus();</span>
+
+<span class="x">// Subscribe handlers before wiring</span>
+<span class="x">$domainEventBus-&gt;subscribe(</span>
+<span class="x">    AccountOpened::class,</span>
+<span class="x">    new AccountOpenedDomainEventHandler($integrationEventPublisher)</span>
+<span class="x">);</span>
+
+<span class="x">// Typed wrapper — satisfies BankAccountRepository, publishes events after save()</span>
+<span class="x">$publishingRepository = new PublishingBankAccountRepository($repository, $domainEventBus);</span>
+</code></pre></div>
+<p><code>DeferredDomainEventBus</code> buffers events keyed by <code>event.id</code> (idempotent). The <code>DomainEventCoordinatorCommandBus</code> calls <code>dispatch()</code> on success or <code>discard()</code> on failure/exception.</p>
+<hr />
+<h2 id="9-running-it">9. Running it</h2>
+<p>A minimal composition root that ties everything together:</p>
+<div class="highlight"><pre><span></span><code><span class="x">use SeedWork\Infrastructure\CommandBusBuilder;</span>
+<span class="x">use SeedWork\Infrastructure\DeferredDomainEventBus;</span>
+<span class="x">use SeedWork\Testing\InMemoryIntegrationEventPublisher;</span>
+<span class="x">use SeedWork\Infrastructure\RegistryCommandBus;</span>
+
+<span class="x">$repository     = new InMemoryBankAccountRepository();</span>
+<span class="x">$integrationPub = new InMemoryIntegrationEventPublisher();</span>
+
+<span class="x">$domainEventBus = new DeferredDomainEventBus();</span>
+<span class="x">$domainEventBus-&gt;subscribe(AccountOpened::class, new AccountOpenedDomainEventHandler($integrationPub));</span>
+
+<span class="x">$publishingRepo = new PublishingBankAccountRepository($repository, $domainEventBus);</span>
+
+<span class="x">$registry = new RegistryCommandBus();</span>
+<span class="x">$registry-&gt;register(DepositMoneyCommand::class, new DepositMoneyCommandHandler($publishingRepo));</span>
+
+<span class="x">$commandBus = (new CommandBusBuilder($registry))</span>
+<span class="x">    -&gt;withDomainEventCoordination($domainEventBus)</span>
+<span class="x">    -&gt;build();</span>
+
+<span class="x">$result = $commandBus-&gt;dispatch(new DepositMoneyCommand($accountId, 100, &#39;USD&#39;));</span>
+</code></pre></div>
+<p>See the full <a href="examples/BankAccount/">BankAccount example</a> for a complete working implementation including queries, transfers, and a composition root.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.top", "content.code.annotate", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@11/dist/mermaid.esm.min.mjs" type="module"></script>
+      
+    
+  </body>
+</html>
