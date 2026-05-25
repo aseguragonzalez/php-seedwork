@@ -5,6 +5,11 @@ PHP applications.
 
 ## Contents
 
+- [Architecture](architecture.md) — Standard service anatomy, outbox pattern, Unit
+  of Work, idempotency, retry/DLQ, and observability (correlationId/causationId).
+- [Best practices](best-practices.md) — DDD/hexagonal layer rules, component
+  responsibilities, operation flow diagrams, and a decision guide for Domain Events
+  vs Integration Events vs Background Tasks.
 - [Component reference](component-reference.md) — Every interface, base class, and
   infrastructure component.
 - [Coding standards](coding-standards.md) — Conventions aligned with the package
