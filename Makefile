@@ -1,4 +1,4 @@
-.PHONY: all format format-check lint static-analyse test test-examples check-layer-boundaries install clean update-autoload create-package
+.PHONY: all format format-check lint static-analyse test test-examples check-layer-boundaries install clean update-autoload create-package docs-serve
 
 all: format-check lint static-analyse check-layer-boundaries test
 
@@ -42,3 +42,6 @@ update-autoload:
 create-package:
 	@mkdir -p dist
 	@composer archive --format=zip --dir=dist
+
+docs-serve:
+	@/home/vscode/.venv/bin/mkdocs serve --dev-addr=0.0.0.0:8001
