@@ -24,6 +24,9 @@
     "ghcr.io/devcontainers/features/git:1": {},
     "ghcr.io/gvatsal60/dev-container-features/pre-commit:1": {}
   },
+  "appPort": [
+    "8001:8001"
+  ],
   "forwardPorts": [
     8001,
     9003
@@ -40,5 +43,6 @@
       "onAutoForward": "notify"
     }
   },
+  "postCreateCommand": "python3 -m venv /home/vscode/.venv && /home/vscode/.venv/bin/pip install -r requirements.txt",
   "remoteUser": "vscode"
 }

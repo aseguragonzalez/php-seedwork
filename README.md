@@ -100,6 +100,8 @@ devcontainer exec --workspace-folder . make <target>
 
 ### Make targets
 
+All targets must be run inside the dev container via `devcontainer exec --workspace-folder . make <target>`. Running them directly on the host will fail because the required tools (PHP, Composer, mkdocs, etc.) are only available inside the container.
+
 - `make install` — Install pre-commit hooks and Composer dependencies.
 - `make all` — Run format-check, lint, static analysis, and tests.
 - `make test` — Run PHPUnit (with coverage in `coverage/`).
@@ -109,6 +111,21 @@ devcontainer exec --workspace-folder . make <target>
 - `make static-analyse` — Run PHPStan (level max).
 - `make clean` — Remove vendor, coverage, and caches.
 - `make create-package` — Build a zip archive in `dist/`.
+- `make docs-serve` — Serve the documentation site locally on port 8001.
+
+### Documentation site
+
+The documentation portal uses [MkDocs Material](https://squidfunk.github.io/mkdocs-material/). Dependencies are installed automatically when the dev container is created.
+
+**Serve locally:**
+
+```bash
+devcontainer exec --workspace-folder . make docs-serve
+```
+
+Then open **http://localhost:8001/php-seedwork/** in your browser. The dev container forwards port 8001 automatically; if you use VS Code with the Dev Containers extension the browser opens on its own.
+
+The server watches for file changes and reloads the browser automatically. Press `Ctrl+C` to stop it.
 
 ## Releasing
 
