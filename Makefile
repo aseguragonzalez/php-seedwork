@@ -44,4 +44,5 @@ create-package:
 	@composer archive --format=zip --dir=dist
 
 docs-serve:
-	@/home/vscode/.venv/bin/mkdocs serve --dev-addr=0.0.0.0:8001
+	@command -v mkdocs >/dev/null 2>&1 || (printf '%s\n' 'ERROR: mkdocs was not found in PATH. Activate the project virtualenv or use the documented devcontainer setup before running `make docs-serve`.'; exit 1)
+	@mkdocs serve --dev-addr=0.0.0.0:8001
