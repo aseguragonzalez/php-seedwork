@@ -7,8 +7,6 @@ namespace SeedWork\Infrastructure;
 use SeedWork\Application\DomainEventBus;
 use SeedWork\Application\DomainEventHandler;
 use SeedWork\Domain\DomainEvent;
-use SeedWork\Testing\DeferredDomainEventBusSpy;
-use SeedWork\Testing\DomainEventBusSpy;
 
 /**
  * Registry-based implementation of {@see DomainEventBus} that buffers events and
@@ -18,8 +16,8 @@ use SeedWork\Testing\DomainEventBusSpy;
  * same event twice (same id) results in a single dispatch. This prevents
  * double-handling when aggregates share events across calls.
  *
- * For test use, extend with {@see DeferredDomainEventBusSpy} to
- * gain the typed {@see DomainEventBusSpy} contract.
+ * For test use, extend with SeedWork\Testing\DeferredDomainEventBusSpy to
+ * gain the typed SeedWork\Testing\DomainEventBusSpy contract.
  *
  * @see DomainEventBus Application port.
  * @see DomainEventHandler Handlers registered via subscribe() and invoked at dispatch.
