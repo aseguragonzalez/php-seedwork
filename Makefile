@@ -22,7 +22,7 @@ test-examples:
 	composer test:examples
 
 check-layer-boundaries:
-	@! find tests/ -name "*.php" -exec grep -l "use Examples\\" {} + 2>/dev/null | grep -q . || \
+	@! find tests/ -name "*.php" -exec grep -lF "use Examples\\" {} + 2>/dev/null | grep -q . || \
 		(printf '\nERROR: tests/ must not import from Examples\\\n'; exit 1)
 
 check: check-layer-boundaries
