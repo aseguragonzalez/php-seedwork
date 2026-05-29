@@ -10,6 +10,11 @@ use SeedWork\Testing\DeferredDomainEventBusSpy;
 use Tests\Fixtures\AnotherTestEvent;
 use Tests\Fixtures\TestEvent;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class DeferredDomainEventBusTest extends TestCase
 {
     public function testDispatchDispatchesToSubscribedHandlersByEventType(): void
@@ -76,7 +81,8 @@ final class DeferredDomainEventBusTest extends TestCase
             ->method('handle')
             ->willReturnCallback(function ($event) use (&$received): void {
                 $received[] = $event;
-            });
+            })
+        ;
 
         $bus = new DeferredDomainEventBusSpy();
         $bus->subscribe(TestEvent::class, $handler);

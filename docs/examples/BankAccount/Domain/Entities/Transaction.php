@@ -4,16 +4,25 @@ declare(strict_types=1);
 
 namespace Examples\BankAccount\Domain\Entities;
 
-use SeedWork\Domain\Entity;
 use Examples\BankAccount\Domain\Exceptions\BankAccountException;
 use Examples\BankAccount\Domain\ValueObjects\Money;
 use Examples\BankAccount\Domain\ValueObjects\TransactionType;
+use SeedWork\Domain\Entity;
 
 /**
  * @extends Entity<TransactionId>
  */
 final readonly class Transaction extends Entity
 {
+    private function __construct(
+        TransactionId $id,
+        public TransactionType $type,
+        public Money $amount,
+        public \DateTimeImmutable $createdAt,
+    ) {
+        parent::__construct($id);
+    }
+
     public static function create(
         TransactionType $type,
         Money $amount,
@@ -35,15 +44,6 @@ final readonly class Transaction extends Entity
         \DateTimeImmutable $createdAt,
     ): self {
         return new self($id, $type, $amount, $createdAt);
-    }
-
-    private function __construct(
-        TransactionId $id,
-        public TransactionType $type,
-        public Money $amount,
-        public \DateTimeImmutable $createdAt,
-    ) {
-        parent::__construct($id);
     }
 
     protected function validate(): void

@@ -29,8 +29,8 @@ interface TaskSchedulerSpy extends TaskScheduler
     /**
      * Registers a handler for the given task type.
      *
-     * @param string $taskType Task type identifier (e.g. 'domain.action_name').
-     * @param TaskHandler $handler Handler instance to invoke.
+     * @param string      $taskType Task type identifier (e.g. 'domain.action_name').
+     * @param TaskHandler $handler  handler instance to invoke
      */
     public function register(string $taskType, TaskHandler $handler): void;
 

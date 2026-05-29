@@ -9,23 +9,13 @@ use SeedWork\Application\BackgroundTask;
 use SeedWork\Infrastructure\OutboxTaskScheduler;
 use SeedWork\Infrastructure\TaskOutboxRepository;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class OutboxTaskSchedulerTest extends TestCase
 {
-    private function createTask(string $id = 'task-001'): BackgroundTask
-    {
-        return new readonly class ($id) extends BackgroundTask {
-            public function __construct(string $id)
-            {
-                parent::__construct(
-                    id: $id,
-                    type: 'domain.test_task',
-                    payload: ['key' => 'value'],
-                    correlationId: 'corr-001'
-                );
-            }
-        };
-    }
-
     public function testScheduleDelegatesToRepository(): void
     {
         $task = $this->createTask();
@@ -46,5 +36,20 @@ final class OutboxTaskSchedulerTest extends TestCase
 
         $scheduler->schedule($task1);
         $scheduler->schedule($task2);
+    }
+
+    private function createTask(string $id = 'task-001'): BackgroundTask
+    {
+        return new readonly class($id) extends BackgroundTask {
+            public function __construct(string $id)
+            {
+                parent::__construct(
+                    id: $id,
+                    type: 'domain.test_task',
+                    payload: ['key' => 'value'],
+                    correlationId: 'corr-001'
+                );
+            }
+        };
     }
 }

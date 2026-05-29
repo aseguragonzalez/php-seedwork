@@ -38,8 +38,9 @@ abstract readonly class ValueObject
     /**
      * Compares this value object to another by value (attributes), not by identity.
      *
-     * @param ValueObject $other Another value object of the same (or compatible) type.
-     * @return bool True if all significant attributes are equal.
+     * @param ValueObject $other another value object of the same (or compatible) type
+     *
+     * @return bool true if all significant attributes are equal
      */
     abstract public function equals(ValueObject $other): bool;
 
@@ -49,7 +50,7 @@ abstract readonly class ValueObject
      * Called from the constructor. Must throw (e.g. InvalidArgumentException) when
      * the object would be in an invalid state.
      *
-     * @throws \InvalidArgumentException When validation fails.
+     * @throws \InvalidArgumentException when validation fails
      */
     abstract protected function validate(): void;
 }

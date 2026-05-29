@@ -7,6 +7,11 @@ namespace Tests\Domain;
 use PHPUnit\Framework\TestCase;
 use Tests\Fixtures\TestEvent;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class DomainEventTest extends TestCase
 {
     public function testEquals(): void

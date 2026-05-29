@@ -9,6 +9,11 @@ use SeedWork\Application\ValidationErrors;
 use Tests\Fixtures\AnotherTestQuery;
 use Tests\Fixtures\TestQuery;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class QueryTest extends TestCase
 {
     public function testConstructionSucceedsWhenValidationPasses(): void

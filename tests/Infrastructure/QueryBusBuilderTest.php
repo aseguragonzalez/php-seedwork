@@ -10,6 +10,11 @@ use SeedWork\Application\QueryBus;
 use SeedWork\Infrastructure\QueryBusBuilder;
 use SeedWork\Infrastructure\RegistryQueryBus;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class QueryBusBuilderTest extends TestCase
 {
     public function testBuildWithNoStepsReturnsRegistryDirectly(): void
@@ -48,7 +53,8 @@ final class QueryBusBuilderTest extends TestCase
 
         $result = (new QueryBusBuilder(new RegistryQueryBus()))
             ->use(fn (QueryBus $inner): QueryBus => $customBus)
-            ->build();
+            ->build()
+        ;
 
         self::assertSame($customBus, $result);
     }
@@ -61,7 +67,8 @@ final class QueryBusBuilderTest extends TestCase
         $result = (new QueryBusBuilder(new RegistryQueryBus()))
             ->use(fn (QueryBus $bus): QueryBus => $outerBus)
             ->use(fn (QueryBus $bus): QueryBus => $innerBus)
-            ->build();
+            ->build()
+        ;
 
         self::assertSame($outerBus, $result);
     }

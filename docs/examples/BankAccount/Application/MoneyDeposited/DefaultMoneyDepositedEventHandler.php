@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Examples\BankAccount\Application\MoneyDeposited;
 
-use SeedWork\Domain\DomainEvent;
 use Examples\BankAccount\Domain\Events\MoneyDeposited;
+use SeedWork\Domain\DomainEvent;
 
 /**
  * Default event handler for the MoneyDeposited event.
@@ -14,7 +14,6 @@ final readonly class DefaultMoneyDepositedEventHandler implements MoneyDeposited
 {
     /**
      * @param MoneyDeposited $event
-     * @return void
      */
     public function handle(DomainEvent $event): void
     {

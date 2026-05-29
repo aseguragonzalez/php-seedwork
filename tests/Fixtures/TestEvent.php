@@ -25,7 +25,7 @@ final readonly class TestEvent extends DomainEvent
     ): self {
         return new self(
             $name,
-            $id ?? 'evt-' . uniqid('', true),
+            $id ?? 'evt-'.uniqid('', true),
             $aggregateId ?? 'agg-test',
             $occurredAt ?? new \DateTimeImmutable('now', new \DateTimeZone('UTC')),
         );

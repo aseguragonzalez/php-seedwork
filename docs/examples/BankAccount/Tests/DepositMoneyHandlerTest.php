@@ -4,18 +4,23 @@ declare(strict_types=1);
 
 namespace Examples\BankAccount\Tests;
 
-use PHPUnit\Framework\TestCase;
-use SeedWork\Infrastructure\CommandBusBuilder;
-use SeedWork\Infrastructure\DeferredDomainEventBus;
-use Examples\BankAccount\Infrastructure\Repositories\PublishingBankAccountRepository;
-use SeedWork\Infrastructure\RegistryCommandBus;
 use Examples\BankAccount\Application\DepositMoney\DepositMoneyCommand;
 use Examples\BankAccount\Application\DepositMoney\DepositMoneyCommandHandler;
 use Examples\BankAccount\Domain\Entities\BankAccount;
 use Examples\BankAccount\Domain\ValueObjects\AccountBalance;
 use Examples\BankAccount\Domain\ValueObjects\Currency;
 use Examples\BankAccount\Infrastructure\Repositories\InMemoryBankAccountRepository;
+use Examples\BankAccount\Infrastructure\Repositories\PublishingBankAccountRepository;
+use PHPUnit\Framework\TestCase;
+use SeedWork\Infrastructure\CommandBusBuilder;
+use SeedWork\Infrastructure\DeferredDomainEventBus;
+use SeedWork\Infrastructure\RegistryCommandBus;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class DepositMoneyHandlerTest extends TestCase
 {
     public function testDepositUpdatesBalanceAndReturnsOk(): void
@@ -34,7 +39,8 @@ final class DepositMoneyHandlerTest extends TestCase
         );
         $bus = (new CommandBusBuilder($registry))
             ->withDomainEventCoordination($domainEventBus)
-            ->build();
+            ->build()
+        ;
 
         $result = $bus->dispatch(new DepositMoneyCommand($account->id->value, 50, 'USD'));
 

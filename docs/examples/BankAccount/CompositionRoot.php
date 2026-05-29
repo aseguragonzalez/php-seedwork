@@ -4,15 +4,6 @@ declare(strict_types=1);
 
 namespace Examples\BankAccount;
 
-use SeedWork\Application\CommandBus;
-use SeedWork\Application\QueryBus;
-use SeedWork\Infrastructure\CommandBusBuilder;
-use SeedWork\Infrastructure\DeferredDomainEventBus;
-use Examples\BankAccount\Infrastructure\Repositories\PublishingBankAccountRepository;
-use SeedWork\Testing\InMemoryIntegrationEventPublisher;
-use SeedWork\Infrastructure\QueryBusBuilder;
-use SeedWork\Infrastructure\RegistryCommandBus;
-use SeedWork\Infrastructure\RegistryQueryBus;
 use Examples\BankAccount\Application\AccountOpened\AccountOpenedDomainEventHandler;
 use Examples\BankAccount\Application\DepositMoney\DepositMoneyCommand;
 use Examples\BankAccount\Application\DepositMoney\DepositMoneyCommandHandler;
@@ -24,6 +15,15 @@ use Examples\BankAccount\Application\WithdrawMoney\WithdrawMoneyCommand;
 use Examples\BankAccount\Application\WithdrawMoney\WithdrawMoneyCommandHandler;
 use Examples\BankAccount\Domain\Events\AccountOpened;
 use Examples\BankAccount\Infrastructure\Repositories\InMemoryBankAccountRepository;
+use Examples\BankAccount\Infrastructure\Repositories\PublishingBankAccountRepository;
+use SeedWork\Application\CommandBus;
+use SeedWork\Application\QueryBus;
+use SeedWork\Infrastructure\CommandBusBuilder;
+use SeedWork\Infrastructure\DeferredDomainEventBus;
+use SeedWork\Infrastructure\QueryBusBuilder;
+use SeedWork\Infrastructure\RegistryCommandBus;
+use SeedWork\Infrastructure\RegistryQueryBus;
+use SeedWork\Testing\InMemoryIntegrationEventPublisher;
 
 /**
  * Composition root for the BankAccount example.
@@ -65,7 +65,8 @@ final class CompositionRoot
 
         $this->commandBus = (new CommandBusBuilder($commandRegistry))
             ->withDomainEventCoordination($this->domainEventBus)
-            ->build();
+            ->build()
+        ;
 
         $queryRegistry = new RegistryQueryBus();
         $queryRegistry->register(
@@ -74,7 +75,8 @@ final class CompositionRoot
         );
 
         $this->queryBus = (new QueryBusBuilder($queryRegistry))
-            ->build();
+            ->build()
+        ;
     }
 
     public function commandBus(): CommandBus

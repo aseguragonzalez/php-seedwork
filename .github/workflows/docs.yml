@@ -7,12 +7,12 @@ name: PHP SeedWork Docs
 on:
   push:
     tags:
-    - 'v*'
+    - v*
     branches:
     - main
     paths:
-    - 'docs/**'
-    - 'mkdocs.yml'
+    - docs/**
+    - mkdocs.yml
   workflow_dispatch:
     inputs:
       version:

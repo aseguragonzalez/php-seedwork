@@ -6,26 +6,16 @@ namespace Tests\Infrastructure;
 
 use PHPUnit\Framework\TestCase;
 use SeedWork\Application\BackgroundTask;
-use SeedWork\Testing\InMemoryTaskOutboxRepository;
 use SeedWork\Infrastructure\TaskOutboxStatus;
+use SeedWork\Testing\InMemoryTaskOutboxRepository;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class InMemoryTaskOutboxRepositoryTest extends TestCase
 {
-    private function createTask(string $id = 'task-001', string $type = 'domain.test_task'): BackgroundTask
-    {
-        return new readonly class ($id, $type) extends BackgroundTask {
-            public function __construct(string $id, string $type)
-            {
-                parent::__construct(
-                    id: $id,
-                    type: $type,
-                    payload: ['key' => 'value'],
-                    correlationId: 'corr-001'
-                );
-            }
-        };
-    }
-
     public function testSaveCreatesAPendingRecord(): void
     {
         $repo = new InMemoryTaskOutboxRepository();
@@ -183,5 +173,20 @@ final class InMemoryTaskOutboxRepositoryTest extends TestCase
         $pending = $repo->findPending();
         $this->assertCount(1, $pending);
         $this->assertSame(TaskOutboxStatus::Pending, $pending[0]->status);
+    }
+
+    private function createTask(string $id = 'task-001', string $type = 'domain.test_task'): BackgroundTask
+    {
+        return new readonly class($id, $type) extends BackgroundTask {
+            public function __construct(string $id, string $type)
+            {
+                parent::__construct(
+                    id: $id,
+                    type: $type,
+                    payload: ['key' => 'value'],
+                    correlationId: 'corr-001'
+                );
+            }
+        };
     }
 }

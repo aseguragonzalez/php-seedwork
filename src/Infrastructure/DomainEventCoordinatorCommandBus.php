@@ -29,15 +29,15 @@ final class DomainEventCoordinatorCommandBus implements CommandBus
     public function __construct(
         private readonly CommandBus $inner,
         private readonly DomainEventBus $eventBus
-    ) {
-    }
+    ) {}
 
     /**
      * Dispatches the command to the inner bus. On ok, calls eventBus->dispatch();
      * on fail or any exception, calls eventBus->discard(). Exceptions propagate after discard.
      *
-     * @param Command $command The command to dispatch.
-     * @return Result The result from the inner bus.
+     * @param Command $command the command to dispatch
+     *
+     * @return Result the result from the inner bus
      */
     public function dispatch(Command $command): Result
     {
@@ -45,6 +45,7 @@ final class DomainEventCoordinatorCommandBus implements CommandBus
             $result = $this->inner->dispatch($command);
         } catch (\Throwable $e) {
             $this->eventBus->discard();
+
             throw $e;
         }
         if ($result->isOk()) {
@@ -52,11 +53,13 @@ final class DomainEventCoordinatorCommandBus implements CommandBus
                 $this->eventBus->dispatch();
             } catch (\Throwable $e) {
                 $this->eventBus->discard();
+
                 throw $e;
             }
         } else {
             $this->eventBus->discard();
         }
+
         return $result;
     }
 }

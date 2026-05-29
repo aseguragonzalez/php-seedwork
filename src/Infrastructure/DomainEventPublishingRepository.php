@@ -41,6 +41,7 @@ use SeedWork\Domain\Repository;
  *
  * @template TId
  * @template T of AggregateRoot<TId>
+ *
  * @implements Repository<TId, T>
  *
  * @see Repository              Domain port this decorates.
@@ -54,8 +55,7 @@ class DomainEventPublishingRepository implements Repository
     public function __construct(
         private readonly Repository $repository,
         private readonly DomainEventBusPublisher $eventBus,
-    ) {
-    }
+    ) {}
 
     /**
      * Persists the aggregate, then publishes its collected events.
@@ -69,7 +69,7 @@ class DomainEventPublishingRepository implements Repository
     }
 
     /**
-     * @return T|null
+     * @return null|T
      */
     public function findById(mixed $id): ?AggregateRoot
     {

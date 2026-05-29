@@ -19,8 +19,7 @@ final class OutboxTaskScheduler implements TaskScheduler
 {
     public function __construct(
         private readonly TaskOutboxRepository $repository
-    ) {
-    }
+    ) {}
 
     public function schedule(BackgroundTask $task): void
     {

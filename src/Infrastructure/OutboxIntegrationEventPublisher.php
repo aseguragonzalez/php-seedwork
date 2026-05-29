@@ -19,8 +19,7 @@ final class OutboxIntegrationEventPublisher implements IntegrationEventPublisher
 {
     public function __construct(
         private readonly IntegrationEventOutboxRepository $repository
-    ) {
-    }
+    ) {}
 
     public function publish(IntegrationEvent $event): void
     {

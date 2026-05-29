@@ -9,6 +9,4 @@ use SeedWork\Testing\InMemoryRepository;
 /**
  * @extends InMemoryRepository<TestId, TestAggregate>
  */
-final class TestRepository extends InMemoryRepository
-{
-}
+final class TestRepository extends InMemoryRepository {}

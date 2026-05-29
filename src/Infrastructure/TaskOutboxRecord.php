@@ -19,13 +19,13 @@ use SeedWork\Application\BackgroundTask;
 final readonly class TaskOutboxRecord
 {
     /**
-     * @param string $id              The background task's ID; used as the outbox record key.
-     * @param BackgroundTask $task    The background task to be executed.
-     * @param TaskOutboxStatus $status Current lifecycle status.
-     * @param int $attempts           Number of delivery attempts so far.
-     * @param \DateTimeImmutable $createdAt When this record was created (UTC).
-     * @param string|null $lastError  Last error message if delivery failed.
-     * @param \DateTimeImmutable|null $deliveredAt When the task was successfully delivered.
+     * @param string                  $id          the background task's ID; used as the outbox record key
+     * @param BackgroundTask          $task        the background task to be executed
+     * @param TaskOutboxStatus        $status      current lifecycle status
+     * @param int                     $attempts    number of delivery attempts so far
+     * @param \DateTimeImmutable      $createdAt   when this record was created (UTC)
+     * @param null|string             $lastError   last error message if delivery failed
+     * @param null|\DateTimeImmutable $deliveredAt when the task was successfully delivered
      */
     public function __construct(
         public string $id,
@@ -35,6 +35,5 @@ final readonly class TaskOutboxRecord
         public \DateTimeImmutable $createdAt,
         public ?string $lastError = null,
         public ?\DateTimeImmutable $deliveredAt = null
-    ) {
-    }
+    ) {}
 }

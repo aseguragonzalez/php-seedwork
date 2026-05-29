@@ -21,30 +21,31 @@ interface TaskOutboxRepository
     /**
      * Persists a new outbox record for the given task with Pending status.
      *
-     * @param BackgroundTask $task The task to store.
+     * @param BackgroundTask $task the task to store
      */
     public function save(BackgroundTask $task): void;
 
     /**
      * Returns pending outbox records up to the given limit.
      *
-     * @param int $limit Maximum number of records to return.
-     * @return list<TaskOutboxRecord> Pending records ordered by creation time.
+     * @param int $limit maximum number of records to return
+     *
+     * @return list<TaskOutboxRecord> pending records ordered by creation time
      */
     public function findPending(int $limit = 100): array;
 
     /**
      * Marks the outbox record as successfully delivered.
      *
-     * @param string $id Outbox record ID.
+     * @param string $id outbox record ID
      */
     public function markAsDelivered(string $id): void;
 
     /**
      * Marks the outbox record as failed with the given error message.
      *
-     * @param string $id    Outbox record ID.
-     * @param string $error Error description for diagnostics.
+     * @param string $id    outbox record ID
+     * @param string $error error description for diagnostics
      */
     public function markAsFailed(string $id, string $error): void;
 }

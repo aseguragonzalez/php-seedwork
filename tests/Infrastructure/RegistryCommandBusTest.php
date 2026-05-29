@@ -11,6 +11,11 @@ use Tests\Fixtures\AnotherTestCommand;
 use Tests\Fixtures\TestCommand;
 use Tests\Fixtures\TestDomainException;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class RegistryCommandBusTest extends TestCase
 {
     public function testDispatchInvokesRegisteredHandlerAndReturnsOk(): void

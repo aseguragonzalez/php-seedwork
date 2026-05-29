@@ -7,6 +7,11 @@ namespace Tests\Application;
 use PHPUnit\Framework\TestCase;
 use SeedWork\Application\Maybe;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class MaybeTest extends TestCase
 {
     public function testJustHasValue(): void

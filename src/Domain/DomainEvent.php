@@ -26,9 +26,9 @@ abstract readonly class DomainEvent
     /**
      * Constructs an immutable domain event.
      *
-     * @param string $id Unique identity of this event (e.g. UUID); used for equality and deduplication.
-     * @param string $aggregateId Identity of the aggregate that raised this event; used for routing and projections.
-     * @param \DateTimeImmutable $occurredAt When the event occurred; use UTC for consistency.
+     * @param string             $id          Unique identity of this event (e.g. UUID); used for equality and deduplication.
+     * @param string             $aggregateId identity of the aggregate that raised this event; used for routing and projections
+     * @param \DateTimeImmutable $occurredAt  when the event occurred; use UTC for consistency
      */
     protected function __construct(
         public string $id,
@@ -38,10 +38,10 @@ abstract readonly class DomainEvent
             new \DateTimeZone('UTC')
         )
     ) {
-        if ($id === '') {
+        if ('' === $id) {
             throw new \InvalidArgumentException('Domain event id must not be empty.');
         }
-        if ($aggregateId === '') {
+        if ('' === $aggregateId) {
             throw new \InvalidArgumentException('Domain event aggregateId must not be empty.');
         }
     }
@@ -51,8 +51,9 @@ abstract readonly class DomainEvent
      *
      * Use when deduplicating (e.g. same event received twice from a message bus).
      *
-     * @param DomainEvent $other Another domain event.
-     * @return bool True if both have the same id.
+     * @param DomainEvent $other another domain event
+     *
+     * @return bool true if both have the same id
      */
     public function equals(DomainEvent $other): bool
     {

@@ -16,6 +16,7 @@ use SeedWork\Domain\DomainEvent;
  * buses, implement handle() in an idempotent way when events may be redelivered.
  *
  * @template TEvent of DomainEvent The domain event type this handler subscribes to.
+ *
  * @see DomainEvent Events passed to handle().
  * @see DomainEventBus Handlers are registered and invoked by the bus via handle().
  * @see https://martinfowler.com/eaaDev/DomainEvent.html Martin Fowler, P of EAA – Domain Event.
@@ -26,7 +27,7 @@ interface DomainEventHandler
      * Handles the domain event. Invoked by the event bus when an event of the
      * type this handler was subscribed for is published.
      *
-     * @param TEvent $event The domain event to handle.
+     * @param TEvent $event the domain event to handle
      */
     public function handle(DomainEvent $event): void;
 }

@@ -21,15 +21,15 @@ abstract readonly class IntegrationEvent
     public string $id;
 
     /**
-     * @param string $type            Event name/topic (e.g. 'bc.aggregate.event_name').
-     * @param string $version         Payload schema version (e.g. '1.0').
-     * @param string $aggregateId     ID of the aggregate that raised the event.
-     * @param array<string, mixed> $payload  Serializable primitive facts.
-     * @param string $correlationId   Correlation ID for distributed tracing.
-     * @param string $id              Unique event ID; auto-generated when empty.
-     * @param \DateTimeImmutable $occurredAt When the event occurred (UTC); defaults to now.
-     * @param string|null $causationId ID of the command or event that caused this one.
-     * @param array<string, string>|null $metadata Optional trace/tenant metadata.
+     * @param string                     $type          Event name/topic (e.g. 'bc.aggregate.event_name').
+     * @param string                     $version       Payload schema version (e.g. '1.0').
+     * @param string                     $aggregateId   ID of the aggregate that raised the event
+     * @param array<string, mixed>       $payload       serializable primitive facts
+     * @param string                     $correlationId correlation ID for distributed tracing
+     * @param string                     $id            unique event ID; auto-generated when empty
+     * @param \DateTimeImmutable         $occurredAt    when the event occurred (UTC); defaults to now
+     * @param null|string                $causationId   ID of the command or event that caused this one
+     * @param null|array<string, string> $metadata      optional trace/tenant metadata
      */
     public function __construct(
         public string $type,
@@ -45,6 +45,6 @@ abstract readonly class IntegrationEvent
         public ?string $causationId = null,
         public ?array $metadata = null
     ) {
-        $this->id = $id !== '' ? $id : 'evt-' . uniqid('', true);
+        $this->id = '' !== $id ? $id : 'evt-'.uniqid('', true);
     }
 }

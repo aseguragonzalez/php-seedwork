@@ -8,6 +8,11 @@ use PHPUnit\Framework\TestCase;
 use SeedWork\Application\ValidationErrorDetail;
 use SeedWork\Application\ValidationErrors;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class ValidationErrorsTest extends TestCase
 {
     public function testValidationErrorDetailStoresCodeAndMessage(): void

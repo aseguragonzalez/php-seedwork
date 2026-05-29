@@ -15,6 +15,11 @@ use SeedWork\Infrastructure\DomainEventCoordinatorCommandBus;
 use SeedWork\Infrastructure\RegistryCommandBus;
 use SeedWork\Infrastructure\TransactionalCommandBus;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class CommandBusBuilderTest extends TestCase
 {
     public function testBuildWithNoStepsReturnsRegistryDirectly(): void
@@ -44,7 +49,8 @@ final class CommandBusBuilderTest extends TestCase
 
         $builder
             ->withDomainEventCoordination($deferredEventBus)
-            ->withTransaction($unitOfWork);
+            ->withTransaction($unitOfWork)
+        ;
 
         self::assertSame($registry, $builder->registry());
     }
@@ -55,7 +61,8 @@ final class CommandBusBuilderTest extends TestCase
 
         $result = (new CommandBusBuilder(new RegistryCommandBus()))
             ->withTransaction($unitOfWork)
-            ->build();
+            ->build()
+        ;
 
         self::assertInstanceOf(TransactionalCommandBus::class, $result);
     }
@@ -64,7 +71,8 @@ final class CommandBusBuilderTest extends TestCase
     {
         $result = (new CommandBusBuilder(new RegistryCommandBus()))
             ->withDomainEventCoordination(new DeferredDomainEventBus())
-            ->build();
+            ->build()
+        ;
 
         self::assertInstanceOf(DomainEventCoordinatorCommandBus::class, $result);
     }
@@ -75,7 +83,8 @@ final class CommandBusBuilderTest extends TestCase
 
         $result = (new CommandBusBuilder(new RegistryCommandBus()))
             ->withDomainEventCoordination($eventBus)
-            ->build();
+            ->build()
+        ;
 
         self::assertInstanceOf(DomainEventCoordinatorCommandBus::class, $result);
     }
@@ -88,7 +97,8 @@ final class CommandBusBuilderTest extends TestCase
         $result = (new CommandBusBuilder(new RegistryCommandBus()))
             ->withTransaction($unitOfWork)
             ->withDomainEventCoordination($deferredEventBus)
-            ->build();
+            ->build()
+        ;
 
         self::assertInstanceOf(TransactionalCommandBus::class, $result);
     }
@@ -100,7 +110,8 @@ final class CommandBusBuilderTest extends TestCase
 
         $result = (new CommandBusBuilder(new RegistryCommandBus()))
             ->use(fn (CommandBus $inner): CommandBus => $customBus)
-            ->build();
+            ->build()
+        ;
 
         self::assertSame($customBus, $result);
     }
@@ -114,7 +125,8 @@ final class CommandBusBuilderTest extends TestCase
         $result = (new CommandBusBuilder(new RegistryCommandBus()))
             ->withTransaction($unitOfWork)
             ->use(fn (CommandBus $inner): CommandBus => $customWrapper)
-            ->build();
+            ->build()
+        ;
 
         self::assertInstanceOf(TransactionalCommandBus::class, $result);
     }

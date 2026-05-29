@@ -9,6 +9,11 @@ use SeedWork\Domain\Entity;
 use Tests\Fixtures\TestEntity;
 use Tests\Fixtures\TestId;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class EntityTest extends TestCase
 {
     public function testEquals(): void
@@ -26,15 +31,13 @@ final class EntityTest extends TestCase
         $id = TestId::create();
         $entity = TestEntity::create($id);
 
-        $otherType = new readonly class ($id) extends Entity {
+        $otherType = new readonly class($id) extends Entity {
             public function __construct(TestId $id)
             {
                 parent::__construct($id);
             }
 
-            protected function validate(): void
-            {
-            }
+            protected function validate(): void {}
         };
 
         $this->assertFalse($entity->equals($otherType));
@@ -42,26 +45,22 @@ final class EntityTest extends TestCase
 
     public function testEqualsReturnsFalseForScalarIdsThatLooseEqualityWouldConfuse(): void
     {
-        $quirkyId = new readonly class ('0e5') extends Entity {
+        $quirkyId = new readonly class('0e5') extends Entity {
             public function __construct(string $id)
             {
                 parent::__construct($id);
             }
 
-            protected function validate(): void
-            {
-            }
+            protected function validate(): void {}
         };
 
-        $zeroId = new readonly class (0) extends Entity {
+        $zeroId = new readonly class(0) extends Entity {
             public function __construct(int $id)
             {
                 parent::__construct($id);
             }
 
-            protected function validate(): void
-            {
-            }
+            protected function validate(): void {}
         };
 
         // "0e5" == 0 is true under PHP loose equality; (string)"0e5" === (string)0 is false

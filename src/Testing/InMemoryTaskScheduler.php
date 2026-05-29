@@ -20,6 +20,7 @@ final class InMemoryTaskScheduler implements TaskSchedulerSpy
 {
     /** @var list<BackgroundTask> */
     private array $scheduled = [];
+
     /** @var array<string, TaskHandler> */
     private array $handlers = [];
 
@@ -47,7 +48,7 @@ final class InMemoryTaskScheduler implements TaskSchedulerSpy
         $this->scheduled = [];
         foreach ($tasks as $task) {
             $handler = $this->handlers[$task->type] ?? null;
-            if ($handler !== null) {
+            if (null !== $handler) {
                 $handler->handle($task);
             }
         }

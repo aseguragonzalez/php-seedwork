@@ -11,6 +11,4 @@ use SeedWork\Application\QueryHandler;
  *
  * @extends QueryHandler<GetBankAccountStatusQuery>
  */
-interface GetBankAccountStatus extends QueryHandler
-{
-}
+interface GetBankAccountStatus extends QueryHandler {}

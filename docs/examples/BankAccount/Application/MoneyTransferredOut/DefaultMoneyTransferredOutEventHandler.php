@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Examples\BankAccount\Application\MoneyTransferredOut;
 
-use SeedWork\Domain\DomainEvent;
 use Examples\BankAccount\Domain\Events\MoneyTransferredOut;
+use SeedWork\Domain\DomainEvent;
 
 /**
  * Default event handler for the MoneyTransferredOut event.

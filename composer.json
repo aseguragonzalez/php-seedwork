@@ -30,8 +30,20 @@
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^3.95.2",
     "phpstan/phpstan": "^2.1",
-    "phpunit/phpunit": "^12.5",
-    "squizlabs/php_codesniffer": "^4.0"
+    "phpunit/phpunit": "^12.5"
+  },
+  "scripts": {
+    "check": [
+      "@cs",
+      "@stan",
+      "@test:no-coverage"
+    ],
+    "cs": "php-cs-fixer fix --dry-run --diff",
+    "cs:fix": "php-cs-fixer fix",
+    "stan": "phpstan analyse --memory-limit=1G",
+    "test": "phpunit --testsuite default --coverage-html coverage/html",
+    "test:examples": "phpunit --testsuite examples --no-coverage",
+    "test:no-coverage": "phpunit --testsuite default --no-coverage"
   },
   "support": {
     "docs": "https://github.com/aseguragonzalez/php-seedwork/tree/main/docs",

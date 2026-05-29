@@ -17,7 +17,7 @@ interface TaskHandler
     /**
      * Executes the background task.
      *
-     * @param BackgroundTask $task The task to handle.
+     * @param BackgroundTask $task the task to handle
      */
     public function handle(BackgroundTask $task): void;
 }

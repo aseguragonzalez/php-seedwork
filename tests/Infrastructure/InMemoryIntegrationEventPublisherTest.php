@@ -8,6 +8,11 @@ use PHPUnit\Framework\TestCase;
 use SeedWork\Testing\InMemoryIntegrationEventPublisher;
 use Tests\Fixtures\FakeIntegrationEvent;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class InMemoryIntegrationEventPublisherTest extends TestCase
 {
     public function testPublishAddsEventsToPublishedList(): void

@@ -12,6 +12,11 @@ use SeedWork\Domain\UnitOfWork;
 use SeedWork\Infrastructure\TransactionalCommandBus;
 use Tests\Fixtures\TestCommand;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class TransactionalCommandBusTest extends TestCase
 {
     public function testDispatchDelegatesToInnerCommandBusWithSameCommand(): void
@@ -21,7 +26,8 @@ final class TransactionalCommandBusTest extends TestCase
         $innerBus->expects($this->once())
             ->method('dispatch')
             ->with($command)
-            ->willReturn(Result::ok());
+            ->willReturn(Result::ok())
+        ;
 
         $unitOfWork = $this->createMock(UnitOfWork::class);
         $unitOfWork->expects($this->once())->method('createSession');
@@ -52,7 +58,8 @@ final class TransactionalCommandBusTest extends TestCase
     {
         $innerBus = $this->createMock(CommandBus::class);
         $innerBus->expects($this->once())->method('dispatch')
-            ->willReturn(Result::failed([new ResultError('err', 'fail')]));
+            ->willReturn(Result::failed([new ResultError('err', 'fail')]))
+        ;
 
         $unitOfWork = $this->createMock(UnitOfWork::class);
         $unitOfWork->expects($this->once())->method('createSession');

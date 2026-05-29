@@ -19,12 +19,12 @@ namespace SeedWork\Application;
 abstract readonly class BackgroundTask
 {
     /**
-     * @param string $id            Unique task ID (UUID).
-     * @param string $type          Task type identifier (e.g. 'domain.action_name').
-     * @param array<string, mixed> $payload Serializable primitive arguments.
-     * @param string $correlationId Correlation ID for distributed tracing (required).
-     * @param string|null $causationId ID of the command or event that caused this task.
-     * @param array<string, string>|null $metadata Optional trace/tenant metadata.
+     * @param string                     $id            unique task ID (UUID)
+     * @param string                     $type          Task type identifier (e.g. 'domain.action_name').
+     * @param array<string, mixed>       $payload       serializable primitive arguments
+     * @param string                     $correlationId correlation ID for distributed tracing (required)
+     * @param null|string                $causationId   ID of the command or event that caused this task
+     * @param null|array<string, string> $metadata      optional trace/tenant metadata
      */
     public function __construct(
         public string $id,
@@ -33,6 +33,5 @@ abstract readonly class BackgroundTask
         public string $correlationId,
         public ?string $causationId = null,
         public ?array $metadata = null
-    ) {
-    }
+    ) {}
 }

@@ -22,8 +22,8 @@ final class RegistryQueryBus implements QueryBus
     /**
      * Registers a query type with its handler instance. Re-registering overwrites.
      *
-     * @param class-string<Query> $queryClass Query class name (FQCN).
-     * @param QueryHandler<Query> $handler Handler instance to invoke for this query.
+     * @param class-string<Query> $queryClass query class name (FQCN)
+     * @param QueryHandler<Query> $handler    handler instance to invoke for this query
      */
     public function register(string $queryClass, QueryHandler $handler): void
     {
@@ -36,7 +36,8 @@ final class RegistryQueryBus implements QueryBus
     public function ask(Query $query): Maybe
     {
         $handler = $this->handlers[$query::class]
-            ?? throw new \LogicException('No handler for ' . $query::class);
+            ?? throw new \LogicException('No handler for '.$query::class);
+
         return $handler->handle($query);
     }
 }

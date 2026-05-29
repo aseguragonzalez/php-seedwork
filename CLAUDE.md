@@ -18,24 +18,21 @@ Then run any make target via:
 devcontainer exec --workspace-folder . make <target>
 ```
 
-- `make test` — PHPUnit (coverage in `coverage/`)
-- `make format` — PHP-CS-Fixer (PSR-12)
-- `make format-check` — check only
-- `make lint` — PHP_CodeSniffer (PSR-12)
-- `make static-analyse` — PHPStan level max
-- `make all` — format-check + lint + static analysis + tests. **Run before every commit.**
+- `make cs` / `make cs-fix` — PHP-CS-Fixer check / auto-fix
+- `make stan` — PHPStan level max
+- `make test` — PHPUnit with coverage; `make test-no-coverage` for the fast variant
+- `make test-examples` — run the BankAccount example test suite
+- `make check` — cs + stan + tests (no coverage). **Run before every commit.**
+- `make all` — install + cs-fix + check
 
 ## Pre-commit workflow
 
 **Always** run both before committing (inside the devcontainer):
-1. `devcontainer exec --workspace-folder . make all` — catches format, lint, static analysis, and test failures.
+1. `devcontainer exec --workspace-folder . make all` — installs deps, fixes formatting, and runs the full check pipeline.
 2. `devcontainer exec --workspace-folder . pre-commit run --all-files` — enforces JSON/YAML formatting, trailing whitespace,
    and re-runs PHP checks via the git hook.
    The conventional commit message hook runs at the `commit-msg` stage only; it is
    not triggered by `--all-files`. It is enforced automatically when you run `git commit`.
-
-Inside the devcontainer, substitute `make test` with the no-coverage variant when the coverage driver is unavailable:
-`vendor/bin/phpunit -c phpunit.xml --testsuite default --no-coverage`
 
 ## Architecture
 

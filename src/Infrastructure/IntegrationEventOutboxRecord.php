@@ -19,13 +19,13 @@ use SeedWork\Application\IntegrationEvent;
 final readonly class IntegrationEventOutboxRecord
 {
     /**
-     * @param string $id              The integration event's ID; used as the outbox record key.
-     * @param IntegrationEvent $event The integration event to be published.
-     * @param IntegrationEventOutboxStatus $status Current lifecycle status.
-     * @param int $attempts           Number of publish attempts so far.
-     * @param \DateTimeImmutable $createdAt When this record was created (UTC).
-     * @param string|null $lastError  Last error message if the record failed.
-     * @param \DateTimeImmutable|null $publishedAt When the event was successfully published.
+     * @param string                       $id          the integration event's ID; used as the outbox record key
+     * @param IntegrationEvent             $event       the integration event to be published
+     * @param IntegrationEventOutboxStatus $status      current lifecycle status
+     * @param int                          $attempts    number of publish attempts so far
+     * @param \DateTimeImmutable           $createdAt   when this record was created (UTC)
+     * @param null|string                  $lastError   last error message if the record failed
+     * @param null|\DateTimeImmutable      $publishedAt when the event was successfully published
      */
     public function __construct(
         public string $id,
@@ -35,6 +35,5 @@ final readonly class IntegrationEventOutboxRecord
         public \DateTimeImmutable $createdAt,
         public ?string $lastError = null,
         public ?\DateTimeImmutable $publishedAt = null
-    ) {
-    }
+    ) {}
 }

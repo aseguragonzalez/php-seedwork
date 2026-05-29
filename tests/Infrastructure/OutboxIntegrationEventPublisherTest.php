@@ -9,6 +9,11 @@ use SeedWork\Infrastructure\IntegrationEventOutboxRepository;
 use SeedWork\Infrastructure\OutboxIntegrationEventPublisher;
 use Tests\Fixtures\FakeIntegrationEvent;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class OutboxIntegrationEventPublisherTest extends TestCase
 {
     public function testPublishSavesEventToRepository(): void

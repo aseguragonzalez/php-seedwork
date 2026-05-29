@@ -1,4 +1,7 @@
 {
+  "appPort": [
+    "8001:8001"
+  ],
   "containerEnv": {
     "XDEBUG_MODE": "coverage,debug,develop"
   },
@@ -24,9 +27,6 @@
     "ghcr.io/devcontainers/features/git:1": {},
     "ghcr.io/gvatsal60/dev-container-features/pre-commit:1": {}
   },
-  "appPort": [
-    "8001:8001"
-  ],
   "forwardPorts": [
     8001,
     9003

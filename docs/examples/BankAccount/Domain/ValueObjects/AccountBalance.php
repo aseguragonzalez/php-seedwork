@@ -25,15 +25,15 @@ final readonly class AccountBalance extends ValueObject
         return $this->amount === $other->amount && $this->currency === $other->currency;
     }
 
+    public static function zero(Currency $currency = Currency::USD): self
+    {
+        return new self(0, $currency);
+    }
+
     protected function validate(): void
     {
         if ($this->amount < 0) {
             throw new BankAccountException('Balance cannot be negative');
         }
-    }
-
-    public static function zero(Currency $currency = Currency::USD): self
-    {
-        return new self(0, $currency);
     }
 }

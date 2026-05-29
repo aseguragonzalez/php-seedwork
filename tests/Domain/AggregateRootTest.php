@@ -11,6 +11,11 @@ use Tests\Fixtures\TestAggregate;
 use Tests\Fixtures\TestEvent;
 use Tests\Fixtures\TestId;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class AggregateRootTest extends TestCase
 {
     public function testEquals(): void
@@ -28,15 +33,13 @@ final class AggregateRootTest extends TestCase
         $id = TestId::create();
         $aggregate = TestAggregate::build($id);
 
-        $otherType = new readonly class ($id) extends AggregateRoot {
+        $otherType = new readonly class($id) extends AggregateRoot {
             public function __construct(TestId $id)
             {
                 parent::__construct($id);
             }
 
-            protected function validate(): void
-            {
-            }
+            protected function validate(): void {}
         };
 
         $this->assertFalse($aggregate->equals($otherType));
@@ -49,7 +52,8 @@ final class AggregateRootTest extends TestCase
 
         $aggregate = TestAggregate::create()
             ->withEvent($event1)
-            ->withEvent($event2);
+            ->withEvent($event2)
+        ;
 
         $events = $aggregate->getDomainEvents();
 
