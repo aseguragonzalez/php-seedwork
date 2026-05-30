@@ -11,6 +11,4 @@ use SeedWork\Application\CommandHandler;
  *
  * @extends CommandHandler<DepositMoneyCommand>
  */
-interface DepositMoney extends CommandHandler
-{
-}
+interface DepositMoney extends CommandHandler {}

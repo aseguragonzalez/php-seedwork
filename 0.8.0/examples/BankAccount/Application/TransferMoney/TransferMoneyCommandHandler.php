@@ -4,19 +4,18 @@ declare(strict_types=1);
 
 namespace Examples\BankAccount\Application\TransferMoney;
 
-use SeedWork\Application\Command;
+use Examples\BankAccount\Domain\Entities\BankAccountId;
 use Examples\BankAccount\Domain\Exceptions\BankAccountException;
 use Examples\BankAccount\Domain\Repositories\BankAccountRepository;
-use Examples\BankAccount\Domain\Entities\BankAccountId;
 use Examples\BankAccount\Domain\ValueObjects\Currency;
 use Examples\BankAccount\Domain\ValueObjects\Money;
+use SeedWork\Application\Command;
 
 final readonly class TransferMoneyCommandHandler implements TransferMoney
 {
     public function __construct(
         private BankAccountRepository $repository,
-    ) {
-    }
+    ) {}
 
     /**
      * @param TransferMoneyCommand $command

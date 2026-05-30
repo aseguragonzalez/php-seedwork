@@ -4,16 +4,21 @@ declare(strict_types=1);
 
 namespace Examples\BankAccount\Tests;
 
+use Examples\BankAccount\Application\OpenAccount\OpenAccountCommand;
+use Examples\BankAccount\Application\OpenAccount\OpenAccountCommandHandler;
+use Examples\BankAccount\Infrastructure\Repositories\InMemoryBankAccountRepository;
+use Examples\BankAccount\Infrastructure\Repositories\PublishingBankAccountRepository;
 use PHPUnit\Framework\TestCase;
 use SeedWork\Application\ValidationErrors;
 use SeedWork\Infrastructure\CommandBusBuilder;
 use SeedWork\Infrastructure\DeferredDomainEventBus;
 use SeedWork\Infrastructure\RegistryCommandBus;
-use Examples\BankAccount\Application\OpenAccount\OpenAccountCommand;
-use Examples\BankAccount\Application\OpenAccount\OpenAccountCommandHandler;
-use Examples\BankAccount\Infrastructure\Repositories\InMemoryBankAccountRepository;
-use Examples\BankAccount\Infrastructure\Repositories\PublishingBankAccountRepository;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class OpenAccountHandlerTest extends TestCase
 {
     public function testValidCommandPersistsAccountAndReturnsOk(): void
@@ -29,7 +34,8 @@ final class OpenAccountHandlerTest extends TestCase
         );
         $bus = (new CommandBusBuilder($registry))
             ->withDomainEventCoordination($domainEventBus)
-            ->build();
+            ->build()
+        ;
 
         $result = $bus->dispatch(new OpenAccountCommand('USD'));
 

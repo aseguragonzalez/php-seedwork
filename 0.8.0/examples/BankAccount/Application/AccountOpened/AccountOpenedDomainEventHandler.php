@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace Examples\BankAccount\Application\AccountOpened;
 
+use Examples\BankAccount\Domain\Events\AccountOpened;
 use SeedWork\Application\IntegrationEventPublisher;
 use SeedWork\Domain\DomainEvent;
-use Examples\BankAccount\Domain\Events\AccountOpened;
 
 final readonly class AccountOpenedDomainEventHandler implements AccountOpenedEventHandler
 {
     public function __construct(
         private IntegrationEventPublisher $publisher,
-    ) {
-    }
+    ) {}
 
     /**
      * @param AccountOpened $event

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Examples\BankAccount\Infrastructure\Repositories;
 
+use Examples\BankAccount\Domain\Repositories\BankAccountRepository;
 use SeedWork\Application\DomainEventBusPublisher;
 use SeedWork\Infrastructure\DomainEventPublishingRepository;
-use Examples\BankAccount\Domain\Repositories\BankAccountRepository;
 
 final class PublishingBankAccountRepository extends DomainEventPublishingRepository implements BankAccountRepository
 {
