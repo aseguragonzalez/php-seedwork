@@ -23,9 +23,6 @@
   "namespaceResolver.sortNatural": true,
   "namespaceResolver.sortOnSave": true,
   "php.validate.executablePath": "/usr/local/bin/php",
-  "phpSniffer.autoDetect": true,
-  "phpSniffer.executablesFolder": "",
-  "phpSniffer.standard": "PSR12",
   "phpunit.args": [
     "-c",
     "${workspaceFolder}/phpunit.xml"
@@ -36,5 +33,5 @@
   },
   "phpunit.php": "/usr/local/bin/php",
   "phpunit.phpunit": "${workspaceFolder}/vendor/bin/phpunit",
-  "phpunit.xdebugPort": 9000
+  "phpunit.xdebugPort": 9003
 }
