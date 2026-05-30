@@ -9,6 +9,11 @@ use SeedWork\Application\ValidationErrors;
 use Tests\Fixtures\AnotherTestCommand;
 use Tests\Fixtures\TestCommand;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class CommandTest extends TestCase
 {
     public function testConstructionSucceedsWhenValidationPasses(): void

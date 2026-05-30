@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Examples\BankAccount\Domain\Events;
 
-use SeedWork\Domain\DomainEvent;
 use Examples\BankAccount\Domain\Entities\BankAccountId;
 use Examples\BankAccount\Domain\ValueObjects\AccountBalance;
+use SeedWork\Domain\DomainEvent;
 
 final readonly class AccountOpened extends DomainEvent
 {
@@ -28,7 +28,7 @@ final readonly class AccountOpened extends DomainEvent
         return new self(
             $accountId,
             $initialBalance,
-            $id ?? 'evt-' . uniqid('', true),
+            $id ?? 'evt-'.uniqid('', true),
             $occurredAt ?? new \DateTimeImmutable('now', new \DateTimeZone('UTC'))
         );
     }

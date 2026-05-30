@@ -18,7 +18,7 @@ interface TaskScheduler
     /**
      * Schedules a background task for async execution.
      *
-     * @param BackgroundTask $task The task to schedule.
+     * @param BackgroundTask $task the task to schedule
      */
     public function schedule(BackgroundTask $task): void;
 }

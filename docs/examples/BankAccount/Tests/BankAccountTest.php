@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Examples\BankAccount\Tests;
 
-use PHPUnit\Framework\TestCase;
 use Examples\BankAccount\Domain\Entities\BankAccount;
 use Examples\BankAccount\Domain\Events\AccountOpened;
 use Examples\BankAccount\Domain\Events\MoneyDeposited;
@@ -14,7 +13,13 @@ use Examples\BankAccount\Domain\Exceptions\InsufficientFundsException;
 use Examples\BankAccount\Domain\ValueObjects\AccountBalance;
 use Examples\BankAccount\Domain\ValueObjects\Currency;
 use Examples\BankAccount\Domain\ValueObjects\Money;
+use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class BankAccountTest extends TestCase
 {
     public function testCreateOpensBankAccountWithZeroBalance(): void

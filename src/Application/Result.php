@@ -21,8 +21,7 @@ final class Result
     private function __construct(
         private readonly bool $success,
         private readonly array $errors = []
-    ) {
-    }
+    ) {}
 
     public static function ok(): self
     {
@@ -32,7 +31,7 @@ final class Result
     /** @param array<ResultError> $errors One or more errors describing the failure. */
     public static function failed(array $errors): self
     {
-        if (count($errors) === 0) {
+        if (0 === count($errors)) {
             throw new \InvalidArgumentException('Result::failed() requires at least one error.');
         }
 

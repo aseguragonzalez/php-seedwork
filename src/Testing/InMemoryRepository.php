@@ -14,6 +14,7 @@ use SeedWork\Domain\AggregateRoot;
  *
  * @template TId
  * @template T of AggregateRoot<TId>
+ *
  * @implements InMemoryRepositorySpy<TId, T>
  *
  * @see InMemoryRepositorySpy Spy interface adding all() and reset().
@@ -32,18 +33,13 @@ class InMemoryRepository implements InMemoryRepositorySpy
     }
 
     /**
-     * @param mixed $id
-     * @return T|null
+     * @return null|T
      */
     public function findById(mixed $id): ?AggregateRoot
     {
-        /** @var T|null */
         return $this->store[$this->key($id)] ?? null;
     }
 
-    /**
-     * @param mixed $id
-     */
     public function deleteById(mixed $id): void
     {
         unset($this->store[$this->key($id)]);
@@ -54,7 +50,6 @@ class InMemoryRepository implements InMemoryRepositorySpy
      */
     public function all(): array
     {
-        /** @var list<T> */
         return array_values($this->store);
     }
 
@@ -65,7 +60,7 @@ class InMemoryRepository implements InMemoryRepositorySpy
 
     private function key(mixed $id): string
     {
-        /** @var string|int|\Stringable $id */
+        // @phpstan-ignore cast.string
         return (string) $id;
     }
 }

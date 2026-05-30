@@ -28,7 +28,7 @@ abstract readonly class Entity
      * Identity is required and immutable; it is the sole basis for equality
      * between entities of the same type.
      *
-     * @param TId $id The unique identity of this entity.
+     * @param TId $id the unique identity of this entity
      */
     protected function __construct(public mixed $id)
     {
@@ -43,14 +43,16 @@ abstract readonly class Entity
      * String-cast strict comparison avoids PHP loose-equality quirks ("0e123" == 0).
      * TId must be stringable (string, int, or object with __toString()).
      *
-     * @param Entity<TId> $other Another entity (typically of the same concrete type).
-     * @return bool True if both entities have the same concrete type and identity.
+     * @param Entity<TId> $other another entity (typically of the same concrete type)
+     *
+     * @return bool true if both entities have the same concrete type and identity
      */
     public function equals(Entity $other): bool
     {
-        /** @var string|int|\Stringable $thisId */
+        /** @var int|string|\Stringable $thisId */
         $thisId = $this->id;
-        /** @var string|int|\Stringable $otherId */
+
+        /** @var int|string|\Stringable $otherId */
         $otherId = $other->id;
 
         return $this::class === $other::class

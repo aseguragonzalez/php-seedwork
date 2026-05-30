@@ -12,6 +12,7 @@ namespace SeedWork\Application;
  * when registered in a query bus registry.
  *
  * @template-covariant T of Query
+ *
  * @see Query The query type this handler accepts.
  * @see Maybe The optional result container this handler returns.
  * @see QueryBus Dispatches queries to the appropriate handler.
@@ -19,8 +20,10 @@ namespace SeedWork\Application;
 interface QueryHandler
 {
     /**
-     * @param T $query The query to handle.
-     * @return Maybe<mixed> The optional query result.
+     * @param T $query the query to handle
+     *
+     * @return Maybe<mixed> the optional query result
+     *
      * @phpstan-ignore generics.variance
      */
     public function handle(Query $query): Maybe;

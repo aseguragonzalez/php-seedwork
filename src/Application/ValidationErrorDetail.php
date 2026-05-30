@@ -17,6 +17,5 @@ final readonly class ValidationErrorDetail
     public function __construct(
         public string $code,
         public string $message,
-    ) {
-    }
+    ) {}
 }

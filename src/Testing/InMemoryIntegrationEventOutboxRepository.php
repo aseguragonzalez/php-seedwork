@@ -48,15 +48,16 @@ final class InMemoryIntegrationEventOutboxRepository implements IntegrationEvent
     {
         $pending = array_filter(
             $this->records,
-            fn (IntegrationEventOutboxRecord $r) => $r->status === IntegrationEventOutboxStatus::Pending
+            fn (IntegrationEventOutboxRecord $r) => IntegrationEventOutboxStatus::Pending === $r->status
         );
+
         return array_slice(array_values($pending), 0, $limit);
     }
 
     public function markAsPublished(string $id): void
     {
         $record = $this->records[$id] ?? null;
-        if ($record === null) {
+        if (null === $record) {
             return;
         }
         $this->records[$id] = new IntegrationEventOutboxRecord(
@@ -72,7 +73,7 @@ final class InMemoryIntegrationEventOutboxRepository implements IntegrationEvent
     public function markAsFailed(string $id, string $error): void
     {
         $record = $this->records[$id] ?? null;
-        if ($record === null) {
+        if (null === $record) {
             return;
         }
         $this->records[$id] = new IntegrationEventOutboxRecord(

@@ -4,18 +4,23 @@ declare(strict_types=1);
 
 namespace Examples\BankAccount\Tests;
 
-use PHPUnit\Framework\TestCase;
-use SeedWork\Infrastructure\CommandBusBuilder;
-use SeedWork\Infrastructure\DeferredDomainEventBus;
-use Examples\BankAccount\Infrastructure\Repositories\PublishingBankAccountRepository;
-use SeedWork\Infrastructure\RegistryCommandBus;
 use Examples\BankAccount\Application\WithdrawMoney\WithdrawMoneyCommand;
 use Examples\BankAccount\Application\WithdrawMoney\WithdrawMoneyCommandHandler;
 use Examples\BankAccount\Domain\Entities\BankAccount;
 use Examples\BankAccount\Domain\ValueObjects\AccountBalance;
 use Examples\BankAccount\Domain\ValueObjects\Currency;
 use Examples\BankAccount\Infrastructure\Repositories\InMemoryBankAccountRepository;
+use Examples\BankAccount\Infrastructure\Repositories\PublishingBankAccountRepository;
+use PHPUnit\Framework\TestCase;
+use SeedWork\Infrastructure\CommandBusBuilder;
+use SeedWork\Infrastructure\DeferredDomainEventBus;
+use SeedWork\Infrastructure\RegistryCommandBus;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class WithdrawMoneyHandlerTest extends TestCase
 {
     public function testWithdrawUpdatesBalanceAndReturnsOk(): void
@@ -34,7 +39,8 @@ final class WithdrawMoneyHandlerTest extends TestCase
         );
         $bus = (new CommandBusBuilder($registry))
             ->withDomainEventCoordination($domainEventBus)
-            ->build();
+            ->build()
+        ;
 
         $result = $bus->dispatch(new WithdrawMoneyCommand($account->id->value, 80, 'USD'));
 
@@ -58,7 +64,8 @@ final class WithdrawMoneyHandlerTest extends TestCase
         );
         $bus = (new CommandBusBuilder($registry))
             ->withDomainEventCoordination($domainEventBus)
-            ->build();
+            ->build()
+        ;
 
         $result = $bus->dispatch(new WithdrawMoneyCommand('non-existent-id', 50, 'USD'));
 
@@ -81,7 +88,8 @@ final class WithdrawMoneyHandlerTest extends TestCase
         );
         $bus = (new CommandBusBuilder($registry))
             ->withDomainEventCoordination($domainEventBus)
-            ->build();
+            ->build()
+        ;
 
         $result = $bus->dispatch(new WithdrawMoneyCommand($account->id->value, 100, 'USD'));
 

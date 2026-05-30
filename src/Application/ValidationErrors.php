@@ -19,7 +19,7 @@ namespace SeedWork\Application;
 final class ValidationErrors extends \Exception
 {
     /**
-     * @param array<ValidationErrorDetail> $errors Field-level validation failures; may be empty.
+     * @param array<ValidationErrorDetail> $errors field-level validation failures; may be empty
      */
     public function __construct(public readonly array $errors)
     {

@@ -15,6 +15,11 @@ use Tests\Fixtures\TestQueryHandler;
 use Tests\Fixtures\TestQueryResult;
 use Tests\Fixtures\TestRepository;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class RegistryQueryBusTest extends TestCase
 {
     public function testAskInvokesRegisteredHandlerAndReturnsMaybe(): void

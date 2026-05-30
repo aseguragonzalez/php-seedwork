@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Fixtures;
 
 use SeedWork\Domain\Entity;
-use Tests\Fixtures\TestDomainException;
 
 /**
  * @extends Entity<TestId>
@@ -19,13 +18,6 @@ final readonly class TestEntity extends Entity
         parent::__construct($id);
     }
 
-    protected function validate(): void
-    {
-        if ($this->createdAt > new \DateTimeImmutable('now', new \DateTimeZone('UTC'))) {
-            throw new TestDomainException('TestEntity createdAt cannot be in the future.');
-        }
-    }
-
     public static function create(?TestId $id = null, ?\DateTimeImmutable $createdAt = null): self
     {
         return new self(
@@ -37,5 +29,12 @@ final readonly class TestEntity extends Entity
     public static function build(TestId $id, \DateTimeImmutable $createdAt): self
     {
         return new self($id, $createdAt);
+    }
+
+    protected function validate(): void
+    {
+        if ($this->createdAt > new \DateTimeImmutable('now', new \DateTimeZone('UTC'))) {
+            throw new TestDomainException('TestEntity createdAt cannot be in the future.');
+        }
     }
 }

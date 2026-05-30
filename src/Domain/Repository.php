@@ -26,22 +26,23 @@ interface Repository
     /**
      * Persists the aggregate (create or update).
      *
-     * @param T $aggregateRoot The aggregate to persist.
+     * @param T $aggregateRoot the aggregate to persist
      */
     public function save(AggregateRoot $aggregateRoot): void;
 
     /**
      * Returns the aggregate for the given id, or null if not found.
      *
-     * @param TId $id The id of the aggregate to load.
-     * @return T|null The aggregate, or null if not found.
+     * @param TId $id the id of the aggregate to load
+     *
+     * @return null|T the aggregate, or null if not found
      */
     public function findById(mixed $id): ?AggregateRoot;
 
     /**
      * Removes the aggregate for the given id.
      *
-     * @param TId $id The id of the aggregate to delete.
+     * @param TId $id the id of the aggregate to delete
      */
     public function deleteById(mixed $id): void;
 }

@@ -9,23 +9,13 @@ use SeedWork\Application\BackgroundTask;
 use SeedWork\Application\TaskHandler;
 use SeedWork\Testing\InMemoryTaskScheduler;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class InMemoryTaskSchedulerTest extends TestCase
 {
-    private function createTask(string $id = 'task-001', string $type = 'domain.test_task'): BackgroundTask
-    {
-        return new readonly class ($id, $type) extends BackgroundTask {
-            public function __construct(string $id, string $type)
-            {
-                parent::__construct(
-                    id: $id,
-                    type: $type,
-                    payload: ['key' => 'value'],
-                    correlationId: 'corr-001'
-                );
-            }
-        };
-    }
-
     public function testScheduleAddsTaskToScheduledList(): void
     {
         $scheduler = new InMemoryTaskScheduler();
@@ -111,5 +101,20 @@ final class InMemoryTaskSchedulerTest extends TestCase
         $scheduler->schedule($task);
 
         $scheduler->executeScheduled();
+    }
+
+    private function createTask(string $id = 'task-001', string $type = 'domain.test_task'): BackgroundTask
+    {
+        return new readonly class($id, $type) extends BackgroundTask {
+            public function __construct(string $id, string $type)
+            {
+                parent::__construct(
+                    id: $id,
+                    type: $type,
+                    payload: ['key' => 'value'],
+                    correlationId: 'corr-001'
+                );
+            }
+        };
     }
 }

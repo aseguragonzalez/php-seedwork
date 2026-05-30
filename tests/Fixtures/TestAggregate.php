@@ -22,10 +22,6 @@ final readonly class TestAggregate extends AggregateRoot
         parent::__construct($id, $domainEvents);
     }
 
-    protected function validate(): void
-    {
-    }
-
     public static function create(?TestId $id = null): self
     {
         return new self($id ?? TestId::create());
@@ -40,4 +36,6 @@ final readonly class TestAggregate extends AggregateRoot
     {
         return new self($this->id, [...$this->getDomainEvents(), $event]);
     }
+
+    protected function validate(): void {}
 }

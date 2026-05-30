@@ -35,9 +35,7 @@ final class CommandBusBuilder
     /** @var list<\Closure(CommandBus): CommandBus> */
     private array $steps = [];
 
-    public function __construct(private readonly RegistryCommandBus $registry)
-    {
-    }
+    public function __construct(private readonly RegistryCommandBus $registry) {}
 
     public function registry(): RegistryCommandBus
     {
@@ -50,8 +48,8 @@ final class CommandBusBuilder
     public function withDomainEventCoordination(DomainEventBus $domainEventBus): self
     {
         $domainEventBus_ = $domainEventBus;
-        $this->steps[] = fn (CommandBus $inner): CommandBus =>
-            new DomainEventCoordinatorCommandBus($inner, $domainEventBus_);
+        $this->steps[] = fn (CommandBus $inner): CommandBus => new DomainEventCoordinatorCommandBus($inner, $domainEventBus_);
+
         return $this;
     }
 
@@ -61,8 +59,8 @@ final class CommandBusBuilder
     public function withTransaction(UnitOfWork $unitOfWork): self
     {
         $unitOfWork_ = $unitOfWork;
-        $this->steps[] = fn (CommandBus $inner): CommandBus =>
-            new TransactionalCommandBus($inner, $unitOfWork_);
+        $this->steps[] = fn (CommandBus $inner): CommandBus => new TransactionalCommandBus($inner, $unitOfWork_);
+
         return $this;
     }
 
@@ -74,6 +72,7 @@ final class CommandBusBuilder
     public function use(\Closure $middleware): self
     {
         $this->steps[] = $middleware;
+
         return $this;
     }
 
@@ -88,6 +87,7 @@ final class CommandBusBuilder
         foreach (array_reverse($this->steps) as $step) {
             $bus = $step($bus);
         }
+
         return $bus;
     }
 }

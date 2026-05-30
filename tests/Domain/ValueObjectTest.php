@@ -7,6 +7,11 @@ namespace Tests\Domain;
 use PHPUnit\Framework\TestCase;
 use Tests\Fixtures\TestValueObject;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class ValueObjectTest extends TestCase
 {
     public function testValidationFailureThrowsDomainException(): void

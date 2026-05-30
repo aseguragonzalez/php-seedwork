@@ -17,7 +17,7 @@ use SeedWork\Domain\DomainEvent;
 interface DomainEventBusPublisher
 {
     /**
-     * @param array<DomainEvent> $events Events to buffer.
+     * @param array<DomainEvent> $events events to buffer
      */
     public function publish(array $events): void;
 }

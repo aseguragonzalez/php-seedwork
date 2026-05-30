@@ -16,22 +16,23 @@ use SeedWork\Domain\DomainEvent;
  * same event twice (same id) results in a single dispatch. This prevents
  * double-handling when aggregates share events across calls.
  *
- * For test use, extend with {@see \SeedWork\Testing\DeferredDomainEventBusSpy} to
- * gain the typed {@see \SeedWork\Testing\DomainEventBusSpy} contract.
+ * For test use, extend with SeedWork\Testing\DeferredDomainEventBusSpy to
+ * gain the typed SeedWork\Testing\DomainEventBusSpy contract.
  *
  * @see DomainEventBus Application port.
  * @see DomainEventHandler Handlers registered via subscribe() and invoked at dispatch.
  */
 class DeferredDomainEventBus implements DomainEventBus
 {
-    /** @var array<string, list<DomainEventHandler<DomainEvent>>> */
-    private array $handlers = [];
     /** @var array<string, DomainEvent> keyed by event id for idempotency */
     protected array $pending = [];
 
+    /** @var array<string, list<DomainEventHandler<DomainEvent>>> */
+    private array $handlers = [];
+
     /**
-     * @param string $eventType FQCN of the domain event.
-     * @param DomainEventHandler<DomainEvent> $handler Handler instance.
+     * @param string                          $eventType FQCN of the domain event
+     * @param DomainEventHandler<DomainEvent> $handler   handler instance
      */
     public function subscribe(string $eventType, DomainEventHandler $handler): void
     {
@@ -41,7 +42,7 @@ class DeferredDomainEventBus implements DomainEventBus
     /**
      * Buffers events by id; duplicate ids (same event published twice) are ignored.
      *
-     * @param array<DomainEvent> $events Events to buffer.
+     * @param array<DomainEvent> $events events to buffer
      */
     public function publish(array $events): void
     {

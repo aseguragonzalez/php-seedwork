@@ -24,8 +24,9 @@ interface CommandBus
      * implementation (e.g. by command class name). Returns {@see Result::ok()}
      * on success or {@see Result::failed()} when the domain rejects the operation.
      *
-     * @param Command $command The command to dispatch.
-     * @return Result The result of the dispatch.
+     * @param Command $command the command to dispatch
+     *
+     * @return Result the result of the dispatch
      */
     public function dispatch(Command $command): Result;
 }

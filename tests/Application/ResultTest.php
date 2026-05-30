@@ -8,6 +8,11 @@ use PHPUnit\Framework\TestCase;
 use SeedWork\Application\Result;
 use SeedWork\Application\ResultError;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class ResultTest extends TestCase
 {
     public function testOkIsOk(): void

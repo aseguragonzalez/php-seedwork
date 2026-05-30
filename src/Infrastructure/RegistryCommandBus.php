@@ -22,8 +22,8 @@ final class RegistryCommandBus implements CommandBus
     private array $handlers = [];
 
     /**
-     * @param class-string<Command> $commandClass Command class name (FQCN).
-     * @param CommandHandler<Command> $handler Handler instance.
+     * @param class-string<Command>   $commandClass command class name (FQCN)
+     * @param CommandHandler<Command> $handler      handler instance
      */
     public function register(string $commandClass, CommandHandler $handler): void
     {
@@ -33,13 +33,16 @@ final class RegistryCommandBus implements CommandBus
     public function dispatch(Command $command): Result
     {
         $handler = $this->handlers[$command::class]
-            ?? throw new \LogicException('No handler for ' . $command::class);
+            ?? throw new \LogicException('No handler for '.$command::class);
+
         try {
             $handler->handle($command);
+
             return Result::ok();
         } catch (\DomainException $e) {
             $shortName = (new \ReflectionClass($e))->getShortName();
             $code = strtolower((string) preg_replace('/(?<!^)[A-Z]/', '_$0', $shortName));
+
             return Result::failed([new ResultError($code, $e->getMessage())]);
         }
     }

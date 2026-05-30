@@ -13,18 +13,17 @@ use SeedWork\Application\QueryHandler;
  */
 final readonly class TestQueryHandler implements QueryHandler
 {
-    public function __construct(private TestRepository $repository)
-    {
-    }
+    public function __construct(private TestRepository $repository) {}
 
     /**
      * @param TestQuery $query
+     *
      * @return Maybe<TestQueryResult>
      */
     public function handle(Query $query): Maybe
     {
         $aggregate = $this->repository->findById(TestId::fromString($query->id));
-        if ($aggregate === null) {
+        if (null === $aggregate) {
             return Maybe::nothing();
         }
 

@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace Tests\Infrastructure;
 
 use PHPUnit\Framework\TestCase;
-use SeedWork\Testing\InMemoryIntegrationEventOutboxRepository;
 use SeedWork\Infrastructure\IntegrationEventOutboxStatus;
+use SeedWork\Testing\InMemoryIntegrationEventOutboxRepository;
 use Tests\Fixtures\FakeIntegrationEvent;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class InMemoryIntegrationEventOutboxRepositoryTest extends TestCase
 {
-    private function createTestEvent(string $id = 'evt-001'): FakeIntegrationEvent
-    {
-        return new FakeIntegrationEvent($id);
-    }
-
     public function testSaveCreatesAPendingRecord(): void
     {
         $repo = new InMemoryIntegrationEventOutboxRepository();
@@ -185,5 +185,10 @@ final class InMemoryIntegrationEventOutboxRepositoryTest extends TestCase
         $pending = $repo->findPending();
         $this->assertCount(1, $pending);
         $this->assertSame(IntegrationEventOutboxStatus::Pending, $pending[0]->status);
+    }
+
+    private function createTestEvent(string $id = 'evt-001'): FakeIntegrationEvent
+    {
+        return new FakeIntegrationEvent($id);
     }
 }

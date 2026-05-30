@@ -15,6 +15,7 @@ use SeedWork\Domain\Repository;
  *
  * @template TId
  * @template T of AggregateRoot<TId>
+ *
  * @extends Repository<TId, T>
  *
  * @see InMemoryRepository Concrete implementation of this interface.

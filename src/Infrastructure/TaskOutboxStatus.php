@@ -12,7 +12,7 @@ namespace SeedWork\Infrastructure;
  */
 enum TaskOutboxStatus: string
 {
-    case Pending   = 'pending';
+    case Pending = 'pending';
     case Delivered = 'delivered';
-    case Failed    = 'failed';
+    case Failed = 'failed';
 }

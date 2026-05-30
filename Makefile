@@ -1,48 +1,46 @@
-.PHONY: all format format-check lint static-analyse test test-examples check-layer-boundaries install clean update-autoload create-package docs-serve
-
-all: format-check lint static-analyse check-layer-boundaries test
-
-clean:
-	@rm -rf vendor
-	@rm -rf coverage
-	@rm -rf .phpunit.cache
-	@rm -rf .php-cs-fixer.cache
-	@rm -rf dist
-
-format:
-	@./vendor/bin/php-cs-fixer fix . --rules=@PSR12
-
-format-check:
-	@./vendor/bin/php-cs-fixer fix . --rules=@PSR12 --dry-run --diff
+.PHONY: all install check cs cs-fix stan test test-no-coverage test-examples check-layer-boundaries clean update-autoload create-package docs-serve
 
 install:
-	@pre-commit install
-	@composer install
-	@export PATH=$PATH:./vendor/bin
+	composer install
 
-lint:
-	@./vendor/bin/phpcs --standard=PSR12 ./src ./tests
+cs:
+	composer cs
 
-static-analyse:
-	@rm -rf /tmp/phpstan/cache
-	@./vendor/bin/phpstan analyse ./src ./tests --level=max --memory-limit=1G
+cs-fix:
+	composer cs:fix
 
-check-layer-boundaries:
-	@! find tests/ -name "*.php" -exec grep -l "use Examples\\\\" {} + 2>/dev/null | grep -q . || (printf '\nERROR: tests/ must not import from Examples\\\n'; exit 1)
+stan:
+	composer stan
 
 test:
-	@./vendor/bin/phpunit -c phpunit.xml --testsuite default --coverage-html coverage/
+	composer test
+
+test-no-coverage:
+	composer test:no-coverage
 
 test-examples:
-	@./vendor/bin/phpunit -c phpunit.xml --testsuite examples --no-coverage
+	composer test:examples
+
+check-layer-boundaries:
+	@! find tests/ -name "*.php" -exec grep -lF "use Examples\\" {} + 2>/dev/null | grep -q . || \
+		(printf '\nERROR: tests/ must not import from Examples\\\n'; exit 1)
+
+check: check-layer-boundaries
+	composer check
+
+all: install cs-fix check
+
+clean:
+	@rm -rf vendor coverage .phpunit.cache .php-cs-fixer.cache dist
 
 update-autoload:
-	@composer dump-autoload
+	composer dump-autoload
 
 create-package:
 	@mkdir -p dist
 	@composer archive --format=zip --dir=dist
 
 docs-serve:
-	@command -v mkdocs >/dev/null 2>&1 || (printf '%s\n' 'ERROR: mkdocs was not found in PATH. Activate the project virtualenv or use the documented devcontainer setup before running `make docs-serve`.'; exit 1)
+	@command -v mkdocs >/dev/null 2>&1 || \
+		(printf '%s\n' 'ERROR: mkdocs was not found in PATH. Activate the project virtualenv or use the documented devcontainer setup before running `make docs-serve`.'; exit 1)
 	@mkdocs serve --dev-addr=0.0.0.0:8001

@@ -11,6 +11,11 @@ use SeedWork\Domain\DomainEvent;
 use SeedWork\Domain\Repository;
 use SeedWork\Infrastructure\DomainEventPublishingRepository;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class DomainEventPublishingRepositoryTest extends TestCase
 {
     public function testSaveDelegatesToRepositoryThenPublishesCollectedEvents(): void

@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace Examples\BankAccount\Domain\Entities;
 
-use SeedWork\Domain\AggregateRoot;
-use SeedWork\Domain\DomainEvent;
-use Examples\BankAccount\Domain\Entities\BankAccountId;
-use Examples\BankAccount\Domain\Entities\Transaction;
 use Examples\BankAccount\Domain\Events\AccountOpened;
 use Examples\BankAccount\Domain\Events\MoneyDeposited;
 use Examples\BankAccount\Domain\Events\MoneyTransferredIn;
@@ -18,6 +14,8 @@ use Examples\BankAccount\Domain\Exceptions\InsufficientFundsException;
 use Examples\BankAccount\Domain\ValueObjects\AccountBalance;
 use Examples\BankAccount\Domain\ValueObjects\Money;
 use Examples\BankAccount\Domain\ValueObjects\TransactionType;
+use SeedWork\Domain\AggregateRoot;
+use SeedWork\Domain\DomainEvent;
 
 /**
  * @extends AggregateRoot<BankAccountId>
@@ -35,10 +33,6 @@ final readonly class BankAccount extends AggregateRoot
         array $domainEvents = []
     ) {
         parent::__construct($id, $domainEvents);
-    }
-
-    protected function validate(): void
-    {
     }
 
     public static function create(?BankAccountId $id = null, ?AccountBalance $initialBalance = null): self
@@ -157,6 +151,8 @@ final readonly class BankAccount extends AggregateRoot
     {
         return $this->transactions;
     }
+
+    protected function validate(): void {}
 
     private function assertSameCurrency(Money $amount): void
     {

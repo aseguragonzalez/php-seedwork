@@ -30,9 +30,7 @@ final class QueryBusBuilder
     /** @var list<\Closure(QueryBus): QueryBus> */
     private array $steps = [];
 
-    public function __construct(private readonly RegistryQueryBus $registry)
-    {
-    }
+    public function __construct(private readonly RegistryQueryBus $registry) {}
 
     public function registry(): RegistryQueryBus
     {
@@ -47,6 +45,7 @@ final class QueryBusBuilder
     public function use(\Closure $middleware): self
     {
         $this->steps[] = $middleware;
+
         return $this;
     }
 
@@ -61,6 +60,7 @@ final class QueryBusBuilder
         foreach (array_reverse($this->steps) as $step) {
             $bus = $step($bus);
         }
+
         return $bus;
     }
 }

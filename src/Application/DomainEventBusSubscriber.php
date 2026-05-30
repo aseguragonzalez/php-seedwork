@@ -17,8 +17,8 @@ use SeedWork\Domain\DomainEvent;
 interface DomainEventBusSubscriber
 {
     /**
-     * @param string $eventType FQCN of the domain event (e.g. MoneyDeposited::class).
-     * @param DomainEventHandler<DomainEvent> $handler Handler instance to invoke.
+     * @param string                          $eventType FQCN of the domain event (e.g. MoneyDeposited::class).
+     * @param DomainEventHandler<DomainEvent> $handler   handler instance to invoke
      */
     public function subscribe(string $eventType, DomainEventHandler $handler): void;
 }

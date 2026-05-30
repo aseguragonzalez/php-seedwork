@@ -48,15 +48,16 @@ final class InMemoryTaskOutboxRepository implements TaskOutboxRepositorySpy
     {
         $pending = array_filter(
             $this->records,
-            fn (TaskOutboxRecord $r) => $r->status === TaskOutboxStatus::Pending
+            fn (TaskOutboxRecord $r) => TaskOutboxStatus::Pending === $r->status
         );
+
         return array_slice(array_values($pending), 0, $limit);
     }
 
     public function markAsDelivered(string $id): void
     {
         $record = $this->records[$id] ?? null;
-        if ($record === null) {
+        if (null === $record) {
             return;
         }
         $this->records[$id] = new TaskOutboxRecord(
@@ -72,7 +73,7 @@ final class InMemoryTaskOutboxRepository implements TaskOutboxRepositorySpy
     public function markAsFailed(string $id, string $error): void
     {
         $record = $this->records[$id] ?? null;
-        if ($record === null) {
+        if (null === $record) {
             return;
         }
         $this->records[$id] = new TaskOutboxRecord(

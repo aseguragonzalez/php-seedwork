@@ -12,7 +12,7 @@ namespace SeedWork\Infrastructure;
  */
 enum IntegrationEventOutboxStatus: string
 {
-    case Pending   = 'pending';
+    case Pending = 'pending';
     case Published = 'published';
-    case Failed    = 'failed';
+    case Failed = 'failed';
 }

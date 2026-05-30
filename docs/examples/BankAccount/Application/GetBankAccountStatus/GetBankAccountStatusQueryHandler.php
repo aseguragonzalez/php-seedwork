@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Examples\BankAccount\Application\GetBankAccountStatus;
 
-use SeedWork\Application\Maybe;
-use SeedWork\Application\Query;
 use Examples\BankAccount\Domain\Entities\BankAccount;
 use Examples\BankAccount\Domain\Entities\BankAccountId;
 use Examples\BankAccount\Domain\Repositories\BankAccountRepository;
+use SeedWork\Application\Maybe;
+use SeedWork\Application\Query;
 
 /**
  * Handler for the GetBankAccountStatus query.
@@ -17,20 +17,21 @@ final readonly class GetBankAccountStatusQueryHandler implements GetBankAccountS
 {
     public function __construct(
         private BankAccountRepository $repository,
-    ) {
-    }
+    ) {}
 
     /**
      * @param GetBankAccountStatusQuery $query
+     *
      * @return Maybe<BankAccountStatusResult>
      */
     public function handle(Query $query): Maybe
     {
         $accountId = BankAccountId::fromString($query->accountId);
-        /** @var BankAccount|null $account */
+
+        /** @var null|BankAccount $account */
         $account = $this->repository->findById($accountId);
 
-        if ($account === null) {
+        if (null === $account) {
             return Maybe::nothing();
         }
 

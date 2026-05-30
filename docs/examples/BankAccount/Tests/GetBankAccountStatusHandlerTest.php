@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Examples\BankAccount\Tests;
 
-use PHPUnit\Framework\TestCase;
-use SeedWork\Infrastructure\QueryBusBuilder;
-use SeedWork\Infrastructure\RegistryQueryBus;
 use Examples\BankAccount\Application\GetBankAccountStatus\BankAccountStatusResult;
 use Examples\BankAccount\Application\GetBankAccountStatus\GetBankAccountStatusQuery;
 use Examples\BankAccount\Application\GetBankAccountStatus\GetBankAccountStatusQueryHandler;
@@ -14,7 +11,15 @@ use Examples\BankAccount\Domain\Entities\BankAccount;
 use Examples\BankAccount\Domain\ValueObjects\AccountBalance;
 use Examples\BankAccount\Domain\ValueObjects\Currency;
 use Examples\BankAccount\Infrastructure\Repositories\InMemoryBankAccountRepository;
+use PHPUnit\Framework\TestCase;
+use SeedWork\Infrastructure\QueryBusBuilder;
+use SeedWork\Infrastructure\RegistryQueryBus;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class GetBankAccountStatusHandlerTest extends TestCase
 {
     public function testExistingAccountReturnsMaybeWithResult(): void
@@ -33,6 +38,7 @@ final class GetBankAccountStatusHandlerTest extends TestCase
         $maybe = $bus->ask(new GetBankAccountStatusQuery($account->id->value));
 
         $this->assertTrue($maybe->hasValue());
+
         /** @var BankAccountStatusResult $result */
         $result = $maybe->value();
         $this->assertSame(200, $result->balance->amount);

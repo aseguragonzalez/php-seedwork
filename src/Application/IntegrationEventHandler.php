@@ -17,7 +17,7 @@ interface IntegrationEventHandler
     /**
      * Processes the integration event.
      *
-     * @param IntegrationEvent $event The event to handle.
+     * @param IntegrationEvent $event the event to handle
      */
     public function handle(IntegrationEvent $event): void;
 }

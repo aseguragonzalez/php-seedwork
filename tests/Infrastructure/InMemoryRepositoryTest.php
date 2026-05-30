@@ -9,6 +9,11 @@ use Tests\Fixtures\TestAggregate;
 use Tests\Fixtures\TestId;
 use Tests\Fixtures\TestRepository;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class InMemoryRepositoryTest extends TestCase
 {
     public function testFindByReturnsNullWhenNotFound(): void

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Fixtures;
 
-use Tests\Fixtures\TestDomainException;
 use SeedWork\Domain\ValueObject;
 
 final readonly class TestValueObject extends ValueObject

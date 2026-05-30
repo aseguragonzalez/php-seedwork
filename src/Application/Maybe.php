@@ -18,24 +18,27 @@ namespace SeedWork\Application;
  */
 final class Maybe
 {
-    /** @param T|null $value */
+    /** @param null|T $value */
     private function __construct(
         private readonly mixed $value,
         private readonly bool $hasValue
-    ) {
-    }
+    ) {}
 
     /**
      * @template TVal
+     *
      * @param TVal $value
+     *
      * @return self<TVal>
+     *
      * @throws \InvalidArgumentException When null is passed. Use {@see nothing()} instead.
      */
     public static function just(mixed $value): self
     {
-        if ($value === null) {
+        if (null === $value) {
             throw new \InvalidArgumentException('Maybe::just() cannot contain null. Use Maybe::nothing() instead.');
         }
+
         return new self($value, true);
     }
 
@@ -44,7 +47,7 @@ final class Maybe
      */
     public static function nothing(): self
     {
-        /** @phpstan-ignore return.type */
+        // @phpstan-ignore return.type
         return new self(null, false);
     }
 
@@ -55,15 +58,17 @@ final class Maybe
 
     /**
      * @return T
-     * @throws \LogicException When called on a nothing value; check {@see hasValue()} first.
+     *
+     * @throws \LogicException when called on a nothing value; check {@see hasValue()} first
      */
     public function value(): mixed
     {
         if (!$this->hasValue) {
             throw new \LogicException('Cannot call value() on Maybe::nothing(). Check hasValue() first.');
         }
-        /** @var T $v */
-        $v = $this->value;
-        return $v;
+
+        assert(null !== $this->value);
+
+        return $this->value;
     }
 }

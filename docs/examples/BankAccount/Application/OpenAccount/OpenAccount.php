@@ -11,6 +11,4 @@ use SeedWork\Application\CommandHandler;
  *
  * @extends CommandHandler<OpenAccountCommand>
  */
-interface OpenAccount extends CommandHandler
-{
-}
+interface OpenAccount extends CommandHandler {}

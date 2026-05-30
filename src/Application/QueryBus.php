@@ -14,8 +14,9 @@ namespace SeedWork\Application;
 interface QueryBus
 {
     /**
-     * @param Query $query The query to dispatch.
-     * @return Maybe<mixed> The result from the query handler.
+     * @param Query $query the query to dispatch
+     *
+     * @return Maybe<mixed> the result from the query handler
      */
     public function ask(Query $query): Maybe;
 }

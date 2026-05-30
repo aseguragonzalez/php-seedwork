@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Examples\BankAccount\Domain\Events;
 
-use SeedWork\Domain\DomainEvent;
 use Examples\BankAccount\Domain\Entities\BankAccountId;
 use Examples\BankAccount\Domain\Entities\TransactionId;
 use Examples\BankAccount\Domain\ValueObjects\Money;
+use SeedWork\Domain\DomainEvent;
 
 final readonly class MoneyTransferredIn extends DomainEvent
 {
@@ -35,7 +35,7 @@ final readonly class MoneyTransferredIn extends DomainEvent
             $fromAccountId,
             $amount,
             $transactionId,
-            $id ?? 'evt-' . uniqid('', true),
+            $id ?? 'evt-'.uniqid('', true),
             $occurredAt ?? new \DateTimeImmutable('now', new \DateTimeZone('UTC'))
         );
     }

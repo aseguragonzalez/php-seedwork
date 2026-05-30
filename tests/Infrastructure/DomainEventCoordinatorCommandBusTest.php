@@ -15,6 +15,11 @@ use SeedWork\Infrastructure\DomainEventCoordinatorCommandBus;
 use Tests\Fixtures\TestCommand;
 use Tests\Fixtures\TestEvent;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 final class DomainEventCoordinatorCommandBusTest extends TestCase
 {
     public function testDispatchCallsEventBusDispatchWhenResultIsOk(): void
@@ -69,7 +74,8 @@ final class DomainEventCoordinatorCommandBusTest extends TestCase
         $innerBus = $this->createMock(CommandBus::class);
         $innerBus->expects($this->once())
             ->method('dispatch')
-            ->willThrowException(new \RuntimeException('infrastructure failure'));
+            ->willThrowException(new \RuntimeException('infrastructure failure'))
+        ;
 
         $decorator = new DomainEventCoordinatorCommandBus($innerBus, $eventBus);
 
@@ -91,7 +97,8 @@ final class DomainEventCoordinatorCommandBusTest extends TestCase
 
         $innerBus = $this->createStub(CommandBus::class);
         $innerBus->method('dispatch')
-            ->willThrowException(new \RuntimeException('infra error'));
+            ->willThrowException(new \RuntimeException('infra error'))
+        ;
 
         $decorator = new DomainEventCoordinatorCommandBus($innerBus, $eventBus);
 
@@ -108,7 +115,8 @@ final class DomainEventCoordinatorCommandBusTest extends TestCase
     {
         $eventBus = $this->createMock(DomainEventBus::class);
         $eventBus->expects($this->once())->method('dispatch')
-            ->willThrowException(new \RuntimeException('handler failure'));
+            ->willThrowException(new \RuntimeException('handler failure'))
+        ;
         $eventBus->expects($this->once())->method('discard');
 
         $innerBus = $this->createInnerBusReturning(Result::ok());
@@ -135,6 +143,7 @@ final class DomainEventCoordinatorCommandBusTest extends TestCase
     {
         $inner = $this->createStub(CommandBus::class);
         $inner->method('dispatch')->willReturn($result);
+
         return $inner;
     }
 }

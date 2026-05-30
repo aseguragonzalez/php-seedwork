@@ -34,7 +34,7 @@ abstract readonly class AggregateRoot
      * Subclasses typically pass through events when creating a new instance after a
      * state change (e.g. withdraw adds MoneyWithdrawn and forwards existing events).
      *
-     * @param TId $id Unique identity of this aggregate; also the consistency boundary identifier.
+     * @param TId                $id           unique identity of this aggregate; also the consistency boundary identifier
      * @param array<DomainEvent> $domainEvents Events already recorded (e.g. from previous operations in the same flow).
      */
     protected function __construct(public mixed $id, private array $domainEvents = [])
@@ -50,14 +50,16 @@ abstract readonly class AggregateRoot
      * String-cast strict comparison avoids PHP loose-equality quirks ("0e123" == 0).
      * TId must be stringable (string, int, or object with __toString()).
      *
-     * @param AggregateRoot<TId> $other Another aggregate root (typically same concrete type).
-     * @return bool True if both have the same concrete type and identity.
+     * @param AggregateRoot<TId> $other another aggregate root (typically same concrete type)
+     *
+     * @return bool true if both have the same concrete type and identity
      */
     public function equals(AggregateRoot $other): bool
     {
-        /** @var string|int|\Stringable $thisId */
+        /** @var int|string|\Stringable $thisId */
         $thisId = $this->id;
-        /** @var string|int|\Stringable $otherId */
+
+        /** @var int|string|\Stringable $otherId */
         $otherId = $other->id;
 
         return $this::class === $other::class
@@ -71,7 +73,7 @@ abstract readonly class AggregateRoot
      * Call this after executing a command (and optionally after persisting the root)
      * to dispatch events to other bounded contexts or read models.
      *
-     * @return array<DomainEvent> Cloned events for publishing; does not clear the aggregate.
+     * @return array<DomainEvent> cloned events for publishing; does not clear the aggregate
      */
     public function getDomainEvents(): array
     {
