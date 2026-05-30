@@ -102,14 +102,16 @@ devcontainer exec --workspace-folder . make <target>
 All targets must be run inside the dev container via `devcontainer exec --workspace-folder . make <target>`. Running them directly on the host will fail because the required tools (PHP, Composer, etc.) are only available inside the container.
 
 - `make all` — Install deps, fix code style, and run the full check pipeline.
-- `make check` — Code style check + static analysis + tests (no coverage). Run before every commit.
+- `make check` — Layer boundary check + code style + static analysis + tests (no coverage). Run before every commit.
+- `make install` — Install Composer dependencies.
 - `make cs` — Check code style with PHP-CS-Fixer (dry-run).
 - `make cs-fix` — Fix code style with PHP-CS-Fixer.
 - `make stan` — Run PHPStan (level max).
-- `make test` — Run PHPUnit with coverage report in `coverage/`.
+- `make test` — Run PHPUnit with coverage report in `coverage/html/`.
 - `make test-no-coverage` — Run PHPUnit without coverage (faster).
 - `make test-examples` — Run the BankAccount example test suite.
 - `make clean` — Remove vendor, coverage, and caches.
+- `make create-package` — Build a zip archive in `dist/`.
 - `make docs-serve` — Serve the documentation site locally on port 8001.
 
 ### Documentation site
