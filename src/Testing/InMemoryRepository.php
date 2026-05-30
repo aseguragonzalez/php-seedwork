@@ -37,7 +37,6 @@ class InMemoryRepository implements InMemoryRepositorySpy
      */
     public function findById(mixed $id): ?AggregateRoot
     {
-        // @var T|null
         return $this->store[$this->key($id)] ?? null;
     }
 
@@ -51,7 +50,6 @@ class InMemoryRepository implements InMemoryRepositorySpy
      */
     public function all(): array
     {
-        // @var list<T>
         return array_values($this->store);
     }
 
