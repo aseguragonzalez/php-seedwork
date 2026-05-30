@@ -72,9 +72,9 @@ Source and issue tracker: [php-seedwork](https://github.com/aseguragonzalez/php-
 
 - **PHP** 8.4
 - **Composer** for dependency management
-- **PHPUnit** ^12.5 for tests
-- **PHPStan** ^2.1 for static analysis
-- **PHP-CS-Fixer** ^3.93 for code style (`@PhpCsFixer` ruleset)
+- **PHPUnit** for tests
+- **PHPStan** level max for static analysis
+- **PHP-CS-Fixer** for code style (`@PhpCsFixer` ruleset)
 
 ## Development
 
