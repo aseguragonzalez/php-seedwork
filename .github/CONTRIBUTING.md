@@ -54,7 +54,7 @@ devcontainer exec --workspace-folder . make <target>
 
 | Command | Description |
 |---|---|
-| `make install` | Install Composer dependencies and pre-commit hooks |
+| `make install` | Install Composer dependencies |
 | `make cs` | Check code style (PHP-CS-Fixer, dry-run) |
 | `make cs-fix` | Auto-fix code style |
 | `make stan` | Static analysis (PHPStan level max) |
