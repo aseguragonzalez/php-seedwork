@@ -6,7 +6,7 @@
 [![CI](https://github.com/aseguragonzalez/php-seedwork/actions/workflows/ci.yml/badge.svg)](https://github.com/aseguragonzalez/php-seedwork/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/aseguragonzalez/php-seedwork/branch/main/graph/badge.svg)](https://codecov.io/gh/aseguragonzalez/php-seedwork)
 [![PHPStan](https://img.shields.io/badge/PHPStan-max-blue)](https://phpstan.org/)
-[![PSR-12](https://img.shields.io/badge/style-PSR--12-brightgreen)](https://www.php-fig.org/psr/psr-12/)
+[![PHP CS Fixer](https://img.shields.io/badge/style-PHP_CS_Fixer-brightgreen)](https://cs.symfony.com/)
 
 DDD and Hexagonal (Clean) Architecture building blocks (aggregates, entities, value
 objects, command/query handlers, etc).
@@ -72,10 +72,9 @@ Source and issue tracker: [php-seedwork](https://github.com/aseguragonzalez/php-
 
 - **PHP** 8.4
 - **Composer** for dependency management
-- **PHPUnit** ^12.5 for tests
-- **PHPStan** ^2.1 for static analysis
-- **PHP-CS-Fixer** ^3.93 for code style
-- **PHP_CodeSniffer** (PSR-12) for linting
+- **PHPUnit** for tests
+- **PHPStan** level max for static analysis
+- **PHP-CS-Fixer** for code style (`@PhpCsFixer` ruleset)
 
 ## Development
 
@@ -96,19 +95,21 @@ Then run any make target with:
 devcontainer exec --workspace-folder . make <target>
 ```
 
-**Debugging:** The PHP debug port in this project is **9000** (not the Xdebug default 9003). Configure your IDE or Xdebug client to connect to port 9000.
+**Debugging:** Xdebug listens on the default port **9003**. Configure your IDE or Xdebug client accordingly.
 
 ### Make targets
 
-All targets must be run inside the dev container via `devcontainer exec --workspace-folder . make <target>`. Running them directly on the host will fail because the required tools (PHP, Composer, mkdocs, etc.) are only available inside the container.
+All targets must be run inside the dev container via `devcontainer exec --workspace-folder . make <target>`. Running them directly on the host will fail because the required tools (PHP, Composer, etc.) are only available inside the container.
 
-- `make install` — Install pre-commit hooks and Composer dependencies.
-- `make all` — Run format-check, lint, static analysis, and tests.
-- `make test` — Run PHPUnit (with coverage in `coverage/`).
-- `make format` — Fix code style with PHP-CS-Fixer (PSR-12).
-- `make format-check` — Check style without changing files.
-- `make lint` — Run PHP_CodeSniffer (PSR-12).
-- `make static-analyse` — Run PHPStan (level max).
+- `make all` — Install deps, fix code style, and run the full check pipeline.
+- `make check` — Layer boundary check + code style + static analysis + tests (no coverage). Run before every commit.
+- `make install` — Install Composer dependencies.
+- `make cs` — Check code style with PHP-CS-Fixer (dry-run).
+- `make cs-fix` — Fix code style with PHP-CS-Fixer.
+- `make stan` — Run PHPStan (level max).
+- `make test` — Run PHPUnit with coverage report in `coverage/html/`.
+- `make test-no-coverage` — Run PHPUnit without coverage (faster).
+- `make test-examples` — Run the BankAccount example test suite.
 - `make clean` — Remove vendor, coverage, and caches.
 - `make create-package` — Build a zip archive in `dist/`.
 - `make docs-serve` — Serve the documentation site locally on port 8001.
