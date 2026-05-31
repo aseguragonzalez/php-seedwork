@@ -20,6 +20,7 @@
       }
     }
   },
+  "dockerComposeFile": "docker-compose.yml",
   "features": {
     "ghcr.io/devcontainers/features/git:1": {},
     "ghcr.io/gvatsal60/dev-container-features/pre-commit:1": {}
@@ -28,11 +29,12 @@
     8001,
     9003
   ],
-  "image": "mcr.microsoft.com/devcontainers/php:8.4-bookworm",
   "mounts": [
     "source=php-seedwork-pre-commit-cache,target=/home/vscode/.cache/pre-commit,type=volume"
   ],
-  "name": "PHP 8.4",
+  "name": "PHP SeedWork",
+  "service": "app",
+  "workspaceFolder": "/workspaces/php-seedwork",
   "portsAttributes": {
     "8001": {
       "label": "MkDocs",
@@ -43,6 +45,6 @@
       "onAutoForward": "notify"
     }
   },
-  "postCreateCommand": "python3 -m venv /home/vscode/.venv && /home/vscode/.venv/bin/pip install -r requirements.txt || true",
+  "postCreateCommand": "bash /workspaces/php-seedwork/.devcontainer/setup.sh",
   "remoteUser": "vscode"
 }

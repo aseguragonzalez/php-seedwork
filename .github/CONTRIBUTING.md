@@ -23,37 +23,46 @@ you agree to uphold our [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Development setup
 
-- **Requirements:** PHP 8.4 or later, Composer 2.x, and the `pre-commit` CLI.
-  Docker and Dev Container are supported for development.
-  - Install `pre-commit` (Python tool) locally, for example:
-    - With pip (matches CI): `pip install pre-commit`
-    - Or via your OS package manager (e.g. `brew install pre-commit`, `apt install pre-commit`)
-- **Setup:**
-  1. Clone the repository.
-  2. Run `make install` to install Composer dependencies and pre-commit hooks.
+**Requirements:** Docker and the [Dev Containers CLI](https://github.com/devcontainers/cli)
+(`devcontainer` command), or VS Code with the
+[Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers).
+
+PHP and Composer are **not** required on the host — they run exclusively inside the dev container.
+
+**Setup:**
+
+1. Clone the repository.
+2. Start the dev container:
+
+   ```bash
+   devcontainer up --workspace-folder .
+   ```
+
+3. Install dependencies inside the container:
+
+   ```bash
+   devcontainer exec --workspace-folder . make install
+   ```
+
 ## Running checks
 
-Before pushing, run the full check suite from the repository root:
+All make targets run inside the dev container:
 
 ```bash
-make all
+devcontainer exec --workspace-folder . make <target>
 ```
 
-This runs:
+| Command | Description |
+|---|---|
+| `make install` | Install Composer dependencies |
+| `make cs` | Check code style (PHP-CS-Fixer, dry-run) |
+| `make cs-fix` | Auto-fix code style |
+| `make stan` | Static analysis (PHPStan level max) |
+| `make test` | Run PHPUnit with coverage |
+| `make check` | Run `cs + stan + test` (no coverage) |
+| `make all` | Run `install + cs-fix + check` |
 
-- `make format-check` — PSR-12 style check (PHP-CS-Fixer)
-- `make lint` — PHP_CodeSniffer (PSR-12)
-- `make static-analyse` — PHPStan (level max)
-- `make test` — PHPUnit
-
-To fix code style automatically:
-
-```bash
-make format
-```
-
-Individual targets: `make format`, `make format-check`, `make lint`,
-`make static-analyse`, `make test`. See the [Makefile](Makefile) for details.
+Run `make all` before every commit to ensure everything passes.
 
 ## Code and style
 
@@ -63,6 +72,52 @@ Individual targets: `make format`, `make format-check`, `make lint`,
   the automated checks.
 - When adding or changing patterns, update the [BankAccount example](docs/examples/BankAccount/)
   and the [documentation](docs/) as needed (see the project rules).
+
+## Commit signing
+
+All commits must be **GPG or SSH signed** (verified). This is required to maintain the integrity of the public package history.
+
+### Setting up SSH signing on the host
+
+If you commit directly from the host (outside the dev container), configure git once:
+
+```bash
+git config --global gpg.format ssh
+git config --global user.signingkey ~/.ssh/id_ed25519.pub
+git config --global commit.gpgsign true
+```
+
+Replace `id_ed25519.pub` with your actual public key filename if different.
+
+### Setting up SSH signing inside the dev container
+
+The dev container does not include your SSH key by default. To map your local key into the container (bind mount — not a copy):
+
+1. Copy the example override file:
+
+   ```bash
+   cp .devcontainer/docker-compose.override.yml.example \
+      .devcontainer/docker-compose.override.yml
+   ```
+
+2. Edit `.devcontainer/docker-compose.override.yml` if your signing key has a different name or location. The default mounts `~/.ssh` read-only:
+
+   ```yaml
+   services:
+     app:
+       volumes:
+         - ~/.ssh:/home/vscode/.ssh:ro
+   ```
+
+3. Rebuild the dev container. The `postCreateCommand` detects `/home/vscode/.ssh/id_ed25519` and automatically sets:
+
+   ```
+   gpg.format = ssh
+   user.signingkey = /home/vscode/.ssh/id_ed25519.pub
+   commit.gpgsign = true
+   ```
+
+`.devcontainer/docker-compose.override.yml` is listed in `.gitignore` — your local key path is never committed.
 
 ## Pull request process
 
