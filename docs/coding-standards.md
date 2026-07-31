@@ -2,6 +2,9 @@
 
 > **Key points reference.** PHP 8.4. Strict types everywhere. PSR-12 formatting.
 
+> When this document and `docs/examples/` disagree, the example is authoritative — it is compiled and
+> tested by CI. Please open an issue so the discrepancy gets fixed.
+
 ---
 
 ## General PHP Baseline
@@ -322,7 +325,7 @@ declare(strict_types=1);
 
 namespace MyService\Domain;
 
-final class AccountNotFound extends \DomainException
+final class AccountNotFoundException extends \DomainException
 {
     public function __construct(string $accountId)
     {
@@ -330,7 +333,7 @@ final class AccountNotFound extends \DomainException
     }
 }
 
-final class InsufficientFunds extends \DomainException
+final class InsufficientFundsException extends \DomainException
 {
     public function __construct(string $accountId, int $available, int $requested)
     {
@@ -344,8 +347,13 @@ final class InsufficientFunds extends \DomainException
 **Key points**
 - Extend PHP's stdlib `\DomainException` — the seedwork does not provide a custom base class.
 - `\DomainException` subclasses are the only correct way to signal business rule violations.
-- The **class name is the machine-readable code**: `InsufficientFunds` becomes `insufficient_funds` automatically — no need to declare a code manually.
+- The **class name is the machine-readable code**: `InsufficientFundsException` becomes `insufficient_funds_exception` automatically — no need to declare a code manually.
 - The **constructor message is the human-readable description**: include the relevant context (IDs, amounts) so logs and API responses are self-explanatory without having to look up the code.
+- The class name **is** the published error code: `RegistryCommandBus` converts the short class name from
+  PascalCase to snake_case to build the `ResultError` code. `InsufficientFunds` emits `insufficient_funds`;
+  adding an `Exception` suffix emits `insufficient_funds_exception`. Renaming the class is therefore a
+  breaking change for API consumers, not a refactor. This package's examples use the `Exception` suffix — align
+  with that convention.
 - Caught by `RegistryCommandBus` and converted to `Result::failed(...)` automatically — handlers never catch them.
 - Infrastructure exceptions (`\PDOException`, etc.) propagate as-is — do not wrap in `\DomainException`.
 - Define one subclass per distinct business rule violation — keep them in the domain layer of your service.
@@ -369,7 +377,7 @@ use SeedWork\Application\Command;
 use SeedWork\Application\ValidationErrors;
 use SeedWork\Application\ValidationErrorDetail;
 
-readonly class OpenAccountCommand extends Command
+final readonly class OpenAccountCommand extends Command
 {
     public function __construct(
         public readonly string $accountId,
@@ -385,10 +393,10 @@ readonly class OpenAccountCommand extends Command
         $errors = [];
 
         if (empty($this->accountId)) {
-            $errors[] = new ValidationErrorDetail('accountId', 'Account ID is required.');
+            $errors[] = new ValidationErrorDetail('account_id_required', 'Account ID is required.');
         }
         if ($this->initialAmount < 0) {
-            $errors[] = new ValidationErrorDetail('initialAmount', 'Initial amount cannot be negative.');
+            $errors[] = new ValidationErrorDetail('initial_amount_negative', 'Initial amount cannot be negative.');
         }
 
         if (!empty($errors)) {
@@ -398,6 +406,10 @@ readonly class OpenAccountCommand extends Command
 }
 ```
 
+Each use case declares its own interface, which the handler implements. This is what the composition root and
+any caller depend on — never the concrete handler class. Name it after the use case in the imperative, with no
+suffix.
+
 ```php
 <?php
 
@@ -406,18 +418,41 @@ declare(strict_types=1);
 namespace MyService\Application\OpenAccount;
 
 use SeedWork\Application\CommandHandler;
+
+/**
+ * Application service that handles OpenAccountCommand.
+ *
+ * @extends CommandHandler<OpenAccountCommand>
+ */
+interface OpenAccount extends CommandHandler {}
+```
+
+The generic parameter lives in the docblock: `CommandHandler::handle()` is typed against the base `Command`, so
+the annotation is the only thing that tells PHPStan which command this use case accepts.
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace MyService\Application\OpenAccount;
+
+use SeedWork\Application\Command;
 use MyService\Domain\Account;
 use MyService\Domain\AccountId;
 use MyService\Domain\AccountRepository;
 use MyService\Domain\Money;
 
-final class OpenAccountHandler implements CommandHandler
+final readonly class OpenAccountCommandHandler implements OpenAccount
 {
     public function __construct(
-        private readonly AccountRepository $accounts,
+        private AccountRepository $accounts,
     ) {}
 
-    public function handle(OpenAccountCommand $command): void
+    /**
+     * @param OpenAccountCommand $command
+     */
+    public function handle(Command $command): void
     {
         $account = Account::open(
             new AccountId($command->accountId),
@@ -432,6 +467,9 @@ final class OpenAccountHandler implements CommandHandler
 
 **Key points**
 - The handler's sole responsibility: obtain aggregate (or create new) → call domain method → save. No business logic.
+- `handle()` takes the base `Command` type. PHP forbids narrowing a parameter type in an implementation, so
+  declaring the concrete command in the signature makes the class fail to load. Narrow it with a
+  `@param XCommand $command` docblock instead.
 - **Do not call `publish($aggregate->getDomainEvents())`** — `DomainEventPublishingRepository` does this automatically after `save()`.
 - `validate()` is called automatically in the `Command` constructor — the handler receives a guaranteed-valid command.
 - The handler returns `void`. The command bus wraps the result in `Result::ok()` on success or `Result::failed(...)` on `\DomainException`.
@@ -460,7 +498,7 @@ use SeedWork\Application\Query;
 use SeedWork\Application\ValidationErrors;
 use SeedWork\Application\ValidationErrorDetail;
 
-readonly class GetBalanceQuery extends Query
+final readonly class GetBalanceQuery extends Query
 {
     public function __construct(
         public readonly string $accountId,
@@ -472,12 +510,36 @@ readonly class GetBalanceQuery extends Query
     {
         if (empty($this->accountId)) {
             throw new ValidationErrors([
-                new ValidationErrorDetail('accountId', 'Account ID is required.'),
+                new ValidationErrorDetail('account_id_required', 'Account ID is required.'),
             ]);
         }
     }
 }
 ```
+
+Each use case declares its own interface, which the handler implements. This is what the composition root and
+any caller depend on — never the concrete handler class. Name it after the use case in the imperative, with no
+suffix.
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace MyService\Application\GetBalance;
+
+use SeedWork\Application\QueryHandler;
+
+/**
+ * Application service that handles GetBalanceQuery and returns Maybe<BalanceResult>.
+ *
+ * @extends QueryHandler<GetBalanceQuery>
+ */
+interface GetBalance extends QueryHandler {}
+```
+
+The generic parameter lives in the docblock: `QueryHandler::handle()` is typed against the base `Query`, so
+the annotation is the only thing that tells PHPStan which query this use case accepts.
 
 ```php
 <?php
@@ -487,16 +549,21 @@ declare(strict_types=1);
 namespace MyService\Application\GetBalance;
 
 use SeedWork\Application\Maybe;
-use SeedWork\Application\QueryHandler;
+use SeedWork\Application\Query;
 use MyService\Application\ReadRepositories\AccountReadRepository;
 
-final class GetBalanceHandler implements QueryHandler
+final readonly class GetBalanceQueryHandler implements GetBalance
 {
     public function __construct(
-        private readonly AccountReadRepository $readRepository,
+        private AccountReadRepository $readRepository,
     ) {}
 
-    public function handle(GetBalanceQuery $query): Maybe
+    /**
+     * @param GetBalanceQuery $query
+     *
+     * @return Maybe<BalanceResult>
+     */
+    public function handle(Query $query): Maybe
     {
         $balance = $this->readRepository->findBalance($query->accountId);
 
@@ -509,9 +576,17 @@ final class GetBalanceHandler implements QueryHandler
 
 **Key points**
 - `handle()` returns `Maybe` — never `null`, never a raw value.
+- `handle()` takes the base `Query` type. PHP forbids narrowing a parameter type in an implementation, so
+  declaring the concrete query in the signature makes the class fail to load. Narrow it with a
+  `@param XQuery $query` docblock instead.
 - Query handlers are strictly read-only. No `save()`, no command dispatching.
-- Use a **read repository** (application-layer port) that returns projections/DTOs, not the domain repository.
+- Prefer a **read repository** (application-layer port returning projections/DTOs) once a query spans more
+  than one aggregate or needs a shape the domain repository doesn't expose. For a single-aggregate read, it
+  is acceptable to depend on the domain repository directly and project inside the handler — see
+  `GetBankAccountStatusQueryHandler` in the example. Don't introduce a read port purely on principle.
 - Return `Maybe::nothing()` for both not-found and unauthorized — do not leak resource existence.
+- Validation error codes (like `account_id_required` above) reach API clients as part of the failure result —
+  name the rule that was violated, not the field, and use snake_case.
 
 **Don't**
 - Load a full aggregate just to extract two fields.
@@ -982,12 +1057,14 @@ $domainEventBus->reset();
 | Classes, interfaces, enums | `PascalCase` | `AccountRepository`, `OpenAccountCommand` |
 | Methods | `camelCase` | `findById`, `getDomainEvents`, `handle` |
 | Properties | `camelCase` | `$accountId`, `$occurredAt` |
-| Files | `PascalCase.php` | `OpenAccountHandler.php` |
+| Files | `PascalCase.php` | `OpenAccountCommandHandler.php` |
 | Namespaces | `PascalCase`, mirror directory structure | `MyService\Application\OpenAccount` |
 | Constants | `UPPER_SNAKE_CASE` | `TYPE`, `VERSION` |
 | Commands | `{Verb}{Noun}Command` | `OpenAccountCommand`, `DepositMoneyCommand` |
 | Queries | `{Get/Find}{Noun}Query` | `GetBalanceQuery`, `FindTransactionQuery` |
-| Handlers | `{CommandOrQuery}Handler` | `OpenAccountHandler`, `GetBalanceHandler` |
+| Use case interfaces | imperative, no suffix | `OpenAccount`, `WithdrawMoney` |
+| Command handlers | `{Command}Handler` | `OpenAccountCommandHandler` |
+| Query handlers | `{Query}Handler` | `GetBankAccountStatusQueryHandler` |
 | Domain Events | Past tense, `PascalCase` | `AccountOpened`, `MoneyDeposited` |
 | Integration Events | Past tense + suffix | `AccountOpenedIntegrationEvent` |
 | Background Tasks | Imperative + suffix | `SendWelcomeEmailTask` |
@@ -1003,15 +1080,11 @@ PHP 8.4 has no runtime generics. Use PHPStan `@template` annotations to carry ty
 
 ```php
 /**
- * @template TId
- * @template TAgg of AggregateRoot<TId>
- * @extends Repository<TId, TAgg>
+ * A concrete port binds the type parameters — it does not re-declare them.
+ *
+ * @extends Repository<AccountId, Account>
  */
-interface AccountRepository extends Repository
-{
-    /** @param TId $id */
-    public function findById(mixed $id): ?Account;
-}
+interface AccountRepository extends Repository {}
 ```
 
 ```php
@@ -1030,5 +1103,11 @@ final class InMemoryAccountRepository extends InMemoryRepository implements Acco
 **Key points**
 - Always annotate generic interfaces and base classes with `@template`.
 - Use `@extends` and `@implements` to propagate type parameters in subclasses.
+- A concrete port (like `AccountRepository` above) binds the base interface's type parameters — it does not
+  re-declare `@template` itself, and it does not need to re-implement inherited methods just to narrow a
+  docblock.
+- `QueryHandler` takes **one** template parameter — the query type. The result type is not a second parameter;
+  `@extends QueryHandler<GetBalanceQuery, BalanceResult>` does not type-check. Declare the result on the
+  handler's `@return Maybe<BalanceResult>` docblock instead.
 - PHPStan enforces these at analysis time — they have no runtime effect.
 - IDs are `mixed` — use `(string) $id` to normalize before storage.
