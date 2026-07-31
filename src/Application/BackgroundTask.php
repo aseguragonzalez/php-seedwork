@@ -13,15 +13,21 @@ namespace SeedWork\Application;
  * Subclasses add domain-specific fields. All fields are primitives so the task
  * is trivially serializable.
  *
+ * Subclasses may narrow the payload shape by specializing the {@see self::$payload}
+ * template parameter, e.g. `@extends BackgroundTask<array{orderId: string}>`. This is
+ * a static-analysis-only aid (PHPStan) — the runtime type remains `array<string, mixed>`.
+ *
  * @see TaskScheduler Port for scheduling tasks.
  * @see TaskHandler   Handler that executes a specific task type.
+ *
+ * @template TPayload of array<string, mixed> = array<string, mixed>
  */
 abstract readonly class BackgroundTask
 {
     /**
      * @param string                     $id            unique task ID (UUID)
      * @param string                     $type          Task type identifier (e.g. 'domain.action_name').
-     * @param array<string, mixed>       $payload       serializable primitive arguments
+     * @param TPayload                   $payload       serializable primitive arguments
      * @param string                     $correlationId correlation ID for distributed tracing (required)
      * @param null|string                $causationId   ID of the command or event that caused this task
      * @param null|array<string, string> $metadata      optional trace/tenant metadata

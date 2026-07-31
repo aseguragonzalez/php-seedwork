@@ -118,6 +118,9 @@ All components live under the `SeedWork\` namespace (Domain, Application, Infras
 
 - **Role:** Contract for events published to external systems (eventual consistency via outbox).
 - **Properties:** `id`, `type`, `version`, `aggregateId`, `occurredAt`, `payload`, `correlationId`, `causationId?`, `metadata?`.
+- **Generics:** `@template TPayload of array<string, mixed> = array<string, mixed>`. Subclasses narrow
+  `payload`'s shape via `@extends IntegrationEvent<array{...}>` for PHPStan; this is a static-analysis
+  aid only — see `AccountOpenedIntegrationEvent` in the fixture. Runtime type stays `array<string, mixed>`.
 
 ### IntegrationEventPublisher (`SeedWork\Application\IntegrationEventPublisher`)
 
@@ -133,6 +136,9 @@ All components live under the `SeedWork\` namespace (Domain, Application, Infras
 
 - **Role:** DTO representing a background task to be scheduled for async execution.
 - **Properties:** `id`, `type`, `payload`, `correlationId`, `causationId?`, `metadata?`.
+- **Generics:** `@template TPayload of array<string, mixed> = array<string, mixed>`. Subclasses narrow
+  `payload`'s shape via `@extends BackgroundTask<array{...}>` for PHPStan; this is a static-analysis
+  aid only — the runtime type stays `array<string, mixed>`.
 
 ### TaskScheduler (`SeedWork\Application\TaskScheduler`)
 

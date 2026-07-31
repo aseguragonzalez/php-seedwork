@@ -1111,3 +1111,9 @@ final class InMemoryAccountRepository extends InMemoryRepository implements Acco
   handler's `@return Maybe<BalanceResult>` docblock instead.
 - PHPStan enforces these at analysis time — they have no runtime effect.
 - IDs are `mixed` — use `(string) $id` to normalize before storage.
+- A `@template` parameter can carry a default, so untyped consumers keep working unchanged
+  (`@template TPayload of array<string, mixed> = array<string, mixed>` on `BackgroundTask` and
+  `IntegrationEvent`). Subclasses that want a narrower `payload` opt in with
+  `@extends BackgroundTask<array{orderId: string}>`; subclasses that don't specialize it are
+  unaffected — this is how a generic parameter is added to an existing base class without a
+  breaking change.
