@@ -1,7 +1,7 @@
 ---
 name: gh-workflow
 description: Use this skill whenever working on php-seedwork and about to open a GitHub issue or pull request, decide a commit message/PR title, or plan how to implement an issue. Encodes this repo's issue-first workflow, identity rules, label taxonomy, and the commit/PR conventions that keep semantic-release from shipping an unintended version bump.
-version: 1.1.0
+version: 1.2.0
 ---
 
 # php-seedwork GitHub workflow
@@ -85,3 +85,18 @@ the release decision; only the type prefix and `!`/`BREAKING CHANGE` do. Dependa
 - Always link the issue via a closing keyword.
 - Apply matching labels from the taxonomy above.
 - Request review from the repo owner explicitly (see Reviewers above).
+
+## Replying to PR review comments
+
+Answer review comments — from a human or a bot reviewer (e.g. Copilot) — in English, as a
+**reply in the same review-comment thread**, never as a new top-level PR comment. A fresh
+top-level comment detaches the answer from the specific line/finding it addresses.
+
+```bash
+gh api repos/<owner>/<repo>/pulls/<pr-number>/comments \
+  -f body="<answer in English>" \
+  -F in_reply_to=<review_comment_id>
+```
+
+Get `<review_comment_id>` from `gh api repos/<owner>/<repo>/pulls/<pr-number>/comments`
+(the `id` field of the comment being answered).

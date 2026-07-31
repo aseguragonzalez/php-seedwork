@@ -29,6 +29,8 @@ Additional rules that apply throughout:
  improvement into the current change — open a separate issue for it (see the boy-scout skill).
 - For bug reports, analyze the problem and propose a solution before opening an issue for it (see the
  bug-triage skill).
+- PR review comments (yours or a bot reviewer's, e.g. Copilot) are answered in English, as a reply in the
+ same review-comment thread — never a new top-level PR comment.
 - See `.claude/skills/gh-workflow/SKILL.md` for label taxonomy, identity, reviewer, and issue/PR mechanics.
 
 ## Commands
