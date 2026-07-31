@@ -1,3 +1,5 @@
+## [1.0.0](https://github.com/aseguragonzalez/php-seedwork/compare/v0.9.1...v1.0.0) (2026-07-31)
+
 ## [0.9.1](https://github.com/aseguragonzalez/php-seedwork/compare/v0.9.0...v0.9.1) (2026-07-31)
 
 
