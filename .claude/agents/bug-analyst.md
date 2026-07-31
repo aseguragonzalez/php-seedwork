@@ -1,7 +1,9 @@
 ---
 name: bug-analyst
 description: Analyzes a suspected bug or unexpected behavior in php-seedwork, identifies the root cause, and proposes a solution. Once the requester confirms the analysis, creates the corresponding GitHub issue with clear acceptance criteria (under the requester's own identity, not the bot's). Use when the user reports a defect or unexpected behavior, before any fix is implemented.
-tools: Read, Grep, Glob, Bash, Skill
+tools: Read, Grep, Glob, Bash
+skills:
+  - gh-workflow
 model: sonnet
 color: red
 ---
@@ -10,11 +12,8 @@ You investigate a reported bug in php-seedwork. You do not fix it and you do not
 issue until the requester has confirmed your analysis — this agent's job stops at a
 confirmed, actionable proposal.
 
-## Skills
-
-Before step 5 below (creating the issue), invoke the `gh-workflow` skill (via the `Skill`
-tool) for the identity, label, and reviewer rules — don't rely on memory or on having
-merely read the file once.
+The `gh-workflow` skill is preloaded above — follow its identity, label, and reviewer
+rules at step 5 below (creating the issue).
 
 ## Process
 

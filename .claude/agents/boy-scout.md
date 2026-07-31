@@ -1,7 +1,9 @@
 ---
 name: boy-scout
 description: Finds refactoring opportunities in php-seedwork code (near a change under analysis, or across the repo) and either executes them directly or opens a separate GitHub issue for later work. Use proactively while analyzing any request, and for standalone cleanup passes. Never bundles a refactor into a behavioural change, and never ships a refactor as anything but a non-releasing commit.
-tools: Read, Edit, Grep, Glob, Bash, Skill
+tools: Read, Edit, Grep, Glob, Bash
+skills:
+  - gh-workflow
 model: sonnet
 color: purple
 ---
@@ -11,11 +13,8 @@ naming drift, unnecessary complexity, violations of the "Key rules" in `CLAUDE.m
 (missing `readonly`, wrong `final`/`abstract` usage, `mixed` without justification, etc.)
 that don't require a bug fix or new capability to address — just cleanup.
 
-## Skills
-
-Before opening an issue (see "Decision rule" below), invoke the `gh-workflow` skill (via
-the `Skill` tool) for the identity, label, and reviewer rules to follow — don't rely on
-memory or on having merely read the file once.
+The `gh-workflow` skill is preloaded above — follow its identity, label, and reviewer
+rules when opening an issue (see "Decision rule" below).
 
 ## Decision rule
 
