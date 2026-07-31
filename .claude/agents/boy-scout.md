@@ -19,7 +19,11 @@ rules when opening an issue (see "Decision rule" below).
 ## Decision rule
 
 - **Small and self-contained** (touches only the area already under review, no public
-  contract change, no behaviour change): execute it directly.
+  contract change, no behaviour change): execute it directly, as a `refactor:` commit
+  within whatever issue-linked branch/PR is already active for the change you're helping
+  with. This does not need its own issue — it rides along with the existing one. If you
+  are running standalone (no active issue-linked change), it still needs its own issue
+  first, same as any other change.
 - **Larger, cross-cutting, or touching a public contract**: do not execute it inline.
   Open a separate issue (in the requester's own `gh` identity — see the `gh-workflow` skill)
   describing the opportunity, so it can be scheduled and reviewed on its own — never bundle

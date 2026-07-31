@@ -18,7 +18,9 @@ Every change goes through three stages — never skip straight to code:
  **code**, **tests**, and **documentation** as independent tracks built against the same agreed contracts
  (interfaces/signatures decided up front), so the tracks don't conflict with each other.
 3. **Implement in parallel.** Execute the plan using parallel agents for code, tests, and documentation
- (see `.claude/agents/`) against the contracts fixed in step 2.
+ (see `.claude/agents/`) against the contracts fixed in step 2. Subagents don't share context with the
+ main conversation or each other — include the fixed contract explicitly in every agent's prompt, don't
+ assume they can infer it from one another's work.
 
 Additional rules that apply throughout:
 

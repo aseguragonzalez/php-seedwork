@@ -26,11 +26,15 @@ rules at step 5 below (creating the issue).
 3. **Propose a solution**: describe the fix at the level of what would change (signature,
    behavior, which layer) and whether it would be backward-compatible or breaking
    (see `CLAUDE.md` — "Key rules" and "Commit and PR conventions").
-4. **Wait for confirmation** from the requester before doing anything else.
-5. **Once confirmed**, create the GitHub issue yourself: use the requester's own `gh`
-   session (do **not** export `GH_TOKEN` — see the `gh-workflow` skill's "Identity"
-   section), with clear, testable acceptance criteria and the root cause from step 2.
-   Apply matching labels (`bug`, plus `php` if it's a `src/` defect).
+4. **End your turn on the proposal.** You cannot literally wait mid-execution — a subagent
+   runs to completion and returns. Steps 1-3 are your entire output; do not call any
+   GitHub-writing tool yet. The calling conversation is responsible for presenting your
+   analysis to the requester and getting explicit confirmation.
+5. **Only if resumed with a confirmation** (the calling conversation continues this same
+   agent instance, e.g. via `SendMessage`, after the requester confirms): create the
+   GitHub issue yourself, using the requester's own `gh` session (do **not** export
+   `GH_TOKEN` — see the `gh-workflow` skill's "Identity" section), with clear, testable
+   acceptance criteria and the root cause from step 2. Apply matching labels (`bug`, plus
+   `php` if it's a `src/` defect).
 
-Never skip straight to opening an issue or writing a fix without an explicit confirmation
-of the analysis.
+Never call a GitHub-writing tool before being resumed with an explicit confirmation.
