@@ -33,8 +33,6 @@
     "source=php-seedwork-pre-commit-cache,target=/home/vscode/.cache/pre-commit,type=volume"
   ],
   "name": "PHP SeedWork",
-  "service": "app",
-  "workspaceFolder": "/workspaces/php-seedwork",
   "portsAttributes": {
     "8001": {
       "label": "MkDocs",
@@ -46,5 +44,7 @@
     }
   },
   "postCreateCommand": "bash /workspaces/php-seedwork/.devcontainer/setup.sh",
-  "remoteUser": "vscode"
+  "remoteUser": "vscode",
+  "service": "app",
+  "workspaceFolder": "/workspaces/php-seedwork"
 }

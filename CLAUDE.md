@@ -4,6 +4,17 @@ DDD and Hexagonal Architecture building blocks for PHP.
 **This is a library of abstractions, not a domain application.**
 Every class is extended/implemented/composed by downstream projects — design decisions here are public contracts.
 
+**All work happens inside the devcontainer.** PHP and Composer are not required (and must not be relied upon)
+on the host — every command in this document assumes `devcontainer exec`.
+
+## Workflow
+
+- Every change starts with a GitHub issue: analyze the request, open (or confirm) an issue describing it,
+ then open a PR that references it (e.g. `Closes #N`). Do not open a PR without a linked issue.
+- All documentation and GitHub artifacts — issues, PRs, commit messages, code comments — are written in
+ English, regardless of the language used in conversation.
+- See `.claude/skills/gh-workflow/SKILL.md` for label taxonomy and issue/PR mechanics.
+
 ## Commands
 
 All commands run inside the devcontainer. Start it once with:
@@ -24,6 +35,18 @@ devcontainer exec --workspace-folder . make <target>
 - `make test-examples` — run the BankAccount example test suite
 - `make check` — cs + stan + tests (no coverage). **Run before every commit.**
 - `make all` — install + cs-fix + check
+
+## Commit and PR conventions
+
+Conventional Commits drive `semantic-release` (see `.releaserc.json`) — the commit type alone decides
+whether (and what kind of) a release ships, so getting it wrong is not cosmetic.
+
+- The commit **type must match the layer actually changed**: `docs:` for changes limited to `docs/` or
+ examples, `ci:`/`build:` for pipeline/tooling changes, `fix:`/`feat:` only when `src/` behaviour changes.
+- **Breaking changes use `!`** (`fix!:`/`feat!:`) so semantic-release cuts a major version. Any of the
+ backward-compatibility violations in "Key rules" below (required param added, class renamed, return type
+ changed, etc.) is a breaking change and must be marked this way — never shipped as a plain `fix:`/`feat:`.
+- PR titles use the same Conventional Commit type as the change they introduce.
 
 ## Pre-commit workflow
 
@@ -64,6 +87,11 @@ Never leak Infrastructure or framework types into Domain or Application.
  block is used. **Read this before creating new patterns.**
 - When adding a new base class or interface, add a concrete implementation in the example.
 - Update consumer examples in `docs/examples/` when changes affect downstream usage.
+- **Any code change (or evaluation of one) must review and update `docs/component-reference.md`,
+ `docs/coding-standards.md`, and this fixture as needed** — documentation that drifts from the code it
+ describes is a defect, not a follow-up.
+- After touching the fixture, run `make test-examples` and re-read it end to end: it must still make
+ sense as idiomatic usage, not merely compile and pass.
 
 ## Testing
 

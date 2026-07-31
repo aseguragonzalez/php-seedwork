@@ -68,10 +68,12 @@ Run `make all` before every commit to ensure everything passes.
 
 - Follow the project [Coding standards](docs/coding-standards.md). They align
   with DDD, Clean Architecture, and this package’s patterns.
-- Code must be PSR-12. Use `make format` and `make lint` so your changes pass
-  the automated checks.
+- Code must be PSR-12. Use `make cs` (check) or `make cs-fix` (auto-fix) so your
+  changes pass the automated checks.
 - When adding or changing patterns, update the [BankAccount example](docs/examples/BankAccount/)
   and the [documentation](docs/) as needed (see the project rules).
+- All documentation and GitHub artifacts — issues, pull requests, commit messages, code
+  comments — must be written in English.
 
 ## Commit signing
 
@@ -121,11 +123,19 @@ The dev container does not include your SSH key by default. To map your local ke
 
 ## Pull request process
 
-1. Branch from `main`. One logical change per pull request.
-2. Ensure `make all` passes locally (CI runs the same checks).
-3. Write clear commit messages and a short PR description.
-4. For new patterns or larger changes, consider the [BankAccount example](docs/examples/BankAccount/)
-  and [component reference](docs/component-reference.md) as references.
+1. Start from a GitHub issue: every pull request must reference an existing issue
+  (e.g. `Closes #123`) describing the problem or request it addresses. Open one first
+  if none exists.
+2. Branch from `main`. One logical change per pull request.
+3. Ensure `make all` passes locally (CI runs the same checks).
+4. Write clear commit messages using [Conventional Commits](https://www.conventionalcommits.org/),
+  matching the type to the layer actually changed (e.g. `docs:` for docs/examples-only changes,
+  `fix:`/`feat:` only for `src/` behaviour changes). Mark breaking changes with `!`
+  (`fix!:`/`feat!:`) — commit types drive automated releases via `semantic-release`,
+  so an incorrect type ships an unintended release.
+5. For new patterns or larger changes, consider the [BankAccount example](docs/examples/BankAccount/)
+  and [component reference](docs/component-reference.md) as references, and update them if the
+  change affects how the package is used.
 
 Maintainers will review and may request changes. Once approved, your PR can be
 merged.
