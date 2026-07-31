@@ -19,7 +19,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -27,7 +27,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
       
 
@@ -1166,6 +1166,8 @@
 <h1 id="coding-standards">Coding Standards</h1>
 <blockquote>
 <p><strong>Key points reference.</strong> PHP 8.4. Strict types everywhere. PSR-12 formatting.</p>
+<p>When this document and <code>docs/examples/</code> disagree, the example is authoritative — it is compiled and
+tested by CI. Please open an issue so the discrepancy gets fixed.</p>
 </blockquote>
 <hr />
 <h2 id="general-php-baseline">General PHP Baseline</h2>
@@ -1476,7 +1478,7 @@
 
 <span class="k">namespace</span> <span class="nx">MyService\Domain</span><span class="p">;</span>
 
-<span class="k">final</span> <span class="k">class</span> <span class="nc">AccountNotFound</span> <span class="k">extends</span> <span class="nx">\DomainException</span>
+<span class="k">final</span> <span class="k">class</span> <span class="nc">AccountNotFoundException</span> <span class="k">extends</span> <span class="nx">\DomainException</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">string</span> <span class="nv">$accountId</span><span class="p">)</span>
     <span class="p">{</span>
@@ -1484,7 +1486,7 @@
     <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="k">final</span> <span class="k">class</span> <span class="nc">InsufficientFunds</span> <span class="k">extends</span> <span class="nx">\DomainException</span>
+<span class="k">final</span> <span class="k">class</span> <span class="nc">InsufficientFundsException</span> <span class="k">extends</span> <span class="nx">\DomainException</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">string</span> <span class="nv">$accountId</span><span class="p">,</span> <span class="nx">int</span> <span class="nv">$available</span><span class="p">,</span> <span class="nx">int</span> <span class="nv">$requested</span><span class="p">)</span>
     <span class="p">{</span>
@@ -1497,8 +1499,13 @@
 <p><strong>Key points</strong>
 - Extend PHP's stdlib <code>\DomainException</code> — the seedwork does not provide a custom base class.
 - <code>\DomainException</code> subclasses are the only correct way to signal business rule violations.
-- The <strong>class name is the machine-readable code</strong>: <code>InsufficientFunds</code> becomes <code>insufficient_funds</code> automatically — no need to declare a code manually.
+- The <strong>class name is the machine-readable code</strong>: <code>InsufficientFundsException</code> becomes <code>insufficient_funds_exception</code> automatically — no need to declare a code manually.
 - The <strong>constructor message is the human-readable description</strong>: include the relevant context (IDs, amounts) so logs and API responses are self-explanatory without having to look up the code.
+- The class name <strong>is</strong> the published error code: <code>RegistryCommandBus</code> converts the short class name from
+  PascalCase to snake_case to build the <code>ResultError</code> code. <code>InsufficientFunds</code> emits <code>insufficient_funds</code>;
+  adding an <code>Exception</code> suffix emits <code>insufficient_funds_exception</code>. Renaming the class is therefore a
+  breaking change for API consumers, not a refactor. This package's examples use the <code>Exception</code> suffix — align
+  with that convention.
 - Caught by <code>RegistryCommandBus</code> and converted to <code>Result::failed(...)</code> automatically — handlers never catch them.
 - Infrastructure exceptions (<code>\PDOException</code>, etc.) propagate as-is — do not wrap in <code>\DomainException</code>.
 - Define one subclass per distinct business rule violation — keep them in the domain layer of your service.</p>
@@ -1516,7 +1523,7 @@
 <span class="k">use</span> <span class="nx">SeedWork\Application\ValidationErrors</span><span class="p">;</span>
 <span class="k">use</span> <span class="nx">SeedWork\Application\ValidationErrorDetail</span><span class="p">;</span>
 
-<span class="k">readonly</span> <span class="k">class</span> <span class="nc">OpenAccountCommand</span> <span class="k">extends</span> <span class="nx">Command</span>
+<span class="k">final</span> <span class="k">readonly</span> <span class="k">class</span> <span class="nc">OpenAccountCommand</span> <span class="k">extends</span> <span class="nx">Command</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span>
         <span class="k">public</span> <span class="k">readonly</span> <span class="nx">string</span> <span class="nv">$accountId</span><span class="p">,</span>
@@ -1532,10 +1539,10 @@
         <span class="nv">$errors</span> <span class="o">=</span> <span class="p">[];</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="k">empty</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">accountId</span><span class="p">))</span> <span class="p">{</span>
-            <span class="nv">$errors</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ValidationErrorDetail</span><span class="p">(</span><span class="s1">&#39;accountId&#39;</span><span class="p">,</span> <span class="s1">&#39;Account ID is required.&#39;</span><span class="p">);</span>
+            <span class="nv">$errors</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ValidationErrorDetail</span><span class="p">(</span><span class="s1">&#39;account_id_required&#39;</span><span class="p">,</span> <span class="s1">&#39;Account ID is required.&#39;</span><span class="p">);</span>
         <span class="p">}</span>
         <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">initialAmount</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nv">$errors</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ValidationErrorDetail</span><span class="p">(</span><span class="s1">&#39;initialAmount&#39;</span><span class="p">,</span> <span class="s1">&#39;Initial amount cannot be negative.&#39;</span><span class="p">);</span>
+            <span class="nv">$errors</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ValidationErrorDetail</span><span class="p">(</span><span class="s1">&#39;initial_amount_negative&#39;</span><span class="p">,</span> <span class="s1">&#39;Initial amount cannot be negative.&#39;</span><span class="p">);</span>
         <span class="p">}</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">empty</span><span class="p">(</span><span class="nv">$errors</span><span class="p">))</span> <span class="p">{</span>
@@ -1544,6 +1551,9 @@
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
+<p>Each use case declares its own interface, which the handler implements. This is what the composition root and
+any caller depend on — never the concrete handler class. Name it after the use case in the imperative, with no
+suffix.</p>
 <div class="highlight"><pre><span></span><code><span class="cp">&lt;?php</span>
 
 <span class="k">declare</span><span class="p">(</span><span class="nx">strict_types</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
@@ -1551,18 +1561,38 @@
 <span class="k">namespace</span> <span class="nx">MyService\Application\OpenAccount</span><span class="p">;</span>
 
 <span class="k">use</span> <span class="nx">SeedWork\Application\CommandHandler</span><span class="p">;</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Application service that handles OpenAccountCommand.</span>
+<span class="sd"> *</span>
+<span class="sd"> * @extends CommandHandler&lt;OpenAccountCommand&gt;</span>
+<span class="sd"> */</span>
+<span class="k">interface</span> <span class="nx">OpenAccount</span> <span class="k">extends</span> <span class="nx">CommandHandler</span> <span class="p">{}</span>
+</code></pre></div>
+<p>The generic parameter lives in the docblock: <code>CommandHandler::handle()</code> is typed against the base <code>Command</code>, so
+the annotation is the only thing that tells PHPStan which command this use case accepts.</p>
+<div class="highlight"><pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="k">declare</span><span class="p">(</span><span class="nx">strict_types</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="k">namespace</span> <span class="nx">MyService\Application\OpenAccount</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">SeedWork\Application\Command</span><span class="p">;</span>
 <span class="k">use</span> <span class="nx">MyService\Domain\Account</span><span class="p">;</span>
 <span class="k">use</span> <span class="nx">MyService\Domain\AccountId</span><span class="p">;</span>
 <span class="k">use</span> <span class="nx">MyService\Domain\AccountRepository</span><span class="p">;</span>
 <span class="k">use</span> <span class="nx">MyService\Domain\Money</span><span class="p">;</span>
 
-<span class="k">final</span> <span class="k">class</span> <span class="nc">OpenAccountHandler</span> <span class="k">implements</span> <span class="nx">CommandHandler</span>
+<span class="k">final</span> <span class="k">readonly</span> <span class="k">class</span> <span class="nc">OpenAccountCommandHandler</span> <span class="k">implements</span> <span class="nx">OpenAccount</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span>
-        <span class="k">private</span> <span class="k">readonly</span> <span class="nx">AccountRepository</span> <span class="nv">$accounts</span><span class="p">,</span>
+        <span class="k">private</span> <span class="nx">AccountRepository</span> <span class="nv">$accounts</span><span class="p">,</span>
     <span class="p">)</span> <span class="p">{}</span>
 
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">handle</span><span class="p">(</span><span class="nx">OpenAccountCommand</span> <span class="nv">$command</span><span class="p">)</span><span class="o">:</span> <span class="nx">void</span>
+    <span class="sd">/**</span>
+<span class="sd">     * @param OpenAccountCommand $command</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">handle</span><span class="p">(</span><span class="nx">Command</span> <span class="nv">$command</span><span class="p">)</span><span class="o">:</span> <span class="nx">void</span>
     <span class="p">{</span>
         <span class="nv">$account</span> <span class="o">=</span> <span class="nx">Account</span><span class="o">::</span><span class="na">open</span><span class="p">(</span>
             <span class="k">new</span> <span class="nx">AccountId</span><span class="p">(</span><span class="nv">$command</span><span class="o">-&gt;</span><span class="na">accountId</span><span class="p">),</span>
@@ -1576,6 +1606,9 @@
 </code></pre></div>
 <p><strong>Key points</strong>
 - The handler's sole responsibility: obtain aggregate (or create new) → call domain method → save. No business logic.
+- <code>handle()</code> takes the base <code>Command</code> type. PHP forbids narrowing a parameter type in an implementation, so
+  declaring the concrete command in the signature makes the class fail to load. Narrow it with a
+  <code>@param XCommand $command</code> docblock instead.
 - <strong>Do not call <code>publish($aggregate-&gt;getDomainEvents())</code></strong> — <code>DomainEventPublishingRepository</code> does this automatically after <code>save()</code>.
 - <code>validate()</code> is called automatically in the <code>Command</code> constructor — the handler receives a guaranteed-valid command.
 - The handler returns <code>void</code>. The command bus wraps the result in <code>Result::ok()</code> on success or <code>Result::failed(...)</code> on <code>\DomainException</code>.
@@ -1598,7 +1631,7 @@
 <span class="k">use</span> <span class="nx">SeedWork\Application\ValidationErrors</span><span class="p">;</span>
 <span class="k">use</span> <span class="nx">SeedWork\Application\ValidationErrorDetail</span><span class="p">;</span>
 
-<span class="k">readonly</span> <span class="k">class</span> <span class="nc">GetBalanceQuery</span> <span class="k">extends</span> <span class="nx">Query</span>
+<span class="k">final</span> <span class="k">readonly</span> <span class="k">class</span> <span class="nc">GetBalanceQuery</span> <span class="k">extends</span> <span class="nx">Query</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span>
         <span class="k">public</span> <span class="k">readonly</span> <span class="nx">string</span> <span class="nv">$accountId</span><span class="p">,</span>
@@ -1610,12 +1643,32 @@
     <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="k">empty</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">accountId</span><span class="p">))</span> <span class="p">{</span>
             <span class="k">throw</span> <span class="k">new</span> <span class="nx">ValidationErrors</span><span class="p">([</span>
-                <span class="k">new</span> <span class="nx">ValidationErrorDetail</span><span class="p">(</span><span class="s1">&#39;accountId&#39;</span><span class="p">,</span> <span class="s1">&#39;Account ID is required.&#39;</span><span class="p">),</span>
+                <span class="k">new</span> <span class="nx">ValidationErrorDetail</span><span class="p">(</span><span class="s1">&#39;account_id_required&#39;</span><span class="p">,</span> <span class="s1">&#39;Account ID is required.&#39;</span><span class="p">),</span>
             <span class="p">]);</span>
         <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
+<p>Each use case declares its own interface, which the handler implements. This is what the composition root and
+any caller depend on — never the concrete handler class. Name it after the use case in the imperative, with no
+suffix.</p>
+<div class="highlight"><pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="k">declare</span><span class="p">(</span><span class="nx">strict_types</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="k">namespace</span> <span class="nx">MyService\Application\GetBalance</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">SeedWork\Application\QueryHandler</span><span class="p">;</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Application service that handles GetBalanceQuery and returns Maybe&lt;BalanceResult&gt;.</span>
+<span class="sd"> *</span>
+<span class="sd"> * @extends QueryHandler&lt;GetBalanceQuery&gt;</span>
+<span class="sd"> */</span>
+<span class="k">interface</span> <span class="nx">GetBalance</span> <span class="k">extends</span> <span class="nx">QueryHandler</span> <span class="p">{}</span>
+</code></pre></div>
+<p>The generic parameter lives in the docblock: <code>QueryHandler::handle()</code> is typed against the base <code>Query</code>, so
+the annotation is the only thing that tells PHPStan which query this use case accepts.</p>
 <div class="highlight"><pre><span></span><code><span class="cp">&lt;?php</span>
 
 <span class="k">declare</span><span class="p">(</span><span class="nx">strict_types</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
@@ -1623,16 +1676,21 @@
 <span class="k">namespace</span> <span class="nx">MyService\Application\GetBalance</span><span class="p">;</span>
 
 <span class="k">use</span> <span class="nx">SeedWork\Application\Maybe</span><span class="p">;</span>
-<span class="k">use</span> <span class="nx">SeedWork\Application\QueryHandler</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">SeedWork\Application\Query</span><span class="p">;</span>
 <span class="k">use</span> <span class="nx">MyService\Application\ReadRepositories\AccountReadRepository</span><span class="p">;</span>
 
-<span class="k">final</span> <span class="k">class</span> <span class="nc">GetBalanceHandler</span> <span class="k">implements</span> <span class="nx">QueryHandler</span>
+<span class="k">final</span> <span class="k">readonly</span> <span class="k">class</span> <span class="nc">GetBalanceQueryHandler</span> <span class="k">implements</span> <span class="nx">GetBalance</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span>
-        <span class="k">private</span> <span class="k">readonly</span> <span class="nx">AccountReadRepository</span> <span class="nv">$readRepository</span><span class="p">,</span>
+        <span class="k">private</span> <span class="nx">AccountReadRepository</span> <span class="nv">$readRepository</span><span class="p">,</span>
     <span class="p">)</span> <span class="p">{}</span>
 
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">handle</span><span class="p">(</span><span class="nx">GetBalanceQuery</span> <span class="nv">$query</span><span class="p">)</span><span class="o">:</span> <span class="nx">Maybe</span>
+    <span class="sd">/**</span>
+<span class="sd">     * @param GetBalanceQuery $query</span>
+<span class="sd">     *</span>
+<span class="sd">     * @return Maybe&lt;BalanceResult&gt;</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">handle</span><span class="p">(</span><span class="nx">Query</span> <span class="nv">$query</span><span class="p">)</span><span class="o">:</span> <span class="nx">Maybe</span>
     <span class="p">{</span>
         <span class="nv">$balance</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">readRepository</span><span class="o">-&gt;</span><span class="na">findBalance</span><span class="p">(</span><span class="nv">$query</span><span class="o">-&gt;</span><span class="na">accountId</span><span class="p">);</span>
 
@@ -1644,9 +1702,17 @@
 </code></pre></div>
 <p><strong>Key points</strong>
 - <code>handle()</code> returns <code>Maybe</code> — never <code>null</code>, never a raw value.
+- <code>handle()</code> takes the base <code>Query</code> type. PHP forbids narrowing a parameter type in an implementation, so
+  declaring the concrete query in the signature makes the class fail to load. Narrow it with a
+  <code>@param XQuery $query</code> docblock instead.
 - Query handlers are strictly read-only. No <code>save()</code>, no command dispatching.
-- Use a <strong>read repository</strong> (application-layer port) that returns projections/DTOs, not the domain repository.
-- Return <code>Maybe::nothing()</code> for both not-found and unauthorized — do not leak resource existence.</p>
+- Prefer a <strong>read repository</strong> (application-layer port returning projections/DTOs) once a query spans more
+  than one aggregate or needs a shape the domain repository doesn't expose. For a single-aggregate read, it
+  is acceptable to depend on the domain repository directly and project inside the handler — see
+  <code>GetBankAccountStatusQueryHandler</code> in the example. Don't introduce a read port purely on principle.
+- Return <code>Maybe::nothing()</code> for both not-found and unauthorized — do not leak resource existence.
+- Validation error codes (like <code>account_id_required</code> above) reach API clients as part of the failure result —
+  name the rule that was violated, not the field, and use snake_case.</p>
 <p><strong>Don't</strong>
 - Load a full aggregate just to extract two fields.
 - Trigger side effects from a query handler.
@@ -2060,7 +2126,7 @@
 <tr>
 <td>Files</td>
 <td><code>PascalCase.php</code></td>
-<td><code>OpenAccountHandler.php</code></td>
+<td><code>OpenAccountCommandHandler.php</code></td>
 </tr>
 <tr>
 <td>Namespaces</td>
@@ -2083,9 +2149,19 @@
 <td><code>GetBalanceQuery</code>, <code>FindTransactionQuery</code></td>
 </tr>
 <tr>
-<td>Handlers</td>
-<td><code>{CommandOrQuery}Handler</code></td>
-<td><code>OpenAccountHandler</code>, <code>GetBalanceHandler</code></td>
+<td>Use case interfaces</td>
+<td>imperative, no suffix</td>
+<td><code>OpenAccount</code>, <code>WithdrawMoney</code></td>
+</tr>
+<tr>
+<td>Command handlers</td>
+<td><code>{Command}Handler</code></td>
+<td><code>OpenAccountCommandHandler</code></td>
+</tr>
+<tr>
+<td>Query handlers</td>
+<td><code>{Query}Handler</code></td>
+<td><code>GetBankAccountStatusQueryHandler</code></td>
 </tr>
 <tr>
 <td>Domain Events</td>
@@ -2123,15 +2199,11 @@
 <h2 id="phpstan-annotations-for-generics">PHPStan Annotations for Generics</h2>
 <p>PHP 8.4 has no runtime generics. Use PHPStan <code>@template</code> annotations to carry type information at static analysis time.</p>
 <div class="highlight"><pre><span></span><code><span class="x">/**</span>
-<span class="x"> * @template TId</span>
-<span class="x"> * @template TAgg of AggregateRoot&lt;TId&gt;</span>
-<span class="x"> * @extends Repository&lt;TId, TAgg&gt;</span>
+<span class="x"> * A concrete port binds the type parameters — it does not re-declare them.</span>
+<span class="x"> *</span>
+<span class="x"> * @extends Repository&lt;AccountId, Account&gt;</span>
 <span class="x"> */</span>
-<span class="x">interface AccountRepository extends Repository</span>
-<span class="x">{</span>
-<span class="x">    /** @param TId $id */</span>
-<span class="x">    public function findById(mixed $id): ?Account;</span>
-<span class="x">}</span>
+<span class="x">interface AccountRepository extends Repository {}</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="x">/**</span>
 <span class="x"> * @template TId</span>
@@ -2147,6 +2219,12 @@
 <p><strong>Key points</strong>
 - Always annotate generic interfaces and base classes with <code>@template</code>.
 - Use <code>@extends</code> and <code>@implements</code> to propagate type parameters in subclasses.
+- A concrete port (like <code>AccountRepository</code> above) binds the base interface's type parameters — it does not
+  re-declare <code>@template</code> itself, and it does not need to re-implement inherited methods just to narrow a
+  docblock.
+- <code>QueryHandler</code> takes <strong>one</strong> template parameter — the query type. The result type is not a second parameter;
+  <code>@extends QueryHandler&lt;GetBalanceQuery, BalanceResult&gt;</code> does not type-check. Declare the result on the
+  handler's <code>@return Maybe&lt;BalanceResult&gt;</code> docblock instead.
 - PHPStan enforces these at analysis time — they have no runtime effect.
 - IDs are <code>mixed</code> — use <code>(string) $id</code> to normalize before storage.</p>
 
@@ -2207,7 +2285,7 @@
       <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.top", "content.code.annotate", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
         <script src="https://unpkg.com/mermaid@11/dist/mermaid.esm.min.mjs" type="module"></script>
       
