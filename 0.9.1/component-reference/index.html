@@ -1845,7 +1845,7 @@
 <h3 id="domaineventpublishingrepository-seedworkinfrastructuredomaineventpublishingrepository">DomainEventPublishingRepository (<code>SeedWork\Infrastructure\DomainEventPublishingRepository</code>)</h3>
 <ul>
 <li><strong>Role:</strong> Repository decorator that publishes <code>$aggregate-&gt;getDomainEvents()</code> via <code>DomainEventBusPublisher</code> after each <code>save()</code>.</li>
-<li><strong>Usage:</strong> Do not instantiate directly. Extend it and implement your domain repository interface so command handlers can be typed against the domain port:</li>
+<li><strong>Usage:</strong> Abstract — cannot be instantiated directly. Extend it and implement your domain repository interface so command handlers can be typed against the domain port:</li>
 </ul>
 <div class="highlight"><pre><span></span><code><span class="x">// Infrastructure layer of your bounded context</span>
 <span class="x">final class PublishingBankAccountRepository</span>
