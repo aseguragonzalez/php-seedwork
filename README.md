@@ -81,6 +81,17 @@ Source and issue tracker: [php-seedwork](https://github.com/aseguragonzalez/php-
 If you plan to contribute, please read [CONTRIBUTING.md](.github/CONTRIBUTING.md) and
 [CODE_OF_CONDUCT.md](.github/CODE_OF_CONDUCT.md).
 
+### GitHub CLI
+
+Issues and pull requests are managed with the [GitHub CLI](https://cli.github.com/) (`gh`).
+Install it and authenticate once:
+
+```bash
+gh auth login
+```
+
+See [CONTRIBUTING.md](.github/CONTRIBUTING.md#github-cli) for details.
+
 ### Dev container
 
 All tooling (PHP, Composer, PHPStan, PHP-CS-Fixer, pre-commit) runs inside the dev container. Start it once from the project root:
@@ -149,6 +160,10 @@ No manual version bumps or CHANGELOG edits are needed.
 | `feat:` | Minor release (0.x.0) |
 | `feat!:` or `BREAKING CHANGE:` | Major release (x.0.0) |
 | `chore:`, `docs:`, `test:` | No release |
+
+An optional `(scope)` (e.g. `fix(ci):`, `build(deps):`) is allowed and purely informational
+for the changelog — it never changes which release, if any, is triggered; only the type
+prefix and `!`/`BREAKING CHANGE` do.
 
 The PR title is also validated against Conventional Commits in CI.
 
