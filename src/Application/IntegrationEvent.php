@@ -14,7 +14,13 @@ namespace SeedWork\Application;
  * $id and $occurredAt are optional: omit them and the constructor auto-generates
  * a unique id ('evt-{uniqid}') and timestamps to UTC now.
  *
+ * Subclasses may narrow the shape of {@see self::$payload} by specializing the `TPayload`
+ * template parameter, e.g. `@extends IntegrationEvent<array{accountId: string}>`. This is
+ * a static-analysis-only aid (PHPStan) — the runtime type remains `array<string, mixed>`.
+ *
  * @see IntegrationEventPublisher Application port for publishing integration events.
+ *
+ * @template TPayload of array<string, mixed> = array<string, mixed>
  */
 abstract readonly class IntegrationEvent
 {
@@ -24,7 +30,7 @@ abstract readonly class IntegrationEvent
      * @param string                     $type          Event name/topic (e.g. 'bc.aggregate.event_name').
      * @param string                     $version       Payload schema version (e.g. '1.0').
      * @param string                     $aggregateId   ID of the aggregate that raised the event
-     * @param array<string, mixed>       $payload       serializable primitive facts
+     * @param TPayload                   $payload       serializable primitive facts
      * @param string                     $correlationId correlation ID for distributed tracing
      * @param string                     $id            unique event ID; auto-generated when empty
      * @param \DateTimeImmutable         $occurredAt    when the event occurred (UTC); defaults to now
