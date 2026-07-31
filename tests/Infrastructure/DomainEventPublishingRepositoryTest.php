@@ -29,7 +29,7 @@ final class DomainEventPublishingRepositoryTest extends TestCase
         $eventBus = $this->createMock(DomainEventBusPublisher::class);
         $eventBus->expects($this->once())->method('publish')->with([]);
 
-        $publishingRepo = new DomainEventPublishingRepository($repository, $eventBus);
+        $publishingRepo = new class($repository, $eventBus) extends DomainEventPublishingRepository {};
         $publishingRepo->save($aggregate);
     }
 
@@ -46,7 +46,7 @@ final class DomainEventPublishingRepositoryTest extends TestCase
         $eventBus = $this->createMock(DomainEventBusPublisher::class);
         $eventBus->expects($this->once())->method('publish')->with($events);
 
-        $publishingRepo = new DomainEventPublishingRepository($repository, $eventBus);
+        $publishingRepo = new class($repository, $eventBus) extends DomainEventPublishingRepository {};
         $publishingRepo->save($aggregate);
     }
 
@@ -61,7 +61,7 @@ final class DomainEventPublishingRepositoryTest extends TestCase
         $eventBus = $this->createMock(DomainEventBusPublisher::class);
         $eventBus->expects($this->never())->method('publish');
 
-        $publishingRepo = new DomainEventPublishingRepository($repository, $eventBus);
+        $publishingRepo = new class($repository, $eventBus) extends DomainEventPublishingRepository {};
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('DB error');
@@ -78,7 +78,7 @@ final class DomainEventPublishingRepositoryTest extends TestCase
 
         $eventBus = $this->createStub(DomainEventBusPublisher::class);
 
-        $publishingRepo = new DomainEventPublishingRepository($repository, $eventBus);
+        $publishingRepo = new class($repository, $eventBus) extends DomainEventPublishingRepository {};
         $result = $publishingRepo->findById($id);
 
         self::assertSame($aggregate, $result);
@@ -93,7 +93,7 @@ final class DomainEventPublishingRepositoryTest extends TestCase
 
         $eventBus = $this->createStub(DomainEventBusPublisher::class);
 
-        $publishingRepo = new DomainEventPublishingRepository($repository, $eventBus);
+        $publishingRepo = new class($repository, $eventBus) extends DomainEventPublishingRepository {};
         $publishingRepo->deleteById($id);
     }
 }

@@ -20,9 +20,9 @@ use SeedWork\Domain\Repository;
  * to respect the Interface Segregation Principle — a repository only needs to
  * publish, not subscribe or dispatch.
  *
- * Because PHP has no runtime generics, do not instantiate this class directly.
- * Instead, extend it and implement your domain repository interface so command
- * handlers can be typed against the domain port:
+ * Because PHP has no runtime generics, this class is abstract: extend it and
+ * implement your domain repository interface so command handlers can be typed
+ * against the domain port:
  *
  * <code>
  * // Infrastructure layer of your bounded context
@@ -47,7 +47,7 @@ use SeedWork\Domain\Repository;
  * @see Repository              Domain port this decorates.
  * @see DomainEventBusPublisher Application port for publishing events.
  */
-class DomainEventPublishingRepository implements Repository
+abstract class DomainEventPublishingRepository implements Repository
 {
     /**
      * @param Repository<TId, T> $repository
