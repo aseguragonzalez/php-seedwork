@@ -6,13 +6,17 @@ name: PHP SeedWork Docs
 
 on:
   push:
-    tags:
-    - v*
     branches:
     - main
     paths:
     - docs/**
     - mkdocs.yml
+  workflow_call:
+    inputs:
+      version:
+        description: Version to deploy without leading v (e.g. 0.8.0)
+        required: true
+        type: string
   workflow_dispatch:
     inputs:
       version:
@@ -51,10 +55,8 @@ jobs:
     - name: Determine version
       id: version
       run: |
-        if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+        if [ -n "${{ inputs.version }}" ]; then
           echo "value=${{ inputs.version }}" >> "$GITHUB_OUTPUT"
-        elif [[ "${{ github.ref }}" == refs/tags/* ]]; then
-          echo "value=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
         else
           echo "value=$(python -m semantic_release version --print-last-released)" >> "$GITHUB_OUTPUT"
         fi
