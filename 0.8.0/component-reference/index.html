@@ -1764,6 +1764,9 @@
 <ul>
 <li><strong>Role:</strong> Contract for events published to external systems (eventual consistency via outbox).</li>
 <li><strong>Properties:</strong> <code>id</code>, <code>type</code>, <code>version</code>, <code>aggregateId</code>, <code>occurredAt</code>, <code>payload</code>, <code>correlationId</code>, <code>causationId?</code>, <code>metadata?</code>.</li>
+<li><strong>Generics:</strong> <code>@template TPayload of array&lt;string, mixed&gt; = array&lt;string, mixed&gt;</code>. Subclasses narrow
+  <code>payload</code>'s shape via <code>@extends IntegrationEvent&lt;array{...}&gt;</code> for PHPStan; this is a static-analysis
+  aid only — see <code>AccountOpenedIntegrationEvent</code> in the fixture. Runtime type stays <code>array&lt;string, mixed&gt;</code>.</li>
 </ul>
 <h3 id="integrationeventpublisher-seedworkapplicationintegrationeventpublisher">IntegrationEventPublisher (<code>SeedWork\Application\IntegrationEventPublisher</code>)</h3>
 <ul>
@@ -1779,6 +1782,9 @@
 <ul>
 <li><strong>Role:</strong> DTO representing a background task to be scheduled for async execution.</li>
 <li><strong>Properties:</strong> <code>id</code>, <code>type</code>, <code>payload</code>, <code>correlationId</code>, <code>causationId?</code>, <code>metadata?</code>.</li>
+<li><strong>Generics:</strong> <code>@template TPayload of array&lt;string, mixed&gt; = array&lt;string, mixed&gt;</code>. Subclasses narrow
+  <code>payload</code>'s shape via <code>@extends BackgroundTask&lt;array{...}&gt;</code> for PHPStan; this is a static-analysis
+  aid only — the runtime type stays <code>array&lt;string, mixed&gt;</code>.</li>
 </ul>
 <h3 id="taskscheduler-seedworkapplicationtaskscheduler">TaskScheduler (<code>SeedWork\Application\TaskScheduler</code>)</h3>
 <ul>

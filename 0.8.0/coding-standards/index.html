@@ -2226,7 +2226,13 @@ the annotation is the only thing that tells PHPStan which query this use case ac
   <code>@extends QueryHandler&lt;GetBalanceQuery, BalanceResult&gt;</code> does not type-check. Declare the result on the
   handler's <code>@return Maybe&lt;BalanceResult&gt;</code> docblock instead.
 - PHPStan enforces these at analysis time — they have no runtime effect.
-- IDs are <code>mixed</code> — use <code>(string) $id</code> to normalize before storage.</p>
+- IDs are <code>mixed</code> — use <code>(string) $id</code> to normalize before storage.
+- A <code>@template</code> parameter can carry a default, so untyped consumers keep working unchanged
+  (<code>@template TPayload of array&lt;string, mixed&gt; = array&lt;string, mixed&gt;</code> on <code>BackgroundTask</code> and
+  <code>IntegrationEvent</code>). Subclasses that want a narrower <code>payload</code> opt in with
+  <code>@extends BackgroundTask&lt;array{orderId: string}&gt;</code>; subclasses that don't specialize it are
+  unaffected — this is how a generic parameter is added to an existing base class without a
+  breaking change.</p>
 
 
 

@@ -19,15 +19,14 @@ final readonly class AccountOpenedDomainEventHandler implements AccountOpenedEve
      */
     public function handle(DomainEvent $event): void
     {
-        // Example: publish an integration event to notify other bounded contexts
-        // that a new account has been opened.
-        //
-        // assert($event instanceof AccountOpened);
-        // $this->publisher->publish(
-        //     new AccountOpenedIntegrationEvent(
-        //         accountId: $event->accountId->value,
-        //         currency:  $event->initialBalance->currency->value,
-        //     )
-        // );
+        assert($event instanceof AccountOpened);
+
+        $this->publisher->publish(
+            new AccountOpenedIntegrationEvent(
+                accountId: (string) $event->accountId,
+                currency: $event->initialBalance->currency->value,
+                correlationId: $event->id
+            )
+        );
     }
 }
