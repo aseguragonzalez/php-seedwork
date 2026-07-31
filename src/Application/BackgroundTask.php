@@ -13,7 +13,7 @@ namespace SeedWork\Application;
  * Subclasses add domain-specific fields. All fields are primitives so the task
  * is trivially serializable.
  *
- * Subclasses may narrow the payload shape by specializing the {@see self::$payload}
+ * Subclasses may narrow the shape of {@see self::$payload} by specializing the `TPayload`
  * template parameter, e.g. `@extends BackgroundTask<array{orderId: string}>`. This is
  * a static-analysis-only aid (PHPStan) — the runtime type remains `array<string, mixed>`.
  *

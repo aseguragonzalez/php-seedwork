@@ -14,7 +14,7 @@ namespace SeedWork\Application;
  * $id and $occurredAt are optional: omit them and the constructor auto-generates
  * a unique id ('evt-{uniqid}') and timestamps to UTC now.
  *
- * Subclasses may narrow the payload shape by specializing the {@see self::$payload}
+ * Subclasses may narrow the shape of {@see self::$payload} by specializing the `TPayload`
  * template parameter, e.g. `@extends IntegrationEvent<array{accountId: string}>`. This is
  * a static-analysis-only aid (PHPStan) — the runtime type remains `array<string, mixed>`.
  *
