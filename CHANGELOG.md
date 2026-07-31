@@ -1,3 +1,10 @@
+## [0.9.1](https://github.com/aseguragonzalez/php-seedwork/compare/v0.9.0...v0.9.1) (2026-07-31)
+
+
+### Bug Fixes
+
+* chain docs deploy after release to remove version race ([#60](https://github.com/aseguragonzalez/php-seedwork/issues/60)) ([2aa9e6b](https://github.com/aseguragonzalez/php-seedwork/commit/2aa9e6b61dbbb2d2e1f61a380cc0a637320dd43d))
+
 # [0.9.0](https://github.com/aseguragonzalez/php-seedwork/compare/v0.8.0...v0.9.0) (2026-07-31)
 
 
