@@ -1,3 +1,10 @@
+# [0.9.0](https://github.com/aseguragonzalez/php-seedwork/compare/v0.8.0...v0.9.0) (2026-07-31)
+
+
+### Features
+
+* add optional TPayload generic to BackgroundTask and IntegrationEvent ([#59](https://github.com/aseguragonzalez/php-seedwork/issues/59)) ([c87ec98](https://github.com/aseguragonzalez/php-seedwork/commit/c87ec98fac64c82a963130c4b44bdce93bc1d4f4))
+
 # [0.8.0](https://github.com/aseguragonzalez/php-seedwork/compare/v0.7.0...v0.8.0) (2026-05-24)
 
 
