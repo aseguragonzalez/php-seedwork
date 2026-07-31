@@ -1,7 +1,7 @@
 ---
 name: gh-workflow
-description: Use this skill whenever working on php-seedwork and about to open a GitHub issue or pull request, or when deciding a commit message/PR title. Encodes this repo's issue-first workflow, label taxonomy, and the commit/PR conventions that keep semantic-release from shipping an unintended version bump.
-version: 1.0.0
+description: Use this skill whenever working on php-seedwork and about to open a GitHub issue or pull request, decide a commit message/PR title, or plan how to implement an issue. Encodes this repo's issue-first workflow, identity rules, label taxonomy, and the commit/PR conventions that keep semantic-release from shipping an unintended version bump.
+version: 1.1.0
 ---
 
 # php-seedwork GitHub workflow
@@ -13,13 +13,38 @@ implements.
 
 ## Flow
 
-1. **Analyze the request** — understand what's being asked before writing any code.
-2. **Create (or confirm) an issue** — describe the problem/request. Skip only if an
-   issue for this exact change already exists.
-3. **Open a PR that references it** — use a closing keyword (`Closes #N`) in the PR body,
-   never just a prose mention.
+1. **Analyze and open the issue.** Understand the request, confirm the understanding with
+   the requester, then create (or confirm) an issue with clear, testable acceptance
+   criteria. Skip creation only if an issue for this exact change already exists.
+2. **Plan.** Re-read the issue and draft an implementation plan that separates code,
+   tests, and documentation as independent tracks against contracts (interfaces/signatures)
+   agreed up front.
+3. **Implement in parallel** using the code/test/docs agents under `.claude/agents/`
+   against those contracts.
+4. **Open a PR that references the issue** — use a closing keyword (`Closes #N`) in the
+   PR body, never just a prose mention.
 
-Never open a PR without a linked issue.
+Never open a PR without a linked issue. While analyzing any request, also check whether
+nearby code could be improved — if so, open a **separate** issue for it (see the
+`boy-scout` skill) rather than folding it into this change.
+
+## Identity
+
+- **Issues** are created under the requester's own `gh` session (the default — do **not**
+  export `GH_TOKEN`). Issues represent the requester's decisions/requests.
+- **Commits and PRs** use the bot App identity when configured (see the global
+  `~/.claude/CLAUDE.md` instructions for minting `GH_TOKEN` and commit authorship) — this
+  is what lets the requester leave a genuine "Approve" review, since GitHub blocks a PR
+  author from approving their own PR.
+- Never mix the two: don't create an issue with the bot token, and don't commit/push with
+  the requester's personal session when the bot identity is available.
+
+## Reviewers
+
+Every PR must explicitly request review from the repo owner
+(`gh pr create --reviewer <owner>` or `gh pr edit <n> --add-reviewer <owner>`), even though
+`.github/CODEOWNERS` may also trigger an automatic request — make it explicit rather than
+relying on that silently.
 
 ## Labels
 
@@ -47,9 +72,16 @@ Pick it by **which layer actually changed**, not by habit:
 A mismatched type (e.g. `fix:` for a docs-only change) either ships a spurious release or
 silently swallows one that should have shipped — both are defects.
 
-## PR conventions
+An optional `(scope)` is allowed and encouraged (`fix(ci):`, `build(deps):`,
+`docs(examples):`) — it's informational only, for changelog grouping. It **never** changes
+the release decision; only the type prefix and `!`/`BREAKING CHANGE` do. Dependabot's
+`build(deps):` is a working example of this: `build:` never releases, regardless of scope.
 
-- Title: same Conventional Commit type as above.
-- Body: exactly **What / Why / How** + **How to test**, in English, no conversation history.
+## Issue and PR content
+
+- Body: exactly **What / Why / How** + **How to test**, in English.
+- **No conversation narrative or reasoning trail** — state the outcome directly. Nobody
+  reads a TL;DR of how the conclusion was reached; write the conclusion.
 - Always link the issue via a closing keyword.
 - Apply matching labels from the taxonomy above.
+- Request review from the repo owner explicitly (see Reviewers above).

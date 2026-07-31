@@ -1,3 +1,5 @@
+<!-- Be direct and concise: state what/why/how. No conversation narrative or reasoning trail. -->
+
 Closes #
 
 ## What

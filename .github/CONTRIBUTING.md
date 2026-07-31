@@ -21,6 +21,27 @@ you agree to uphold our [Code of Conduct](CODE_OF_CONDUCT.md).
 - **Features:** Use the [Feature request](https://github.com/aseguragonzalez/php-seedwork/issues/new?template=feature_request.md)
   template. Describe the use case and, if you have one, a possible solution.
 
+## GitHub CLI
+
+Every issue and pull request is created and managed with the
+[GitHub CLI](https://cli.github.com/) (`gh`), not the web UI:
+
+1. [Install `gh`](https://github.com/cli/cli#installation).
+2. Authenticate once as yourself:
+
+   ```bash
+   gh auth login
+   ```
+
+3. Verify it's working:
+
+   ```bash
+   gh auth status
+   ```
+
+All examples in this document (`gh issue create`, `gh pr create`, ...) assume `gh` is
+installed and authenticated.
+
 ## Development setup
 
 **Requirements:** Docker and the [Dev Containers CLI](https://github.com/devcontainers/cli)
@@ -136,6 +157,9 @@ The dev container does not include your SSH key by default. To map your local ke
 5. For new patterns or larger changes, consider the [BankAccount example](docs/examples/BankAccount/)
   and [component reference](docs/component-reference.md) as references, and update them if the
   change affects how the package is used.
+6. Write the PR description directly and concisely (What/Why/How/How to test, per the PR
+  template) — do not include narrative about how the change was investigated or discussed.
+7. Request a review explicitly rather than relying only on automatic CODEOWNERS assignment.
 
 Maintainers will review and may request changes. Once approved, your PR can be
 merged.

@@ -9,11 +9,27 @@ on the host — every command in this document assumes `devcontainer exec`.
 
 ## Workflow
 
-- Every change starts with a GitHub issue: analyze the request, open (or confirm) an issue describing it,
- then open a PR that references it (e.g. `Closes #N`). Do not open a PR without a linked issue.
+Every change goes through three stages — never skip straight to code:
+
+1. **Analyze and open the issue.** Understand the request, confirm the understanding with the requester,
+ then open (or confirm) a GitHub issue with clear, testable acceptance criteria. No PR without a linked
+ issue (e.g. `Closes #N`).
+2. **Plan before implementing.** Re-read the issue, and draft an implementation plan that separates
+ **code**, **tests**, and **documentation** as independent tracks built against the same agreed contracts
+ (interfaces/signatures decided up front), so the tracks don't conflict with each other.
+3. **Implement in parallel.** Execute the plan using parallel agents for code, tests, and documentation
+ (see `.claude/agents/`) against the contracts fixed in step 2.
+
+Additional rules that apply throughout:
+
 - All documentation and GitHub artifacts — issues, PRs, commit messages, code comments — are written in
- English, regardless of the language used in conversation.
-- See `.claude/skills/gh-workflow/SKILL.md` for label taxonomy and issue/PR mechanics.
+ English, regardless of the language used in conversation, and are **direct and concise**: state the
+ what/why/how, never the conversation or reasoning process that led to it. No narrative, no TL;DR filler.
+- While analyzing any request, check whether nearby code could be improved. If so, do not bundle the
+ improvement into the current change — open a separate issue for it (see the boy-scout skill).
+- For bug reports, analyze the problem and propose a solution before opening an issue for it (see the
+ bug-triage skill).
+- See `.claude/skills/gh-workflow/SKILL.md` for label taxonomy, identity, reviewer, and issue/PR mechanics.
 
 ## Commands
 
@@ -46,6 +62,10 @@ whether (and what kind of) a release ships, so getting it wrong is not cosmetic.
 - **Breaking changes use `!`** (`fix!:`/`feat!:`) so semantic-release cuts a major version. Any of the
  backward-compatibility violations in "Key rules" below (required param added, class renamed, return type
  changed, etc.) is a breaking change and must be marked this way — never shipped as a plain `fix:`/`feat:`.
+- An optional `(scope)` is allowed and encouraged for clarity (`fix(ci):`, `build(deps):`, `docs(examples):`)
+ — the scope is informational only (changelog grouping) and **never changes the release decision**; only
+ the type prefix and the `!`/`BREAKING CHANGE` footer do.
+- Refactors use `refactor:` and must never carry behaviour changes — a refactor must not trigger a release.
 - PR titles use the same Conventional Commit type as the change they introduce.
 
 ## Pre-commit workflow
