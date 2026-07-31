@@ -18,11 +18,16 @@ colliding — treat that contract as given, not something to redesign.
   Never leak Infrastructure or framework types upward.
 - PHP 8.4+, `declare(strict_types=1);` always.
 - `final` on classes unless the class is explicitly designed for extension; base classes
-  meant to be extended are `abstract`, never `final` — and never both instantiable and
-  "extend me only" (see the `DomainEventPublishingRepository` issue for what NOT to do).
+  meant to be extended are `abstract`, never `final` — never ship a class that is both
+  instantiable and documented as "extend me only".
 - `readonly` properties and constructor promotion by default.
 - No `mixed` without justification; use PHPStan `@template`/`@extends` for generics.
-- Exceptions extend `\DomainException`, never bare `\Exception`.
+- Exceptions: a business-rule violation (domain invariant) gets a named `\DomainException`
+  subclass defined in the domain layer — this is the only correct way to signal one, and
+  it's what `RegistryCommandBus` catches and converts to `Result::failed(...)`. Other error
+  kinds are NOT `\DomainException`: invalid constructor arguments use `\InvalidArgumentException`,
+  programmer errors use `\LogicException`, and infrastructure/library exceptions (e.g.
+  `\PDOException`) propagate as-is, never wrapped. Never throw bare `\Exception` in any case.
 - Backward compatibility: adding a required parameter, renaming a class, or changing a
   return type is a breaking change — flag it, don't silently ship it.
 - Do not write or modify tests, and do not update `docs/` — those are separate tracks

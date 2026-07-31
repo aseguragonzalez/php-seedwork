@@ -1,7 +1,8 @@
 ---
 name: bug-triage
 description: Use this skill when the user reports unexpected behavior or a suspected defect in php-seedwork, before writing any fix. Encodes the analyze-propose-confirm-then-issue flow so a bug report turns into a well-formed GitHub issue instead of an immediate, unreviewed code change.
-version: 1.0.0
+metadata:
+  version: "1.0.0"
 ---
 
 # Bug triage for php-seedwork

@@ -1,7 +1,8 @@
 ---
 name: boy-scout
 description: Use this skill while analyzing any request or change in php-seedwork, to check whether nearby code could be improved, and whenever the user explicitly asks for a cleanup/refactor pass. Encodes the rule that improvements are either executed inline (if small and contract-safe) or split into a separate issue — never bundled into the requested change — and that refactors must never trigger a release.
-version: 1.0.0
+metadata:
+  version: "1.0.0"
 ---
 
 # Boy-scout rule for php-seedwork

@@ -1,7 +1,8 @@
 ---
 name: gh-workflow
 description: Use this skill whenever working on php-seedwork and about to open a GitHub issue or pull request, decide a commit message/PR title, or plan how to implement an issue. Encodes this repo's issue-first workflow, identity rules, label taxonomy, and the commit/PR conventions that keep semantic-release from shipping an unintended version bump.
-version: 1.2.0
+metadata:
+  version: "1.2.0"
 ---
 
 # php-seedwork GitHub workflow

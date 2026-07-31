@@ -19,7 +19,8 @@ paper over.
 - Never mock domain objects — use the real fixture (`docs/examples/BankAccount/` patterns
   mirrored as fixtures under `tests/`, never importing `Examples\` directly — enforced by
   `make check-layer-boundaries`).
-- Test naming: `test{Behavior}` or `test_{snake_case_behavior}`.
+- Test naming: `test{Behavior}` (camelCase) — the entire test suite uses this consistently;
+  there is no snake_case variant in use.
 - Cover edge cases (nulls, empty strings, boundary values) — consumers of this library
   depend on predictable behaviour more than a typical application would.
 - Do not modify `src/` production code or `docs/` — those are separate tracks running in

@@ -100,7 +100,10 @@ Never leak Infrastructure or framework types into Domain or Application.
 - `readonly` properties and constructor promotion by default.
 - Interfaces for contracts (Repository, CommandBus); abstract classes for shared behaviour (AggregateRoot, Entity).
 - No `mixed` types without justification. Use PHPStan `@template`/`@extends` for generics.
-- Exceptions: extend `\DomainException` (PHP stdlib) for domain failures. Never bare `\Exception`.
+- Exceptions: a business-rule violation gets a named `\DomainException` (PHP stdlib) subclass
+ defined in the domain layer — the only correct way to signal one. Other cases use the matching
+ SPL type (`\InvalidArgumentException`, `\LogicException`, ...) or propagate as-is for
+ infrastructure/library exceptions; `\DomainException` is not a catch-all. Never bare `\Exception`.
 - Backward compatibility matters: adding required params, renaming classes, or changing return types are breaking changes.
 
 ## Fixture and examples
@@ -119,7 +122,8 @@ Never leak Infrastructure or framework types into Domain or Application.
 
 - PHPUnit ^12.5, tests in `tests/`.
 - Use `createMock()` to verify interactions, `createStub()` for stand-ins. Never mock domain objects — use the fixture.
-- Test naming: `test{Behavior}` or `test_{snake_case_behavior}`.
+- Test naming: `test{Behavior}` (camelCase) — the entire test suite uses this consistently;
+ there is no snake_case variant in use.
 - Edge cases matter more here than in app code — consumers depend on predictable behaviour.
 
 ## Code review
