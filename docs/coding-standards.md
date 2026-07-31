@@ -933,7 +933,7 @@ $publishingRepository = new ConcretePostgresAccountRepository(
 - Subscribe with the fully-qualified class name of the domain event (`AccountOpened::class`).
 - Pass the bus as `DomainEventBusPublisher` to the repository constructor — the handler never sees it.
 - Pass the bus as `DomainEventBus` to `CommandBusBuilder::withDomainEventCoordination()`.
-- `DomainEventPublishingRepository` is a **concrete decorator** — extend it in your typed infrastructure class and call `parent::__construct($repository, $eventBus)`. Extending it (rather than using it directly) preserves the typed domain repository interface for command handlers.
+- `DomainEventPublishingRepository` is an **abstract decorator** — extend it in your typed infrastructure class and call `parent::__construct($repository, $eventBus)`. It cannot be instantiated directly; extending it preserves the typed domain repository interface for command handlers.
 
 ---
 

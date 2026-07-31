@@ -201,7 +201,7 @@ All components live under the `SeedWork\` namespace (Domain, Application, Infras
 ### DomainEventPublishingRepository (`SeedWork\Infrastructure\DomainEventPublishingRepository`)
 
 - **Role:** Repository decorator that publishes `$aggregate->getDomainEvents()` via `DomainEventBusPublisher` after each `save()`.
-- **Usage:** Do not instantiate directly. Extend it and implement your domain repository interface so command handlers can be typed against the domain port:
+- **Usage:** Abstract — cannot be instantiated directly. Extend it and implement your domain repository interface so command handlers can be typed against the domain port:
 
 ```php
 // Infrastructure layer of your bounded context
