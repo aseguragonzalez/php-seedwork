@@ -6,6 +6,9 @@ python3 -m venv /home/vscode/.venv
 /home/vscode/.venv/bin/pip install -r requirements.txt \
     || echo '[setup] WARNING: pip install failed — MkDocs and other Python tools may be missing.'
 
+# Register pre-commit git hooks (pre-commit + commit-msg stages)
+/home/vscode/.venv/bin/pre-commit install --hook-type pre-commit --hook-type commit-msg
+
 # Configure Git SSH signing when key is mapped via docker-compose.override.yml
 if [ -f /home/vscode/.ssh/id_ed25519.pub ]; then
     git config --global gpg.format ssh
