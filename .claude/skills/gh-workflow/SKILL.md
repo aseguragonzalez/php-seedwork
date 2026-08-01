@@ -14,20 +14,40 @@ implements.
 
 ## Flow
 
-1. **Analyze and open the issue.** Understand the request, confirm the understanding with
-   the requester, then create (or confirm) an issue with clear, testable acceptance
-   criteria. Skip creation only if an issue for this exact change already exists.
+1. **Analyze and open the issue(s).** Understand the request, confirm the understanding
+   with the requester, then create (or confirm) one issue per independently shippable
+   concern, each with clear, testable acceptance criteria. If the request bundles
+   unrelated concerns, split it into multiple issues rather than opening one issue for
+   everything — don't retrofit the split later. Skip creation only if an issue for that
+   exact concern already exists.
 2. **Plan.** Re-read the issue and draft an implementation plan that separates code,
    tests, and documentation as independent tracks against contracts (interfaces/signatures)
-   agreed up front.
+   agreed up front. Decide here whether the issue ships as one PR or several (see "One
+   issue, multiple PRs" below) — don't decide mid-implementation.
 3. **Implement in parallel** using the code/test/docs agents under `.claude/agents/`
    against those contracts.
-4. **Open a PR that references the issue** — use a closing keyword (`Closes #N`) in the
-   PR body, never just a prose mention.
+4. **Open a PR that references the issue(s) it addresses** — a PR that fully resolves an
+   issue uses a closing keyword (`Closes #N`); a PR that only partially resolves one uses
+   `Relates to #N` instead (see "One issue, multiple PRs" below). Never just a prose
+   mention.
 
-Never open a PR without a linked issue. While analyzing any request, also check whether
-nearby code could be improved — if so, open a **separate** issue for it (see the
-`boy-scout` skill) rather than folding it into this change.
+Never open a PR without at least one linked issue. While analyzing any request, also
+check whether nearby code could be improved — if so, open a **separate** issue for it
+(see the `boy-scout` skill) rather than folding it into this change.
+
+### One issue, multiple PRs
+
+An issue's acceptance criteria don't have to land in a single PR — large or naturally
+incremental work can ship as a sequence of PRs against the same issue:
+
+- Every PR in the sequence but the last uses `Relates to #N` in its body — the issue stays
+  open, and the PR title/type reflects only what that PR itself changed (see the
+  commit-type table below).
+- The PR that satisfies the issue's last remaining acceptance criterion uses `Closes #N`,
+  which closes the issue on merge.
+- Decide the split during planning (step 2 above), not opportunistically mid-review — an
+  unplanned split risks leaving the issue's acceptance criteria only partially covered
+  with no PR left to track the gap.
 
 ## Identity
 
@@ -83,7 +103,8 @@ the release decision; only the type prefix and `!`/`BREAKING CHANGE` do. Dependa
 - Body: exactly **What / Why / How** + **How to test**, in English.
 - **No conversation narrative or reasoning trail** — state the outcome directly. Nobody
   reads a TL;DR of how the conclusion was reached; write the conclusion.
-- Always link the issue via a closing keyword.
+- Always link the issue(s) — `Closes #N` if this PR resolves it, `Relates to #N` if it's
+  one of several PRs against that issue (see "One issue, multiple PRs" above).
 - Apply matching labels from the taxonomy above.
 - Request review from the repo owner explicitly (see Reviewers above).
 
