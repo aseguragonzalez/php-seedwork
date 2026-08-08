@@ -1,10 +1,10 @@
-name: Devcontainer
+name: Devcontainer quality
 
 on:
   pull_request:
     paths:
     - .devcontainer/**
-    - .github/workflows/devcontainer.yml
+    - .github/workflows/devcontainer-quality.yml
 
 permissions:
   contents: read
@@ -12,7 +12,7 @@ permissions:
 jobs:
   build-and-check:
     name: Build image and run checks
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 8
 
     steps:
@@ -22,5 +22,6 @@ jobs:
     - name: Build devcontainer and run quality checks
       uses: devcontainers/ci@513af61f4de4f75d37e4438f184ba4358f0fc1ca # v0.3.1900000450
       with:
+        cacheFrom: ghcr.io/aseguragonzalez/php-seedwork-devcontainer
         push: never
         runCmd: make install check test-examples
