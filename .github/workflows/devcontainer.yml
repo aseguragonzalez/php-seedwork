@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
     - .devcontainer/**
+    - .github/workflows/devcontainer.yml
 
 permissions:
   contents: read
@@ -12,6 +13,7 @@ jobs:
   build-and-check:
     name: Build image and run checks
     runs-on: ubuntu-latest
+    timeout-minutes: 8
 
     steps:
     - name: Checkout

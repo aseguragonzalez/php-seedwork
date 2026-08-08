@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# The pre-commit cache is a named Docker volume (see devcontainer.json "mounts"), which
+# Docker creates owned by root on first use — including on every fresh CI runner, where the
+# volume never persists between runs. Reclaim it for the remote user before pre-commit writes to it.
+sudo chown -R vscode:vscode /home/vscode/.cache/pre-commit
+
 # Python venv for pre-commit / MkDocs
 python3 -m venv /home/vscode/.venv
 /home/vscode/.venv/bin/pip install -r requirements.txt \
