@@ -2,9 +2,6 @@ name: Devcontainer quality
 
 on:
   pull_request:
-    paths:
-    - .devcontainer/**
-    - .github/workflows/devcontainer-quality.yml
 
 permissions:
   contents: read
@@ -18,8 +15,26 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      with:
+        fetch-depth: 0
+
+    - name: Check for devcontainer changes
+      id: filter
+      run: |
+        set -uo pipefail
+        changed_files=$(git diff --name-only "${{ github.event.pull_request.base.sha }}" "${{ github.sha }}")
+        if [ $? -ne 0 ]; then
+          echo "::error::git diff failed, refusing to silently skip the devcontainer build" >&2
+          exit 1
+        fi
+        if echo "$changed_files" | grep -qE '^(\.devcontainer/|\.github/workflows/devcontainer-quality\.yml)'; then
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "changed=false" >> "$GITHUB_OUTPUT"
+        fi
 
     - name: Build devcontainer and run quality checks
+      if: steps.filter.outputs.changed == 'true'
       uses: devcontainers/ci@513af61f4de4f75d37e4438f184ba4358f0fc1ca # v0.3.1900000450
       with:
         cacheFrom: ghcr.io/aseguragonzalez/php-seedwork-devcontainer
