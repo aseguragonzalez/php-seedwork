@@ -1940,7 +1940,8 @@ the annotation is the only thing that tells PHPStan which query this use case ac
 - <code>IntegrationEventPublisher::publish()</code> takes a <strong>single</strong> <code>IntegrationEvent</code> — call it once per event.
 - Read <code>correlationId</code> from <code>RequestContext</code> — <code>DomainEvent</code> does not carry it.
 - Set <code>causationId</code> to the domain event's <code>id</code>.
-- Use <code>$event-&gt;aggregateId</code> (available on the <code>DomainEvent</code> base) — no need to duplicate it as a field on the event.</p>
+- Use <code>$event-&gt;aggregateId</code> (available on the <code>DomainEvent</code> base) — no need to duplicate it as a field on the event.
+- This is structurally enforced when the bus is <code>DeferredDomainEventBus</code>: if a handler dispatches another command that reaches the same bus instance while the outer <code>dispatch()</code> is still running, the bus raises <code>\LogicException</code> rather than silently corrupting the pending buffer. Route side effects through <code>IntegrationEventPublisher</code>/<code>TaskScheduler</code>, not back through the command bus.</p>
 <hr />
 <h3 id="result-and-maybe">Result and Maybe</h3>
 <p><code>Result</code> is the return type of every command dispatch: <code>ok</code> on success, <code>failed</code> with typed errors on a business rule violation. <code>Maybe</code> is the return type of every query: <code>just(value)</code> when found, <code>nothing()</code> when absent. Both eliminate null returns and unchecked exceptions from the application boundary.</p>
@@ -2007,7 +2008,8 @@ the annotation is the only thing that tells PHPStan which query this use case ac
 - Subscribe with the fully-qualified class name of the domain event (<code>AccountOpened::class</code>).
 - Pass the bus as <code>DomainEventBusPublisher</code> to the repository constructor — the handler never sees it.
 - Pass the bus as <code>DomainEventBus</code> to <code>CommandBusBuilder::withDomainEventCoordination()</code>.
-- <code>DomainEventPublishingRepository</code> is an <strong>abstract decorator</strong> — extend it in your typed infrastructure class and call <code>parent::__construct($repository, $eventBus)</code>. It cannot be instantiated directly; extending it preserves the typed domain repository interface for command handlers.</p>
+- <code>DomainEventPublishingRepository</code> is an <strong>abstract decorator</strong> — extend it in your typed infrastructure class and call <code>parent::__construct($repository, $eventBus)</code>. It cannot be instantiated directly; extending it preserves the typed domain repository interface for command handlers.
+- <code>publish()</code>, <code>dispatch()</code>, and <code>discard()</code> guard against reentrancy: calling any of them from within a handler that runs during an in-flight <code>dispatch()</code> on the same instance raises <code>\LogicException</code>. This is not a scoping concern (see per-request instantiation above) — it fires even within a single request/fiber if a handler dispatches a command that reaches this same bus instance again before the outer <code>dispatch()</code> returns. Sequential, non-nested usage (the pattern shown above) is unaffected.</p>
 <hr />
 <h3 id="commandbusbuilder-full-wiring">CommandBusBuilder — Full Wiring</h3>
 <p>The correct bus stack for a write operation is:</p>
@@ -2094,7 +2096,7 @@ the annotation is the only thing that tells PHPStan which query this use case ac
 </code></pre></div>
 <ul>
 <li><code>pending(): list&lt;DomainEvent&gt;</code> — events buffered but not yet dispatched.</li>
-<li><code>reset()</code> clears the buffer without dispatching. Different from <code>discard()</code> (production lifecycle call).</li>
+<li><code>reset()</code> clears the buffer without dispatching. Different from <code>discard()</code> (production lifecycle call): <code>reset()</code> bypasses the reentrancy guard entirely — it exists for test introspection between scenarios, not for production dispatch flow.</li>
 <li>Use <code>DeferredDomainEventBus</code> in production wiring; <code>DeferredDomainEventBusSpy</code> in tests only.</li>
 </ul>
 <hr />
