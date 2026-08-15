@@ -1842,6 +1842,7 @@
 <li><strong>Role:</strong> Buffers domain events on <code>publish()</code>; dispatches them synchronously to subscribed handlers on <code>dispatch()</code>. Buffer is keyed by <code>event.id</code> (idempotent per-transaction).</li>
 <li><strong>Usage:</strong> Subscribe handlers with <code>subscribe($eventFqcn, $handler)</code>. Pair with <code>DomainEventCoordinatorCommandBus</code> for automatic lifecycle management.</li>
 <li><strong>Reentrancy guard:</strong> <code>publish()</code>, <code>dispatch()</code>, and <code>discard()</code> each throw <code>\LogicException</code> if called while a <code>dispatch()</code> on the same instance is already in progress — e.g. a handler that, directly or indirectly, triggers another command dispatch that reaches the same bus instance before the outer <code>dispatch()</code> returns. This protects the single shared pending buffer from being read, cleared, or repopulated mid-iteration by a nested call. Sequential (non-nested) calls are unaffected; only genuine reentrancy is rejected.</li>
+<li><strong>Scoping:</strong> Instantiate per request/fiber, never as a container singleton, under async PHP runtimes (Swoole, OpenSwoole, RoadRunner, FrankenPHP worker mode, ReactPHP, AMPHP, native Fibers) — see "DomainEventBus Wiring" in <code>docs/coding-standards.md</code> for why.</li>
 </ul>
 <h3 id="domaineventpublishingrepository-seedworkinfrastructuredomaineventpublishingrepository">DomainEventPublishingRepository (<code>SeedWork\Infrastructure\DomainEventPublishingRepository</code>)</h3>
 <ul>
