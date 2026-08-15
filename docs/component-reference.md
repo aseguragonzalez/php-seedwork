@@ -198,7 +198,7 @@ All components live under the `SeedWork\` namespace (Domain, Application, Infras
 - **Role:** Buffers domain events on `publish()`; dispatches them synchronously to subscribed handlers on `dispatch()`. Buffer is keyed by `event.id` (idempotent per-transaction).
 - **Usage:** Subscribe handlers with `subscribe($eventFqcn, $handler)`. Pair with `DomainEventCoordinatorCommandBus` for automatic lifecycle management.
 - **Reentrancy guard:** `publish()`, `dispatch()`, and `discard()` each throw `\LogicException` if called while a `dispatch()` on the same instance is already in progress — e.g. a handler that, directly or indirectly, triggers another command dispatch that reaches the same bus instance before the outer `dispatch()` returns. This protects the single shared pending buffer from being read, cleared, or repopulated mid-iteration by a nested call. Sequential (non-nested) calls are unaffected; only genuine reentrancy is rejected.
-- **Scoping:** Instantiate per request/fiber, never as a container singleton, under async PHP runtimes (Swoole, FrankenPHP workers, RoadRunner, ReactPHP, AMPHP, Fibers) — see "DomainEventBus Wiring" in `docs/coding-standards.md` for why.
+- **Scoping:** Instantiate per request/fiber, never as a container singleton, under async PHP runtimes (Swoole, OpenSwoole, RoadRunner, FrankenPHP worker mode, ReactPHP, AMPHP, native Fibers) — see "DomainEventBus Wiring" in `docs/coding-standards.md` for why.
 
 ### DomainEventPublishingRepository (`SeedWork\Infrastructure\DomainEventPublishingRepository`)
 

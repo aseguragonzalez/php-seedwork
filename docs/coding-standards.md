@@ -929,7 +929,14 @@ $publishingRepository = new ConcretePostgresAccountRepository(
 );
 ```
 
-> `DeferredDomainEventBus` buffers pending events in a plain instance property with no per-context isolation. Under classic PHP-FPM/CLI, one process handles one request, so this is safe. Under long-lived async PHP runtimes (Swoole, OpenSwoole, RoadRunner, FrankenPHP worker mode, ReactPHP, AMPHP, native Fibers) the DI container is bootstrapped once per worker and reused across concurrently-interleaved requests/coroutines — wiring `DeferredDomainEventBus` (or any custom `DomainEventBus` implementation with internal buffering state) as a container singleton lets one coroutine's `discard()`/`dispatch()` corrupt another coroutine's still-buffered events. Instantiate it per request/fiber (as in the example above), never as a singleton, in these runtimes.
+> `DeferredDomainEventBus` buffers pending events in a plain instance property with no per-context
+> isolation. Under classic PHP-FPM/CLI, one process handles one request, so this is safe. Under
+> long-lived async PHP runtimes (Swoole, OpenSwoole, RoadRunner, FrankenPHP worker mode, ReactPHP,
+> AMPHP, native Fibers) the DI container is bootstrapped once per worker and reused across
+> concurrently-interleaved requests/coroutines — wiring `DeferredDomainEventBus` (or any custom
+> `DomainEventBus` implementation with internal buffering state) as a container singleton lets one
+> coroutine's `discard()`/`dispatch()` corrupt another coroutine's still-buffered events. Instantiate
+> it per request/fiber (as in the example above), never as a singleton, in these runtimes.
 
 **Key points**
 - `DeferredDomainEventBus` buffers events by ID (idempotent) and dispatches them after the handler completes but before commit.
