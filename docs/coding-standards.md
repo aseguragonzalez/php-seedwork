@@ -854,6 +854,7 @@ final class AccountOpenedDomainEventHandler implements DomainEventHandler
 - Read `correlationId` from `RequestContext` — `DomainEvent` does not carry it.
 - Set `causationId` to the domain event's `id`.
 - Use `$event->aggregateId` (available on the `DomainEvent` base) — no need to duplicate it as a field on the event.
+- This is structurally enforced when the bus is `DeferredDomainEventBus`: if a handler dispatches another command that reaches the same bus instance while the outer `dispatch()` is still running, the bus raises `\LogicException` rather than silently corrupting the pending buffer. Route side effects through `IntegrationEventPublisher`/`TaskScheduler`, not back through the command bus.
 
 ---
 
@@ -934,6 +935,7 @@ $publishingRepository = new ConcretePostgresAccountRepository(
 - Pass the bus as `DomainEventBusPublisher` to the repository constructor — the handler never sees it.
 - Pass the bus as `DomainEventBus` to `CommandBusBuilder::withDomainEventCoordination()`.
 - `DomainEventPublishingRepository` is an **abstract decorator** — extend it in your typed infrastructure class and call `parent::__construct($repository, $eventBus)`. It cannot be instantiated directly; extending it preserves the typed domain repository interface for command handlers.
+- `publish()`, `dispatch()`, and `discard()` guard against reentrancy: calling any of them from within a handler that runs during an in-flight `dispatch()` on the same instance raises `\LogicException`. This is not a scoping concern (see per-request instantiation above) — it fires even within a single request/fiber if a handler dispatches a command that reaches this same bus instance again before the outer `dispatch()` returns. Sequential, non-nested usage (the pattern shown above) is unaffected.
 
 ---
 
@@ -1045,7 +1047,7 @@ $domainEventBus->reset();
 ```
 
 - `pending(): list<DomainEvent>` — events buffered but not yet dispatched.
-- `reset()` clears the buffer without dispatching. Different from `discard()` (production lifecycle call).
+- `reset()` clears the buffer without dispatching. Different from `discard()` (production lifecycle call): `reset()` bypasses the reentrancy guard entirely — it exists for test introspection between scenarios, not for production dispatch flow.
 - Use `DeferredDomainEventBus` in production wiring; `DeferredDomainEventBusSpy` in tests only.
 
 ---

@@ -19,6 +19,10 @@ use SeedWork\Domain\DomainEvent;
  * For test use, extend with SeedWork\Testing\DeferredDomainEventBusSpy to
  * gain the typed SeedWork\Testing\DomainEventBusSpy contract.
  *
+ * Guards against reentrant publish()/dispatch()/discard() calls while a dispatch()
+ * is already in progress on the same instance, throwing \LogicException instead of
+ * silently corrupting the pending buffer.
+ *
  * @see DomainEventBus Application port.
  * @see DomainEventHandler Handlers registered via subscribe() and invoked at dispatch.
  */
@@ -29,6 +33,8 @@ class DeferredDomainEventBus implements DomainEventBus
 
     /** @var array<string, list<DomainEventHandler<DomainEvent>>> */
     private array $handlers = [];
+
+    private bool $dispatching = false;
 
     /**
      * @param string                          $eventType FQCN of the domain event
@@ -46,6 +52,8 @@ class DeferredDomainEventBus implements DomainEventBus
      */
     public function publish(array $events): void
     {
+        $this->guardAgainstReentrancy();
+
         foreach ($events as $event) {
             $id = $event->id;
             if (!isset($this->pending[$id])) {
@@ -59,13 +67,21 @@ class DeferredDomainEventBus implements DomainEventBus
      */
     public function dispatch(): void
     {
-        $events = array_values($this->pending);
-        $this->pending = [];
-        foreach ($events as $event) {
-            $handlers = $this->handlers[$event::class] ?? [];
-            foreach ($handlers as $handler) {
-                $handler->handle($event);
+        $this->guardAgainstReentrancy();
+
+        $this->dispatching = true;
+
+        try {
+            $events = array_values($this->pending);
+            $this->pending = [];
+            foreach ($events as $event) {
+                $handlers = $this->handlers[$event::class] ?? [];
+                foreach ($handlers as $handler) {
+                    $handler->handle($event);
+                }
             }
+        } finally {
+            $this->dispatching = false;
         }
     }
 
@@ -74,6 +90,17 @@ class DeferredDomainEventBus implements DomainEventBus
      */
     public function discard(): void
     {
+        $this->guardAgainstReentrancy();
+
         $this->pending = [];
+    }
+
+    private function guardAgainstReentrancy(): void
+    {
+        if ($this->dispatching) {
+            throw new \LogicException(
+                'DeferredDomainEventBus does not support reentrant publish()/dispatch()/discard() calls while a dispatch() is already in progress on this instance.'
+            );
+        }
     }
 }
