@@ -139,6 +139,37 @@ final class DomainEventCoordinatorCommandBusTest extends TestCase
         $decorator->dispatch(new TestCommand());
     }
 
+    public function testNestedDispatchTriggeredByDomainEventHandlerSurfacesLogicException(): void
+    {
+        $event = TestEvent::create();
+
+        $eventBus = new DeferredDomainEventBus();
+        $innerBus = $this->createStub(CommandBus::class);
+        $innerBus->method('dispatch')->willReturn(Result::ok());
+
+        $decorator = new DomainEventCoordinatorCommandBus($innerBus, $eventBus);
+
+        // The handler simulates a command handler that, while processing the
+        // outer command's domain events, triggers another command dispatch
+        // through the same coordinator/event-bus pair (e.g. a saga/process
+        // manager reacting synchronously to a domain event).
+        $eventHandler = $this->createMock(DomainEventHandler::class);
+        $eventHandler->expects($this->once())
+            ->method('handle')
+            ->willReturnCallback(function () use ($decorator): void {
+                $decorator->dispatch(new TestCommand('nested'));
+            })
+        ;
+
+        $eventBus->subscribe(TestEvent::class, $eventHandler);
+        $eventBus->publish([$event]);
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessageMatches('/reentrant/i');
+
+        $decorator->dispatch(new TestCommand());
+    }
+
     private function createInnerBusReturning(Result $result): CommandBus
     {
         $inner = $this->createStub(CommandBus::class);

@@ -197,6 +197,7 @@ All components live under the `SeedWork\` namespace (Domain, Application, Infras
 
 - **Role:** Buffers domain events on `publish()`; dispatches them synchronously to subscribed handlers on `dispatch()`. Buffer is keyed by `event.id` (idempotent per-transaction).
 - **Usage:** Subscribe handlers with `subscribe($eventFqcn, $handler)`. Pair with `DomainEventCoordinatorCommandBus` for automatic lifecycle management.
+- **Reentrancy guard:** `publish()`, `dispatch()`, and `discard()` each throw `\LogicException` if called while a `dispatch()` on the same instance is already in progress — e.g. a handler that, directly or indirectly, triggers another command dispatch that reaches the same bus instance before the outer `dispatch()` returns. This protects the single shared pending buffer from being read, cleared, or repopulated mid-iteration by a nested call. Sequential (non-nested) calls are unaffected; only genuine reentrancy is rejected.
 
 ### DomainEventPublishingRepository (`SeedWork\Infrastructure\DomainEventPublishingRepository`)
 

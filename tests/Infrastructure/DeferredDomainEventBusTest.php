@@ -6,6 +6,7 @@ namespace Tests\Infrastructure;
 
 use PHPUnit\Framework\TestCase;
 use SeedWork\Application\DomainEventHandler;
+use SeedWork\Infrastructure\DeferredDomainEventBus;
 use SeedWork\Testing\DeferredDomainEventBusSpy;
 use Tests\Fixtures\AnotherTestEvent;
 use Tests\Fixtures\TestEvent;
@@ -158,6 +159,118 @@ final class DeferredDomainEventBusTest extends TestCase
         $bus->reset();
 
         $this->assertSame([], $bus->pending());
+        $bus->dispatch();
+    }
+
+    public function testDispatchThrowsLogicExceptionOnReentrantDispatchFromHandler(): void
+    {
+        $bus = new DeferredDomainEventBus();
+        $handler = $this->createMock(DomainEventHandler::class);
+        $handler->expects($this->once())
+            ->method('handle')
+            ->willReturnCallback(function () use ($bus): void {
+                $bus->dispatch();
+            })
+        ;
+        $bus->subscribe(TestEvent::class, $handler);
+        $bus->publish([TestEvent::create()]);
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessageMatches('/reentrant/i');
+
+        $bus->dispatch();
+    }
+
+    public function testDispatchThrowsLogicExceptionOnReentrantPublishFromHandler(): void
+    {
+        $bus = new DeferredDomainEventBus();
+        $handler = $this->createMock(DomainEventHandler::class);
+        $handler->expects($this->once())
+            ->method('handle')
+            ->willReturnCallback(function () use ($bus): void {
+                $bus->publish([TestEvent::create()]);
+            })
+        ;
+        $bus->subscribe(TestEvent::class, $handler);
+        $bus->publish([TestEvent::create()]);
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessageMatches('/reentrant/i');
+
+        $bus->dispatch();
+    }
+
+    public function testDispatchThrowsLogicExceptionOnReentrantDiscardFromHandler(): void
+    {
+        $bus = new DeferredDomainEventBus();
+        $handler = $this->createMock(DomainEventHandler::class);
+        $handler->expects($this->once())
+            ->method('handle')
+            ->willReturnCallback(function () use ($bus): void {
+                $bus->discard();
+            })
+        ;
+        $bus->subscribe(TestEvent::class, $handler);
+        $bus->publish([TestEvent::create()]);
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessageMatches('/reentrant/i');
+
+        $bus->dispatch();
+    }
+
+    public function testNonReentrantPublishDispatchSequenceIsUnaffected(): void
+    {
+        $event1 = TestEvent::create();
+        $event2 = TestEvent::create();
+        $received = [];
+
+        $handler = $this->createMock(DomainEventHandler::class);
+        $handler->expects($this->exactly(2))
+            ->method('handle')
+            ->willReturnCallback(function ($event) use (&$received): void {
+                $received[] = $event;
+            })
+        ;
+
+        $bus = new DeferredDomainEventBus();
+        $bus->subscribe(TestEvent::class, $handler);
+
+        $bus->publish([$event1]);
+        $bus->dispatch();
+
+        $bus->publish([$event2]);
+        $bus->dispatch();
+
+        $this->assertSame([$event1, $event2], $received);
+    }
+
+    public function testDispatchingFlagResetsAfterDispatchThrowsAllowingSubsequentCalls(): void
+    {
+        $bus = new DeferredDomainEventBus();
+        $failingHandler = $this->createMock(DomainEventHandler::class);
+        $failingHandler->expects($this->once())
+            ->method('handle')
+            ->willThrowException(new \RuntimeException('handler failure'))
+        ;
+        $bus->subscribe(TestEvent::class, $failingHandler);
+        $bus->publish([TestEvent::create()]);
+
+        try {
+            $bus->dispatch();
+            $this->fail('Expected RuntimeException was not thrown.');
+        } catch (\RuntimeException $e) {
+            $this->assertSame('handler failure', $e->getMessage());
+        }
+
+        // The flag must have been reset in the finally block; none of the
+        // following calls should spuriously trigger the reentrancy guard.
+        $bus->discard();
+
+        $secondHandler = $this->createMock(DomainEventHandler::class);
+        $secondHandler->expects($this->once())->method('handle');
+        $bus->subscribe(AnotherTestEvent::class, $secondHandler);
+        $bus->publish([AnotherTestEvent::create()]);
         $bus->dispatch();
     }
 }
