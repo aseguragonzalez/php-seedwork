@@ -11,12 +11,13 @@ use SeedWork\Domain\UnitOfWork;
 
 /**
  * CommandBus decorator that runs each dispatch inside a unit of work: creates a
- * session, dispatches to the decorated command bus, then commits on success
- * (including Result::failed — the domain rejected it cleanly) or rolls back on
- * infrastructure exceptions.
+ * session, dispatches to the decorated command bus, then commits only when the
+ * command succeeded. A failed result or an exception rolls the session back, so
+ * a command that did not succeed never leaves partial writes behind.
  *
- * - Result::ok() or Result::failed() → commit (no infrastructure error).
- * - Throwable                        → rollback and rethrow.
+ * - Result::ok()     → commit. If commit() throws, rollback and rethrow.
+ * - Result::failed() → rollback; the failed Result is returned (not thrown).
+ * - Throwable        → rollback and rethrow.
  *
  * Recommended stacking (outer → inner):
  *   TransactionalCommandBus > DomainEventCoordinatorCommandBus > RegistryCommandBus
@@ -32,8 +33,9 @@ final class TransactionalCommandBus implements CommandBus
     ) {}
 
     /**
-     * Dispatches the command within a unit-of-work session; commits on result
-     * (ok or failed), rolls back and rethrows on any throwable.
+     * Dispatches the command within a unit-of-work session; commits on
+     * Result::ok(), rolls back on Result::failed(), rolls back and rethrows on
+     * any throwable (including one raised by commit()).
      *
      * @param Command $command the command to dispatch
      *
@@ -45,13 +47,26 @@ final class TransactionalCommandBus implements CommandBus
 
         try {
             $result = $this->inner->dispatch($command);
-            $this->unitOfWork->commit();
-
-            return $result;
         } catch (\Throwable $e) {
             $this->unitOfWork->rollback();
 
             throw $e;
         }
+
+        if ($result->isFailed()) {
+            $this->unitOfWork->rollback();
+
+            return $result;
+        }
+
+        try {
+            $this->unitOfWork->commit();
+        } catch (\Throwable $e) {
+            $this->unitOfWork->rollback();
+
+            throw $e;
+        }
+
+        return $result;
     }
 }

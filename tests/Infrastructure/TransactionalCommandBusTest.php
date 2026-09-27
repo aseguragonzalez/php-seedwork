@@ -54,22 +54,43 @@ final class TransactionalCommandBusTest extends TestCase
         $bus->dispatch(new TestCommand());
     }
 
-    public function testCommitIsCalledEvenWhenResultIsFailed(): void
+    public function testRollbackIsCalledAndFailedResultReturnedWhenResultIsFailed(): void
     {
-        $innerBus = $this->createMock(CommandBus::class);
-        $innerBus->expects($this->once())->method('dispatch')
-            ->willReturn(Result::failed([new ResultError('err', 'fail')]))
-        ;
+        $failed = Result::failed([new ResultError('err', 'fail')]);
+        $innerBus = $this->createStub(CommandBus::class);
+        $innerBus->method('dispatch')->willReturn($failed);
 
         $unitOfWork = $this->createMock(UnitOfWork::class);
         $unitOfWork->expects($this->once())->method('createSession');
-        $unitOfWork->expects($this->once())->method('commit');
-        $unitOfWork->expects($this->never())->method('rollback');
+        $unitOfWork->expects($this->never())->method('commit');
+        $unitOfWork->expects($this->once())->method('rollback');
 
         $bus = new TransactionalCommandBus($innerBus, $unitOfWork);
         $result = $bus->dispatch(new TestCommand());
 
+        $this->assertSame($failed, $result);
         $this->assertTrue($result->isFailed());
+        $this->assertSame('err', $result->errors()[0]->code);
+    }
+
+    public function testRollbackIsCalledAndExceptionRethrownWhenCommitThrows(): void
+    {
+        $innerBus = $this->createStub(CommandBus::class);
+        $innerBus->method('dispatch')->willReturn(Result::ok());
+
+        $unitOfWork = $this->createMock(UnitOfWork::class);
+        $unitOfWork->expects($this->once())->method('createSession');
+        $unitOfWork->expects($this->once())->method('commit')
+            ->willThrowException(new \RuntimeException('Commit failed'))
+        ;
+        $unitOfWork->expects($this->once())->method('rollback');
+
+        $bus = new TransactionalCommandBus($innerBus, $unitOfWork);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Commit failed');
+
+        $bus->dispatch(new TestCommand());
     }
 
     public function testRollbackIsCalledAndExceptionRethrownWhenDispatchThrows(): void
