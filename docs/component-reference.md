@@ -183,7 +183,10 @@ All components live under the `SeedWork\` namespace (Domain, Application, Infras
 ### TransactionalCommandBus (`SeedWork\Infrastructure\TransactionalCommandBus`)
 
 - **Role:** Decorator that wraps each command in a `UnitOfWork` (createSession → dispatch → commit or rollback).
-- **Note:** Commits even on `Result::failed()` — domain rejection is not an infrastructure error.
+- **Behaviour:**
+  - `Result::ok()` → `commit()`. If `commit()` throws, `rollback()` then rethrow.
+  - `Result::failed()` → `rollback()`; the failed `Result` is returned, not thrown. Writes made before the domain rejection are never persisted.
+  - Exception → `rollback()` then rethrow.
 
 ### DomainEventCoordinatorCommandBus (`SeedWork\Infrastructure\DomainEventCoordinatorCommandBus`)
 

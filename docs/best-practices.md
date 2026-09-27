@@ -224,7 +224,7 @@ The Unit of Work defines the **transaction boundary** for a command execution.
 **Key points**
 - Wraps the entire command handler execution: aggregate load, domain method call, save, and domain event dispatch — all inside one transaction.
 - Domain event handlers run **before the commit**, inside the same transaction. If a handler throws, the transaction rolls back.
-- If the command handler throws `\DomainException`, the bus converts it to `Result::failed()`, domain events are discarded, and the transaction commits (there is nothing to roll back).
+- If the command handler throws `\DomainException`, the bus converts it to `Result::failed()`, domain events are discarded, and the transaction rolls back — any write the handler made before the rejection is not persisted. The caller still receives the failed `Result`, not an exception.
 - The transaction boundary is the command. Never let a transaction span multiple commands.
 
 **Do**

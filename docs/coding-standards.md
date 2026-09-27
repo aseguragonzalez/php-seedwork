@@ -981,6 +981,7 @@ $commandBus = (new CommandBusBuilder($registry))
 - No PSR-11 container. Handlers are registered by command class name with concrete instances via `RegistryCommandBus::register()`.
 - `withTransaction($unitOfWork)` must come before `withDomainEventCoordination()` — events are dispatched inside the transaction.
 - `withDomainEventCoordination($domainEventBus)` calls `dispatch()` on success and `discard()` on failure.
+- `withTransaction($unitOfWork)` commits only on `Result::ok()`. A `Result::failed()` (a `\DomainException` thrown by the handler) or any exception rolls the transaction back, so a rejected command never leaves partial writes.
 - Command validation happens automatically in the `Command` constructor — no additional validation layer is needed.
 
 **Don't**
