@@ -1,10 +1,34 @@
 ## [1.0.3](https://github.com/aseguragonzalez/php-seedwork/compare/v1.0.2...v1.0.3) (2026-09-27)
 
+
+### Bug Fixes
+
+* roll back the unit of work when a command returns a failed result ([#111](https://github.com/aseguragonzalez/php-seedwork/issues/111)) ([986e561](https://github.com/aseguragonzalez/php-seedwork/commit/986e56113c1f29e074a92ec69ada4a68632ace13))
+
 ## [1.0.2](https://github.com/aseguragonzalez/php-seedwork/compare/v1.0.1...v1.0.2) (2026-08-15)
+
+
+### Bug Fixes
+
+* guard DeferredDomainEventBus against reentrant dispatch ([#99](https://github.com/aseguragonzalez/php-seedwork/issues/99)) ([4a7554c](https://github.com/aseguragonzalez/php-seedwork/commit/4a7554c3b5a48d158022f7d3c66ce4f9351118e8))
 
 ## [1.0.1](https://github.com/aseguragonzalez/php-seedwork/compare/v1.0.0...v1.0.1) (2026-08-08)
 
+
+### Bug Fixes
+
+* **ci:** stop blocking every PR on a required check that only some PRs trigger ([#93](https://github.com/aseguragonzalez/php-seedwork/issues/93)) ([0c7462f](https://github.com/aseguragonzalez/php-seedwork/commit/0c7462f3ae197240b09fabce511ce604145b5cfb))
+
 ## [1.0.0](https://github.com/aseguragonzalez/php-seedwork/compare/v0.9.1...v1.0.0) (2026-07-31)
+
+
+### ⚠ BREAKING CHANGES
+
+* make DomainEventPublishingRepository abstract (#66)
+
+### Bug Fixes
+
+* make DomainEventPublishingRepository abstract ([#66](https://github.com/aseguragonzalez/php-seedwork/issues/66)) ([645b827](https://github.com/aseguragonzalez/php-seedwork/commit/645b827222403c1569e916be1cb65522a89a012c))
 
 ## [0.9.1](https://github.com/aseguragonzalez/php-seedwork/compare/v0.9.0...v0.9.1) (2026-07-31)
 
