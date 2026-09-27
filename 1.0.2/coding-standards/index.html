@@ -1418,9 +1418,9 @@ tested by CI. Please open an issue so the discrepancy gets fixed.</p>
         <span class="k">return</span> <span class="k">new</span> <span class="nx">self</span><span class="p">(</span>
             <span class="nv">$ownerId</span><span class="p">,</span>
             <span class="nv">$initialBalance</span><span class="p">,</span>
-            <span class="nv">$id</span> <span class="o">??</span> <span class="s1">&#39;evt-&#39;</span> <span class="o">.</span> <span class="nb">uniqid</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="k">true</span><span class="p">),</span>
+            <span class="nv">$id</span> <span class="o">??</span> <span class="s1">'evt-'</span> <span class="o">.</span> <span class="nb">uniqid</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span> <span class="k">true</span><span class="p">),</span>
             <span class="nv">$aggregateId</span><span class="p">,</span>
-            <span class="nv">$occurredAt</span> <span class="o">??</span> <span class="k">new</span> <span class="nx">\DateTimeImmutable</span><span class="p">(</span><span class="s1">&#39;now&#39;</span><span class="p">,</span> <span class="k">new</span> <span class="nx">\DateTimeZone</span><span class="p">(</span><span class="s1">&#39;UTC&#39;</span><span class="p">)),</span>
+            <span class="nv">$occurredAt</span> <span class="o">??</span> <span class="k">new</span> <span class="nx">\DateTimeImmutable</span><span class="p">(</span><span class="s1">'now'</span><span class="p">,</span> <span class="k">new</span> <span class="nx">\DateTimeZone</span><span class="p">(</span><span class="s1">'UTC'</span><span class="p">)),</span>
         <span class="p">);</span>
     <span class="p">}</span>
 <span class="p">}</span>
@@ -1482,7 +1482,7 @@ tested by CI. Please open an issue so the discrepancy gets fixed.</p>
 <span class="p">{</span>
     <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">string</span> <span class="nv">$accountId</span><span class="p">)</span>
     <span class="p">{</span>
-        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="s2">&quot;Account &#39;</span><span class="si">{</span><span class="nv">$accountId</span><span class="si">}</span><span class="s2">&#39; was not found.&quot;</span><span class="p">);</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="s2">"Account '</span><span class="si">{</span><span class="nv">$accountId</span><span class="si">}</span><span class="s2">' was not found."</span><span class="p">);</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
@@ -1491,7 +1491,7 @@ tested by CI. Please open an issue so the discrepancy gets fixed.</p>
     <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">string</span> <span class="nv">$accountId</span><span class="p">,</span> <span class="nx">int</span> <span class="nv">$available</span><span class="p">,</span> <span class="nx">int</span> <span class="nv">$requested</span><span class="p">)</span>
     <span class="p">{</span>
         <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span>
-            <span class="s2">&quot;Account &#39;</span><span class="si">{</span><span class="nv">$accountId</span><span class="si">}</span><span class="s2">&#39; has insufficient funds: </span><span class="si">{</span><span class="nv">$available</span><span class="si">}</span><span class="s2"> available, </span><span class="si">{</span><span class="nv">$requested</span><span class="si">}</span><span class="s2"> requested.&quot;</span>
+            <span class="s2">"Account '</span><span class="si">{</span><span class="nv">$accountId</span><span class="si">}</span><span class="s2">' has insufficient funds: </span><span class="si">{</span><span class="nv">$available</span><span class="si">}</span><span class="s2"> available, </span><span class="si">{</span><span class="nv">$requested</span><span class="si">}</span><span class="s2"> requested."</span>
         <span class="p">);</span>
     <span class="p">}</span>
 <span class="p">}</span>
@@ -1539,10 +1539,10 @@ tested by CI. Please open an issue so the discrepancy gets fixed.</p>
         <span class="nv">$errors</span> <span class="o">=</span> <span class="p">[];</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="k">empty</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">accountId</span><span class="p">))</span> <span class="p">{</span>
-            <span class="nv">$errors</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ValidationErrorDetail</span><span class="p">(</span><span class="s1">&#39;account_id_required&#39;</span><span class="p">,</span> <span class="s1">&#39;Account ID is required.&#39;</span><span class="p">);</span>
+            <span class="nv">$errors</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ValidationErrorDetail</span><span class="p">(</span><span class="s1">'account_id_required'</span><span class="p">,</span> <span class="s1">'Account ID is required.'</span><span class="p">);</span>
         <span class="p">}</span>
         <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">initialAmount</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nv">$errors</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ValidationErrorDetail</span><span class="p">(</span><span class="s1">&#39;initial_amount_negative&#39;</span><span class="p">,</span> <span class="s1">&#39;Initial amount cannot be negative.&#39;</span><span class="p">);</span>
+            <span class="nv">$errors</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ValidationErrorDetail</span><span class="p">(</span><span class="s1">'initial_amount_negative'</span><span class="p">,</span> <span class="s1">'Initial amount cannot be negative.'</span><span class="p">);</span>
         <span class="p">}</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">empty</span><span class="p">(</span><span class="nv">$errors</span><span class="p">))</span> <span class="p">{</span>
@@ -1643,7 +1643,7 @@ the annotation is the only thing that tells PHPStan which command this use case 
     <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="k">empty</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">accountId</span><span class="p">))</span> <span class="p">{</span>
             <span class="k">throw</span> <span class="k">new</span> <span class="nx">ValidationErrors</span><span class="p">([</span>
-                <span class="k">new</span> <span class="nx">ValidationErrorDetail</span><span class="p">(</span><span class="s1">&#39;account_id_required&#39;</span><span class="p">,</span> <span class="s1">&#39;Account ID is required.&#39;</span><span class="p">),</span>
+                <span class="k">new</span> <span class="nx">ValidationErrorDetail</span><span class="p">(</span><span class="s1">'account_id_required'</span><span class="p">,</span> <span class="s1">'Account ID is required.'</span><span class="p">),</span>
             <span class="p">]);</span>
         <span class="p">}</span>
     <span class="p">}</span>
@@ -1730,8 +1730,8 @@ the annotation is the only thing that tells PHPStan which query this use case ac
 
 <span class="k">final</span> <span class="k">readonly</span> <span class="k">class</span> <span class="nc">AccountOpenedIntegrationEvent</span> <span class="k">extends</span> <span class="nx">IntegrationEvent</span>
 <span class="p">{</span>
-    <span class="k">public</span> <span class="k">const</span> <span class="no">string</span> <span class="nx">TYPE</span> <span class="o">=</span> <span class="s1">&#39;account.opened&#39;</span><span class="p">;</span>
-    <span class="k">public</span> <span class="k">const</span> <span class="no">string</span> <span class="nx">VERSION</span> <span class="o">=</span> <span class="s1">&#39;1&#39;</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">const</span> <span class="no">string</span> <span class="nx">TYPE</span> <span class="o">=</span> <span class="s1">'account.opened'</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">const</span> <span class="no">string</span> <span class="nx">VERSION</span> <span class="o">=</span> <span class="s1">'1'</span><span class="p">;</span>
 
     <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span>
         <span class="k">public</span> <span class="k">readonly</span> <span class="nx">string</span> <span class="nv">$ownerId</span><span class="p">,</span>
@@ -1746,9 +1746,9 @@ the annotation is the only thing that tells PHPStan which query this use case ac
             <span class="nx">version</span><span class="o">:</span> <span class="nx">self</span><span class="o">::</span><span class="na">VERSION</span><span class="p">,</span>
             <span class="nx">aggregateId</span><span class="o">:</span> <span class="nv">$aggregateId</span><span class="p">,</span>
             <span class="nx">payload</span><span class="o">:</span> <span class="p">[</span>
-                <span class="s1">&#39;ownerId&#39;</span> <span class="o">=&gt;</span> <span class="nv">$ownerId</span><span class="p">,</span>
-                <span class="s1">&#39;balance&#39;</span> <span class="o">=&gt;</span> <span class="nv">$balance</span><span class="p">,</span>
-                <span class="s1">&#39;currency&#39;</span> <span class="o">=&gt;</span> <span class="nv">$currency</span><span class="p">,</span>
+                <span class="s1">'ownerId'</span> <span class="o">=&gt;</span> <span class="nv">$ownerId</span><span class="p">,</span>
+                <span class="s1">'balance'</span> <span class="o">=&gt;</span> <span class="nv">$balance</span><span class="p">,</span>
+                <span class="s1">'currency'</span> <span class="o">=&gt;</span> <span class="nv">$currency</span><span class="p">,</span>
             <span class="p">],</span>
             <span class="nx">correlationId</span><span class="o">:</span> <span class="nv">$correlationId</span><span class="p">,</span>
             <span class="nx">causationId</span><span class="o">:</span> <span class="nv">$causationId</span><span class="p">,</span>
@@ -1799,20 +1799,20 @@ the annotation is the only thing that tells PHPStan which query this use case ac
 
 <span class="k">final</span> <span class="k">readonly</span> <span class="k">class</span> <span class="nc">SendWelcomeEmailTask</span> <span class="k">extends</span> <span class="nx">BackgroundTask</span>
 <span class="p">{</span>
-    <span class="k">public</span> <span class="k">const</span> <span class="no">string</span> <span class="nx">TYPE</span> <span class="o">=</span> <span class="s1">&#39;send_welcome_email&#39;</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">const</span> <span class="no">string</span> <span class="nx">TYPE</span> <span class="o">=</span> <span class="s1">'send_welcome_email'</span><span class="p">;</span>
 
     <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span>
         <span class="k">public</span> <span class="k">readonly</span> <span class="nx">string</span> <span class="nv">$accountId</span><span class="p">,</span>
         <span class="k">public</span> <span class="k">readonly</span> <span class="nx">string</span> <span class="nv">$email</span><span class="p">,</span>
         <span class="nx">string</span> <span class="nv">$correlationId</span><span class="p">,</span>
         <span class="o">?</span><span class="nx">string</span> <span class="nv">$causationId</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span>
-        <span class="nx">string</span> <span class="nv">$id</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="nx">string</span> <span class="nv">$id</span> <span class="o">=</span> <span class="s1">''</span><span class="p">,</span>
         <span class="o">?</span><span class="k">array</span> <span class="nv">$metadata</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span>
     <span class="p">)</span> <span class="p">{</span>
         <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span>
             <span class="nx">id</span><span class="o">:</span> <span class="nv">$id</span> <span class="o">?:</span> <span class="nx">\Ramsey\Uuid\Uuid</span><span class="o">::</span><span class="na">uuid4</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">toString</span><span class="p">(),</span>
             <span class="nx">type</span><span class="o">:</span> <span class="nx">self</span><span class="o">::</span><span class="na">TYPE</span><span class="p">,</span>
-            <span class="nx">payload</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;accountId&#39;</span> <span class="o">=&gt;</span> <span class="nv">$accountId</span><span class="p">,</span> <span class="s1">&#39;email&#39;</span> <span class="o">=&gt;</span> <span class="nv">$email</span><span class="p">],</span>
+            <span class="nx">payload</span><span class="o">:</span> <span class="p">[</span><span class="s1">'accountId'</span> <span class="o">=&gt;</span> <span class="nv">$accountId</span><span class="p">,</span> <span class="s1">'email'</span> <span class="o">=&gt;</span> <span class="nv">$email</span><span class="p">],</span>
             <span class="nx">correlationId</span><span class="o">:</span> <span class="nv">$correlationId</span><span class="p">,</span>
             <span class="nx">causationId</span><span class="o">:</span> <span class="nv">$causationId</span><span class="p">,</span>
             <span class="nx">metadata</span><span class="o">:</span> <span class="nv">$metadata</span><span class="p">,</span>
@@ -1866,7 +1866,7 @@ the annotation is the only thing that tells PHPStan which query this use case ac
 
 <span class="k">final</span> <span class="k">class</span> <span class="nc">RequestContext</span>
 <span class="p">{</span>
-    <span class="k">private</span> <span class="nx">string</span> <span class="nv">$correlationId</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+    <span class="k">private</span> <span class="nx">string</span> <span class="nv">$correlationId</span> <span class="o">=</span> <span class="s1">''</span><span class="p">;</span>
 
     <span class="k">public</span> <span class="k">function</span> <span class="nf">initialize</span><span class="p">(</span><span class="nx">string</span> <span class="nv">$correlationId</span><span class="p">)</span><span class="o">:</span> <span class="nx">void</span>
     <span class="p">{</span>
@@ -1881,7 +1881,7 @@ the annotation is the only thing that tells PHPStan which query this use case ac
 </code></pre></div>
 <p>At the entry point (controller, subscriber):</p>
 <div class="highlight"><pre><span></span><code><span class="x">// Read from HTTP header or generate a new one</span>
-<span class="x">$correlationId = $request-&gt;headers-&gt;get(&#39;X-Correlation-ID&#39;) ?? (string) Uuid::uuid4();</span>
+<span class="x">$correlationId = $request-&gt;headers-&gt;get('X-Correlation-ID') ?? (string) Uuid::uuid4();</span>
 <span class="x">$requestContext-&gt;initialize($correlationId);</span>
 </code></pre></div>
 <p>Inject <code>RequestContext</code> into any <code>DomainEventHandler</code> or infrastructure component that needs to propagate <code>correlationId</code>. The seedwork does not provide this abstraction — define it in your service.</p>
@@ -2048,6 +2048,7 @@ it per request/fiber (as in the example above), never as a singleton, in these r
 - No PSR-11 container. Handlers are registered by command class name with concrete instances via <code>RegistryCommandBus::register()</code>.
 - <code>withTransaction($unitOfWork)</code> must come before <code>withDomainEventCoordination()</code> — events are dispatched inside the transaction.
 - <code>withDomainEventCoordination($domainEventBus)</code> calls <code>dispatch()</code> on success and <code>discard()</code> on failure.
+- <code>withTransaction($unitOfWork)</code> commits only on <code>Result::ok()</code>. A <code>Result::failed()</code> (a <code>\DomainException</code> thrown by the handler) or any exception rolls the transaction back, so a rejected command never leaves partial writes.
 - Command validation happens automatically in the <code>Command</code> constructor — no additional validation layer is needed.</p>
 <p><strong>Don't</strong>
 - Register handlers with a PSR-11 container string — pass instances directly.

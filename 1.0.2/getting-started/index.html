@@ -851,7 +851,7 @@
 <span class="x">    protected function validate(): void</span>
 <span class="x">    {</span>
 <span class="x">        if ($this-&gt;amount &lt;= 0) {</span>
-<span class="x">            throw new \DomainException(&#39;Amount must be greater than 0&#39;);</span>
+<span class="x">            throw new \DomainException('Amount must be greater than 0');</span>
 <span class="x">        }</span>
 <span class="x">    }</span>
 <span class="x">}</span>
@@ -880,9 +880,9 @@
 <span class="x">    ): self {</span>
 <span class="x">        return new self(</span>
 <span class="x">            $amount,</span>
-<span class="x">            $id ?? &#39;evt-&#39; . uniqid(&#39;&#39;, true),</span>
+<span class="x">            $id ?? 'evt-' . uniqid('', true),</span>
 <span class="x">            $aggregateId,</span>
-<span class="x">            $occurredAt ?? new \DateTimeImmutable(&#39;now&#39;, new \DateTimeZone(&#39;UTC&#39;)),</span>
+<span class="x">            $occurredAt ?? new \DateTimeImmutable('now', new \DateTimeZone('UTC')),</span>
 <span class="x">        );</span>
 <span class="x">    }</span>
 <span class="x">}</span>
@@ -960,10 +960,10 @@
 <span class="x">    {</span>
 <span class="x">        $errors = [];</span>
 <span class="x">        if (empty($this-&gt;accountId)) {</span>
-<span class="x">            $errors[] = new ValidationErrorDetail(&#39;account_id_required&#39;, &#39;Account ID is required.&#39;);</span>
+<span class="x">            $errors[] = new ValidationErrorDetail('account_id_required', 'Account ID is required.');</span>
 <span class="x">        }</span>
 <span class="x">        if ($this-&gt;amount &lt;= 0) {</span>
-<span class="x">            $errors[] = new ValidationErrorDetail(&#39;amount_must_be_positive&#39;, &#39;Amount must be positive.&#39;);</span>
+<span class="x">            $errors[] = new ValidationErrorDetail('amount_must_be_positive', 'Amount must be positive.');</span>
 <span class="x">        }</span>
 <span class="x">        if (count($errors) &gt; 0) {</span>
 <span class="x">            throw new ValidationErrors($errors);</span>
@@ -985,7 +985,7 @@
 <span class="x">        /** @var DepositMoneyCommand $command */</span>
 <span class="x">        $accountId = BankAccountId::fromString($command-&gt;accountId);</span>
 <span class="x">        $account = $this-&gt;repository-&gt;findById($accountId)</span>
-<span class="x">            ?? throw new \DomainException(&quot;BankAccount &#39;{$accountId}&#39; not found&quot;);</span>
+<span class="x">            ?? throw new \DomainException("BankAccount '{$accountId}' not found");</span>
 
 <span class="x">        $updated = $account-&gt;deposit($command-&gt;amount);</span>
 <span class="x">        $this-&gt;repository-&gt;save($updated);</span>
@@ -1009,7 +1009,7 @@
 <span class="x">    public function validate(): void</span>
 <span class="x">    {</span>
 <span class="x">        if (empty($this-&gt;accountId)) {</span>
-<span class="x">            throw new ValidationErrors([new ValidationErrorDetail(&#39;account_id_required&#39;, &#39;Account ID is required.&#39;)]);</span>
+<span class="x">            throw new ValidationErrors([new ValidationErrorDetail('account_id_required', 'Account ID is required.')]);</span>
 <span class="x">        }</span>
 <span class="x">    }</span>
 <span class="x">}</span>
@@ -1050,12 +1050,12 @@
 <span class="x">    -&gt;withDomainEventCoordination($domainEventBus)   // dispatches or discards events after command</span>
 <span class="x">    -&gt;build();</span>
 
-<span class="x">$result = $commandBus-&gt;dispatch(new DepositMoneyCommand($accountId, 100, &#39;USD&#39;));</span>
+<span class="x">$result = $commandBus-&gt;dispatch(new DepositMoneyCommand($accountId, 100, 'USD'));</span>
 <span class="x">if ($result-&gt;isOk()) {</span>
 <span class="x">    // success</span>
 <span class="x">} elseif ($result-&gt;isFailed()) {</span>
 <span class="x">    foreach ($result-&gt;errors() as $error) {</span>
-<span class="x">        echo $error-&gt;code . &#39;: &#39; . $error-&gt;description;</span>
+<span class="x">        echo $error-&gt;code . ': ' . $error-&gt;description;</span>
 <span class="x">    }</span>
 <span class="x">}</span>
 </code></pre></div>
@@ -1120,7 +1120,7 @@
 <span class="x">    -&gt;withDomainEventCoordination($domainEventBus)</span>
 <span class="x">    -&gt;build();</span>
 
-<span class="x">$result = $commandBus-&gt;dispatch(new DepositMoneyCommand($accountId, 100, &#39;USD&#39;));</span>
+<span class="x">$result = $commandBus-&gt;dispatch(new DepositMoneyCommand($accountId, 100, 'USD'));</span>
 </code></pre></div>
 <p>See the full <a href="examples/BankAccount/">BankAccount example</a> for a complete working implementation including queries, transfers, and a composition root.</p>
 

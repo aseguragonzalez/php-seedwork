@@ -1827,7 +1827,10 @@
 <h3 id="transactionalcommandbus-seedworkinfrastructuretransactionalcommandbus">TransactionalCommandBus (<code>SeedWork\Infrastructure\TransactionalCommandBus</code>)</h3>
 <ul>
 <li><strong>Role:</strong> Decorator that wraps each command in a <code>UnitOfWork</code> (createSession → dispatch → commit or rollback).</li>
-<li><strong>Note:</strong> Commits even on <code>Result::failed()</code> — domain rejection is not an infrastructure error.</li>
+<li><strong>Behaviour:</strong></li>
+<li><code>Result::ok()</code> → <code>commit()</code>. If <code>commit()</code> throws, <code>rollback()</code> then rethrow.</li>
+<li><code>Result::failed()</code> → <code>rollback()</code>; the failed <code>Result</code> is returned, not thrown. Writes made before the domain rejection are never persisted.</li>
+<li>Exception → <code>rollback()</code> then rethrow.</li>
 </ul>
 <h3 id="domaineventcoordinatorcommandbus-seedworkinfrastructuredomaineventcoordinatorcommandbus">DomainEventCoordinatorCommandBus (<code>SeedWork\Infrastructure\DomainEventCoordinatorCommandBus</code>)</h3>
 <ul>
@@ -1919,7 +1922,7 @@
 <span class="x">    -&gt;build();</span>
 
 <span class="x">// Entry point (controller, CLI, etc.)</span>
-<span class="x">$result = $commandBus-&gt;dispatch(new DepositMoneyCommand($accountId, 100, &#39;USD&#39;));</span>
+<span class="x">$result = $commandBus-&gt;dispatch(new DepositMoneyCommand($accountId, 100, 'USD'));</span>
 <span class="x">if ($result-&gt;isFailed()) {</span>
 <span class="x">    // handle domain rejection</span>
 <span class="x">}</span>

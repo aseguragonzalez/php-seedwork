@@ -1403,7 +1403,7 @@
 <p><strong>Key points</strong>
 - Wraps the entire command handler execution: aggregate load, domain method call, save, and domain event dispatch — all inside one transaction.
 - Domain event handlers run <strong>before the commit</strong>, inside the same transaction. If a handler throws, the transaction rolls back.
-- If the command handler throws <code>\DomainException</code>, the bus converts it to <code>Result::failed()</code>, domain events are discarded, and the transaction commits (there is nothing to roll back).
+- If the command handler throws <code>\DomainException</code>, the bus converts it to <code>Result::failed()</code>, domain events are discarded, and the transaction rolls back — any write the handler made before the rejection is not persisted. The caller still receives the failed <code>Result</code>, not an exception.
 - The transaction boundary is the command. Never let a transaction span multiple commands.</p>
 <p><strong>Do</strong>
 - Use <code>TransactionalCommandBus</code> to apply the Unit of Work transparently — handlers never see it.
