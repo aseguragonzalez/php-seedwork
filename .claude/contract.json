@@ -1,0 +1,69 @@
+{
+  "$schema": "https://github.com/aseguragonzalez/claude-workspace/schemas/contract.schema.json",
+  "components": [
+    {
+      "gates": {
+        "format": {
+          "run": "make cs"
+        },
+        "lint": {
+          "run": "make check-layer-boundaries"
+        },
+        "typecheck": {
+          "run": "make stan"
+        },
+        "unit": {
+          "run": "make test-no-coverage test-examples"
+        }
+      },
+      "install": {
+        "run": "make install"
+      },
+      "name": "seedwork",
+      "path": "."
+    }
+  ],
+  "conventions": {
+    "commitTypes": ".claude/skills/gh-workflow/SKILL.md#commit-type--release-impact",
+    "issueReference": "relates",
+    "labels": [
+      "php"
+    ],
+    "quirks": [
+      "The repository's own CLAUDE.md, .claude/skills/gh-workflow, .github/CONTRIBUTING.md and pull request template still use closing keywords; this contract's 'Relates to #N' wins, because an issue is done only once its release is on Packagist.",
+      "The devcontainer's compose file publishes host port 8001 (MkDocs), so a second worktree stack cannot bind it while another stack runs.",
+      "The postCreateCommand (.devcontainer/setup.sh) runs 'pre-commit install', which needs a usable .git inside the container; a worktree's .git file points to the main checkout outside the mount.",
+      "The devcontainer runs PHP 8.5 while CI runs PHP 8.4 and composer.json pins platform PHP 8.4.",
+      "CI runs 'make test' with Xdebug coverage uploaded to Codecov; the local unit gate runs the no-coverage variant.",
+      "The required check 'Build image and run checks' builds the devcontainer and runs 'make install check test-examples' only when .devcontainer/ or its workflow changed, and passes as a no-op otherwise.",
+      "main accepts squash merges only and requires a code owner's approval and resolved review threads.",
+      "The repository has no 'ready' label yet."
+    ],
+    "requiredChecks": [
+      "CodeQL",
+      "quality / Quality Check",
+      "Validate PR Title",
+      "Build image and run checks"
+    ],
+    "signedCommits": true
+  },
+  "delivery": {
+    "done": "published",
+    "release": "semantic-release"
+  },
+  "invariants": [
+    "CLAUDE.md",
+    "docs/coding-standards.md",
+    "docs/best-practices.md"
+  ],
+  "stack": {
+    "basis": "Estimate: a single PHP devcontainer with no services; PHPStan runs with a 1 GiB memory limit; disk is the per-worktree vendor and caches, the base image is shared.",
+    "diskMiB": 2048,
+    "memoryMiB": 2048
+  },
+  "toolchain": {
+    "kind": "devcontainer",
+    "workspaceFolder": "/workspaces/php-seedwork"
+  },
+  "version": 1
+}
